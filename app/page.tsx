@@ -24,13 +24,14 @@ import { Work } from "@/components/sections/Work";
  * certifications are supporting detail, not movements. "Currently exploring"
  * became Act 3, which is what it was always gesturing at.
  *
- * `page-rails` draws the two vertical hairlines that run the height of the
- * document and mark the content column. It is the one structural motif holding
- * the sections together as a single document rather than a stack of cards.
+ * `counterfoil` draws the single vermilion margin rule. Folios hang outside it in
+ * the stub; prose sits inside. That rule about where things go is the structure
+ * — and it is harder to fake than a composition, because it has to hold on
+ * every row of every section.
  */
 export default function HomePage() {
   return (
-    <main id="main" className="page-rails">
+    <main id="main" className="counterfoil">
       <Hero />
       <Snapshot />
 

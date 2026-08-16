@@ -279,9 +279,13 @@ export function ProjectPlate({
           sizes={sizes}
           className="object-cover object-top"
         />
+        {/* Not a symmetric ring. The research flagged same-colour-on-all-four-
+            edges as a tell: it flattens the object and destroys any implied
+            light source. A top highlight and a bottom shade imply light from
+            above, which is what every other surface on this page assumes. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 ring-1 ring-black/10 ring-inset dark:ring-white/10"
+          className="pointer-events-none absolute inset-0 border-t border-b border-t-white/12 border-b-black/25"
         />
       </div>
     );

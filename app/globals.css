@@ -383,18 +383,28 @@
    drift apart again. Plain :root rather than @theme, because the gutter
    changes at breakpoints. */
 :root {
-  --page-max: 78rem; /* 1248px */
-  --page-gutter: 1.25rem;
-  --rail-inset: 0.5rem; /* air between the rail and the first character */
+  --page-max: 72rem;
+  --page-gutter: 1.125rem;
+
+  /* The stub: the strip outside the margin rule where folios, years and
+     stamps live. 3.25rem is wide enough for "01", a four-digit year and a
+     two-line stamp at 11px, and narrow enough that the prose measure lands
+     at 40-44 characters on a 390px screen. */
+  --stub: 3.25rem;
+  --stub-gap: 1rem;
 }
 @media (width >= 40rem) {
   :root {
     --page-gutter: 2rem;
+    --stub: 5.5rem;
+    --stub-gap: 1.5rem;
   }
 }
 @media (width >= 64rem) {
   :root {
     --page-gutter: 3rem;
+    --stub: 9rem;
+    --stub-gap: 2.25rem;
   }
 }
 
@@ -403,44 +413,50 @@
   max-width: var(--page-max);
   margin-inline: auto;
   padding-inline: var(--page-gutter);
+  /* Prose sits inside the margin rule. Metadata is pulled back out into the
+     stub with `stub-item`, which is the only thing allowed to cross. */
+  padding-inline-start: calc(var(--page-gutter) + var(--stub) + var(--stub-gap));
 }
 
-/* The vertical hairlines that mark the content column and run the height of
-   the page. This is the single structural motif that holds otherwise separate
-   sections together — it is why the site does not read as a stack of cards.
+/* THE MARGIN RULE.
+   One vermilion hairline running the height of the document, positioned at the
+   stub boundary of the centred column. It replaces the two symmetrical page
+   rails, which marked the column and said nothing — a rule only earns its place
+   when content hangs off it.
 
-   The rails were previously pinned to the VIEWPORT while .container-page is
-   max-width + margin-inline:auto, so above 1248px the column centred and the
-   rails did not follow: ~90px outside the text at 1440px, ~330px at 1920px.
-   Meanwhile every other vertical mark on the page — the section-heading rules,
-   the Snapshot cell dividers — is column-aligned, so the page ran two
-   competing grids. The max() clamps below 1248px so nothing jumps at the
-   crossover, and --rail-inset keeps the hairline off the first character. */
-@utility page-rails {
+   --accent-line is decorative by contract (2.20:1 light, 2.89:1 dark), which is
+   correct: nothing informational depends on seeing it. The folios and stamps in
+   the stub carry the information, and they sit at --ink-3. */
+@utility counterfoil {
   position: relative;
 
-  &::before,
-  &::after {
+  &::before {
     content: "";
     position: absolute;
     inset-block: 0;
     width: 1px;
-    background: var(--rail);
+    background: var(--accent-line);
     pointer-events: none;
     z-index: 0;
-  }
-  &::before {
     left: calc(
-      max(0px, (100% - var(--page-max)) / 2) + var(--page-gutter) -
-        var(--rail-inset)
+      max(0px, (100% - var(--page-max)) / 2) + var(--page-gutter) +
+        var(--stub) + (var(--stub-gap) / 2)
     );
   }
-  &::after {
-    right: calc(
-      max(0px, (100% - var(--page-max)) / 2) + var(--page-gutter) -
-        var(--rail-inset)
-    );
-  }
+}
+
+/* Pulls an element out of the prose column and into the stub, where it hangs
+   to the left of the margin rule. Right-aligned so folios and years form a
+   clean edge against the rule rather than a ragged one. */
+@utility stub-item {
+  position: absolute;
+  /* Pull back out of the prose column and across the gutter, so the element
+     lands in the stub. `left: 0` would resolve against the nearest positioned
+     ancestor — which is inside the column — and put it on top of the text. */
+  left: calc(-1 * (var(--stub) + var(--stub-gap)));
+  width: var(--stub);
+  text-align: right;
+  pointer-events: none;
 }
 
 /* The label layer — real small caps, not letterspaced uppercase.

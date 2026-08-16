@@ -37,8 +37,16 @@ export function SectionHeading({
 }) {
   return (
     <header className={cn("mb-10 sm:mb-14", className)}>
-      <Reveal className="flex items-center gap-4">
-        <span className="label-sc text-accent">{index}</span>
+      <Reveal className="relative flex items-center gap-4">
+        {/* The folio hangs in the stub, outside the margin rule. It is the
+            clearest statement of the whole grid: numbers live in the margin,
+            prose lives in the column, and nothing crosses. */}
+        <span
+          aria-hidden="true"
+          className="stub-item label-sc top-1 pr-3 text-accent"
+        >
+          {index}
+        </span>
         <span className="label-sc text-ink-3">{label}</span>
         <span aria-hidden="true" className="rule-fade h-px flex-1" />
         {action ? <div className="hidden sm:block">{action}</div> : null}

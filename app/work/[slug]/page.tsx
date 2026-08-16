@@ -67,7 +67,7 @@ export default async function CaseStudyPage({
   const next = projects[(index + 1) % projects.length];
 
   return (
-    <main id="main" className="page-rails">
+    <main id="main" className="counterfoil">
       <article>
         <header className="container-page pt-10 pb-12 sm:pt-14">
           <Link
