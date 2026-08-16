@@ -677,23 +677,37 @@
    ───────────────────────────────────────────────────────────────────────────── */
 
 @layer components {
-  [data-reveal] {
-    opacity: 0;
-    transform: translateY(14px);
-    transition: opacity 620ms var(--ease-out), transform 620ms var(--ease-out);
-    transition-delay: var(--reveal-delay, 0ms);
-    /* No `will-change` here on purpose. The homepage renders ~55 [data-reveal]
-       nodes, so hinting them all would ask the compositor for ~55 layers at
-       load — on a page whose whole argument is what happens on a mid-range
-       Android. Opacity and transform are already compositor-driven. */
+  /* Reveal.
+     Default state is VISIBLE. The animation only ever hides-then-reveals, and
+     only where it is supported, so no-support / reduced-motion / no-JS all
+     land on "content is there" without a rescue rule.
+
+     `entry` range rather than a time delay: a scroll-driven animation has no
+     clock. The stagger comes from --reveal-shift, which offsets where in the
+     element's entry the animation runs. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      [data-reveal] {
+        animation: reveal-in linear both;
+        animation-timeline: view();
+        animation-range: entry calc(0% + var(--reveal-shift, 0%)) entry
+          calc(56% + var(--reveal-shift, 0%));
+      }
+    }
   }
 
-  [data-reveal][data-revealed] {
-    opacity: 1;
-    transform: none;
+  @keyframes reveal-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 
-  /* Underline that grows from the left on hover — used for text links */
+/* Underline that grows from the left on hover — used for text links */
   .link-underline {
     background-image: linear-gradient(currentColor, currentColor);
     background-repeat: no-repeat;
@@ -790,10 +804,6 @@ dialog.command-palette[open] [data-palette-panel] {
     scroll-behavior: auto !important;
   }
 
-  [data-reveal] {
-    opacity: 1 !important;
-    transform: none !important;
-  }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -832,12 +842,6 @@ html {
   html {
     background-image: none;
   }
-}
-
-/* JS-off fallback: reveal everything immediately. */
-.no-js [data-reveal] {
-  opacity: 1;
-  transform: none;
 }
 
 /* Résumé density.
@@ -898,11 +902,6 @@ html {
   nav[data-site-nav],
   [data-print-hide] {
     display: none !important;
-  }
-
-  [data-reveal] {
-    opacity: 1 !important;
-    transform: none !important;
   }
 
   .text-gradient-accent {

@@ -9,7 +9,6 @@ import { BackToTop } from "@/components/site/BackToTop";
 import { CommandPalette } from "@/components/site/CommandPalette";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
-import { ScrollReveal } from "@/components/site/ScrollReveal";
 import { ThemeScript } from "@/components/site/ThemeScript";
 import "./globals.css";
 
@@ -78,7 +77,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`no-js ${serif.variable} ${sans.variable} ${mono.variable}`}
+      className={`${serif.variable} ${sans.variable} ${mono.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -114,7 +113,6 @@ export default function RootLayout({
           resumePdf={real(profile.resumePdf)}
           projects={paletteProjects}
         />
-        <ScrollReveal />
       </body>
     </html>
   );

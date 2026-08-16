@@ -4,13 +4,13 @@ import { cn } from "@/lib/cn";
 /**
  * Marks a subtree for scroll reveal.
  *
- * This is a server component — it only stamps `data-reveal` and a delay custom
- * property onto an element. A single IntersectionObserver in
- * `components/site/ScrollReveal.tsx` releases them. No animation library, no
- * per-element client component, and no hydration cost.
+ * A server component that stamps one attribute. There is no observer, no
+ * client boundary and no JavaScript: the animation is driven entirely by
+ * `animation-timeline: view()` in globals.css.
  *
- * The transition itself lives in globals.css, which also handles the two cases
- * that matter: `prefers-reduced-motion` and JavaScript never running.
+ * Content is visible by default and the animation only hides-then-reveals
+ * where it is supported, so browsers without scroll-driven animations, users
+ * with reduced motion, and anyone whose JS fails all simply see the page.
  */
 export function Reveal({
   as: Tag = "div",
@@ -21,29 +21,26 @@ export function Reveal({
   ...rest
 }: {
   as?: ElementType;
-  /** Stagger in milliseconds. Keep under ~240ms; longer reads as lag. */
-  delay?: number;
   /**
-   * Render already-revealed.
-   *
-   * Above-the-fold content must never be animation-gated. `[data-reveal]` ships
-   * from the server at `opacity: 0`, so without this the hero stays invisible
-   * until React hydrates and the observer fires — a blank page on a mid-range
-   * Android over mobile data, on the one screen that has to land. Stamping
-   * `data-revealed` at render time paints it with the first byte of HTML;
-   * `ScrollReveal` skips these because it selects `:not([data-revealed])`.
+   * Stagger, in the old millisecond vocabulary so call sites did not have to
+   * change. A scroll-driven animation has no clock, so this maps onto a shift
+   * in *where within the element's entry* the animation runs. Capped, because
+   * past roughly 10% the later items in a group visibly lag the scroll.
    */
+  delay?: number;
+  /** Opt out entirely — used above the fold, where nothing should animate. */
   immediate?: boolean;
   className?: string;
   children: ReactNode;
 } & Record<string, unknown>) {
+  const shift = Math.min(delay / 24, 10);
+
   return (
     <Tag
-      data-reveal=""
-      {...(immediate ? { "data-revealed": "" } : {})}
+      {...(immediate ? {} : { "data-reveal": "" })}
       style={
-        delay && !immediate
-          ? ({ "--reveal-delay": `${delay}ms` } as React.CSSProperties)
+        !immediate && shift
+          ? ({ "--reveal-shift": `${shift}%` } as React.CSSProperties)
           : undefined
       }
       className={cn(className)}
