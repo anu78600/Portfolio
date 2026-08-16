@@ -547,6 +547,127 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+   DEPTH
+
+   Depth here is stratification, not blur. The physics forces it: a pure-black
+   shadow at 30% alpha moves light paper by ΔL 0.229 in OKLab and a dark ground
+   by only 0.031 — a 7.4x asymmetry no amount of extra alpha closes. On dark,
+   shadow is a contact cue worth about one JND whatever you spend on it, so
+   elevation has to be carried upward in tone instead.
+
+   Four strategies, each encoding a different claim. A component picks a claim,
+   never a look:
+
+     rule    adjacent regions of the same sheet   row and section separators
+     wash    a different KIND of content          set-apart blocks
+     well    recessed into the sheet              metadata, definition lists
+     plate   an object laid ON the sheet          Quiet Compound. Once.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  --plate-shadow:
+    0 1px 0 var(--border),
+    0 2px 0 var(--bg),
+    0 3px 0 var(--border-hover),
+    0 6px 12px -6px oklch(0.42 0.045 84 / 0.1),
+    0 18px 28px -14px oklch(0.42 0.045 84 / 0.07);
+  --well-shadow:
+    inset 0 1px 2px oklch(0.42 0.045 84 / 0.1),
+    inset 0 -1px 0 oklch(1 0 0 / 0.7);
+}
+
+[data-theme="dark"] {
+  /* Two shadows maximum. Further layers buy ΔL < 0.005 on this ground, which
+     is below the just-noticeable difference — they cost paint and buy nothing. */
+  --plate-shadow:
+    inset 0 1px 0 0 oklch(1 0 0 / 0.065),
+    0 2px 4px -2px oklch(0.04 0.015 60 / 0.6),
+    0 14px 30px -16px oklch(0.04 0.015 60 / 0.55);
+  --well-shadow:
+    inset 0 1px 2px oklch(0 0 0 / 0.35),
+    inset 0 -1px 0 oklch(1 0 0 / 0.03);
+}
+
+/* THE PLATE.
+   Its own colour world, scoped by redefining the semantic tokens rather than by
+   overriding component classes — so every Tag, Button and Icon inside resolves
+   to plate colours automatically, and brass cannot leak out. That containment
+   is the whole argument: gold across a site is a trading-signals funnel; gold
+   inside the product's own block is quoting the product.
+
+   It is also the ONE element permitted to cross and cover the margin rule. */
+@utility folio-product {
+  position: relative;
+  z-index: 1; /* paints over the counterfoil rule */
+  container-type: inline-size;
+
+  --bg: oklch(0.2 0.018 80);
+  --surface: oklch(0.235 0.018 80);
+  --surface-elevated: oklch(0.26 0.018 80);
+  --surface-sunken: oklch(0.17 0.016 80);
+  --text-primary: oklch(0.95 0.008 90);
+  --text-secondary: oklch(0.8 0.012 90);
+  --text-muted: oklch(0.7 0.014 90);
+  --border: oklch(0.34 0.02 82);
+  --border-hover: oklch(0.4 0.022 82);
+  --border-strong: oklch(0.58 0.026 84);
+  --accent: oklch(0.8 0.132 92);
+  --accent-hover: oklch(0.86 0.115 94);
+  --accent-contrast: oklch(0.2 0.018 80);
+  --accent-soft: oklch(0.3 0.06 90);
+  --accent-line: oklch(0.64 0.115 90);
+  --focus: oklch(0.8 0.132 92);
+
+  color: var(--text-primary);
+  /* A directional border-box gradient, not a symmetric ring. A ring flattens a
+     raised object into a sticker; this catches brass along the top edge and
+     lets the bottom fall into its own shadow, so the object has a light
+     source. One extra paint layer, no pseudo-element, no compositing. */
+  border: 1px solid transparent;
+  border-radius: 3px; /* paper does not have a 16px radius */
+  background:
+    linear-gradient(var(--bg), var(--bg)) padding-box,
+    linear-gradient(
+        180deg,
+        oklch(0.64 0.115 90 / 0.55) 0%,
+        oklch(1 0 0 / 0.06) 26%,
+        oklch(1 0 0 / 0.02) 72%,
+        oklch(0 0 0 / 0.18) 100%
+      )
+      border-box;
+  box-shadow: var(--plate-shadow);
+}
+
+[data-theme="dark"] .folio-product {
+  --bg: oklch(0.262 0.02 80);
+  --surface: oklch(0.295 0.02 80);
+  --surface-elevated: oklch(0.32 0.02 80);
+  --surface-sunken: oklch(0.225 0.018 80);
+  --accent-contrast: oklch(0.2 0.018 80);
+}
+
+@media (forced-colors: active) {
+  .folio-product {
+    border-color: CanvasText;
+  }
+}
+
+/* Recessed into the sheet. For metadata that belongs to a surface rather than
+   sitting on top of it. */
+@utility well {
+  background: var(--surface-sunken);
+  box-shadow: var(--well-shadow);
+  border-radius: 2px;
+}
+
+/* A different kind of content. No border, no shadow, ever — the tint is the
+   entire signal, and adding an edge would make it a card. */
+@utility wash {
+  background: var(--accent-soft);
+  box-decoration-break: clone;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
    MOTION
 
    One reveal primitive, used everywhere. Elements start slightly translated and
@@ -689,24 +810,27 @@ dialog.command-palette[open] [data-palette-panel] {
    unaffected by this z-index.
    ───────────────────────────────────────────────────────────────────────────── */
 
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0.022;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23n)'/%3E%3C/svg%3E");
+/* Grain lives on the element already painting the ground, not on a fixed
+   overlay. `body::after` at z-index 9999 forced a permanent viewport-sized
+   composited layer above all content; as a background-image it rasterises once
+   at 128x128, tiles, and costs nothing per frame.
+
+   0.022 dark / 0.012 light. Below about 0.008 the amplitude drops under one
+   quantisation level and it stops dithering anything — at that point it is
+   decoration pretending to be engineering. */
+html {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23n)' opacity='0.012'/%3E%3C/svg%3E");
+  background-repeat: repeat;
   background-size: 128px 128px;
 }
 
-:root:not([data-theme="dark"]) body::after {
-  opacity: 0.014;
+[data-theme="dark"] {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23n)' opacity='0.022'/%3E%3C/svg%3E");
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  body::after {
-    display: none;
+  html {
+    background-image: none;
   }
 }
 
@@ -765,8 +889,8 @@ body::after {
     background: #fff !important;
   }
 
-  body::after {
-    display: none !important;
+  html {
+    background-image: none !important;
   }
 
   [data-print="hide"],

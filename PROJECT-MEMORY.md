@@ -240,6 +240,17 @@ This is durable authorisation for pushing to `github.com/anu78600/Portfolio`
 Order every time: typecheck -> build -> verify (overflow probe, contrast against
 compiled CSS where colour changed) -> commit -> push. Never push a red build.
 
+**And after every phase, run two agents** (his instruction, 17 Aug):
+
+1. **Analyse** the whole site as built — read the actual files, find real defects.
+2. **Report** — errors, improvement suggestions, and where it can be made more
+   premium.
+
+Run them as a Workflow so the analyst's findings feed the reporter. Give the
+analyst the repo path and make it read files rather than reason from the diff;
+the most valuable findings this session all came from reading shipped code and
+compiled CSS, not from reasoning about intent.
+
 ## 5. Hard-won gotchas
 
 - **`pkill` does not work in this environment.** Stale `next start` processes

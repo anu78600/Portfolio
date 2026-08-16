@@ -1,6 +1,7 @@
 import type { Project } from "@/content/types";
 import { real } from "@/lib/content";
 import { ButtonLink } from "@/components/ui/Button";
+import { cn } from "@/lib/cn";
 import { Reveal } from "@/components/ui/Reveal";
 import { Tag, TagRow } from "@/components/ui/Tag";
 import { ProjectPlate } from "./ProjectPlate";
@@ -25,7 +26,17 @@ export function LeadProject({ project }: { project: Project }) {
   return (
     <Reveal
       as="article"
-      className="overflow-hidden rounded-lg border border-line bg-elevated lg:grid lg:grid-cols-12"
+      className={cn(
+        "folio-product overflow-hidden lg:grid lg:grid-cols-12",
+        // The one element allowed to cross and cover the margin rule. Pulled
+        // back across the stub so it sits over the ruling the way a plate is
+        // glued over the ruling of a bound ledger. Everything else on the page
+        // respects the rule absolutely; this exception carries the whole
+        // hierarchy argument and costs one z-index.
+        // Left only. Pulling both sides overflows the viewport, because only
+        // the left has a stub to absorb it.
+        "-ml-[calc(var(--stub)+var(--stub-gap))]",
+      )}
     >
       <div className="relative aspect-[16/10] border-b border-line lg:col-span-6 lg:aspect-auto lg:min-h-[380px] lg:border-r lg:border-b-0">
         <ProjectPlate
@@ -39,7 +50,7 @@ export function LeadProject({ project }: { project: Project }) {
       </div>
 
       <div className="flex flex-col justify-center p-6 sm:p-9 lg:col-span-6">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <div className="well flex flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2">
           <Tag tone="accent">{project.status}</Tag>
           <span className="label-sc text-ink-3">{project.category}</span>
           {year ? <span className="label-sc text-ink-3">{year}</span> : null}
