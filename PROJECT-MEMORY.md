@@ -169,6 +169,55 @@ gesturing at. Contact remains the closing call.
 
 ---
 
+## 4c. Type system (phase 3, 17 Aug)
+
+Geist is gone. It is what `create-next-app` installs, so on a Next site
+deployed to Vercel it reads as the absence of a typeface choice.
+
+| Face | Job | Shipped |
+|---|---|---|
+| Source Serif 4 VF (wght 370–650, opsz 10–34) | body, prose, small-caps labels | 145 kB |
+| Instrument Sans 500 / 600 | headings, row titles, buttons | 44 kB |
+| IBM Plex Mono 400 | folios, dates, stamps | 10 kB |
+| Source Serif Italic, Fraunces wordmark | on disk, unused until phases 4–5 | 18 kB |
+
+**Never `next/font/google` for these.** Its CDN re-subsets and strips the
+OpenType tables. Source Serif arrives from it without `smcp`/`c2sc`/`onum`/
+`lnum`/`zero`/`case`, so every small-caps label would silently render as fake
+squashed capitals. The upstream OFL files are fetched, axis-clipped, subset and
+committed by `scratchpad/fonts3.py`, which prints the surviving GSUB features.
+The shipped roman carries `c2sc case ccmp liga lnum onum pnum smcp tnum zero`,
+verified against the compiled woff2.
+
+**X-height normalisation** — measured from the shipped files, not from
+specimens: Source Serif 0.4910 (reference), Instrument Sans 0.5100 →
+`size-adjust: 96.3%`, IBM Plex Mono 0.5160 → `95.2%`. Skipping this is what
+makes a multi-family system look assembled rather than designed.
+
+**Body is 19px, not 17.** Source Serif's x-height is 7.7% below Geist's, so
+keeping the old token would have shipped a legibility regression disguised as a
+font swap.
+
+**The label layer is real small caps** via `font-variant-caps: all-small-caps`,
+source text left in normal case so copy-paste and screen readers stay clean.
+The old letterspaced-uppercase-mono label (`label-mono`) is retired; the utility
+is now `label-sc`. Held at `--ink-3` and targets ≥5.5:1, not 4.5:1, because
+small caps carry less ink per glyph.
+
+**Figure routing is deliberate and three-way:** lining+proportional by default,
+oldstyle in prose (`p`, `li`), tabular+lining+slashed-zero in columns. The same
+year renders two ways on one page; the boundary is intent, not inconsistency.
+
+**Per-theme weight** — `--w-body` 400/380, `--w-heading` 600/570. Light text on
+a dark ground optically thickens; this is a one-token fix no static-font site
+can make.
+
+**Cost, honestly:** preloaded font went 69 kB → 145 kB, first load ~304 kB →
+~377 kB. Phases 4 and 6 delete the sticky header, mobile menu, scroll listener
+and IntersectionObserver, which is where that comes back.
+
+---
+
 ## 5. Hard-won gotchas
 
 - **`pkill` does not work in this environment.** Stale `next start` processes

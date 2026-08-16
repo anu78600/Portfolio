@@ -106,7 +106,7 @@ export default function ResumePage() {
                         <span className="text-ink-3"> · </span>
                         {item.organisation}
                       </h3>
-                      <span className="label-mono text-ink-3">
+                      <span className="label-sc text-ink-3">
                         {[period, itemLocation].filter(Boolean).join(" · ") ||
                           "Dates to be added"}
                       </span>
@@ -146,7 +146,7 @@ export default function ResumePage() {
                           </span>
                         ) : null}
                       </h3>
-                      <span className="label-mono text-ink-3">
+                      <span className="label-sc text-ink-3">
                         {period ?? "Years to be added"}
                       </span>
                     </div>
@@ -184,7 +184,7 @@ export default function ResumePage() {
             <dl className="flex flex-col gap-3">
               {skillGroups.map((group) => (
                 <div key={group.id} className="sm:flex sm:gap-4">
-                  <dt className="label-mono shrink-0 pt-1 text-ink-3 sm:w-44">
+                  <dt className="label-sc shrink-0 pt-1 text-ink-3 sm:w-44">
                     {group.title}
                   </dt>
                   <dd className="text-[0.9375rem] leading-relaxed text-ink-2">
@@ -210,7 +210,7 @@ export default function ResumePage() {
                       <span className="text-ink-2">{cert.issuer}</span>
                     </span>
                     {date ? (
-                      <span className="label-mono text-ink-3">{date}</span>
+                      <span className="label-sc text-ink-3">{date}</span>
                     ) : null}
                   </li>
                 );
@@ -242,7 +242,7 @@ function Block({
 }) {
   return (
     <section className="mt-9 border-t border-line pt-6">
-      <h2 className="label-mono mb-4 flex items-center gap-2 text-accent">
+      <h2 className="label-sc mb-4 flex items-center gap-2 text-accent">
         <Icon name={icon} size={14} />
         {title}
       </h2>

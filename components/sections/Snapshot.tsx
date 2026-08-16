@@ -49,7 +49,7 @@ export function Snapshot() {
               delay={index * 45}
               className={cellClasses(index)}
             >
-              <span className="label-mono text-ink-3">{domain.label}</span>
+              <span className="label-sc text-ink-3">{domain.label}</span>
               <span className="text-[0.9375rem] leading-snug text-balance text-ink">
                 {domain.detail}
               </span>

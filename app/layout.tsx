@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { geistMono, geistSans } from "./fonts";
+import { mono, sans, serif } from "./fonts";
 import { profile } from "@/content/profile";
 import { projects } from "@/content/projects";
 import { real } from "@/lib/content";
@@ -78,7 +78,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`no-js ${geistSans.variable} ${geistMono.variable}`}
+      className={`no-js ${serif.variable} ${sans.variable} ${mono.variable}`}
       suppressHydrationWarning
     >
       <head>

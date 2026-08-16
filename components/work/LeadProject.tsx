@@ -41,8 +41,8 @@ export function LeadProject({ project }: { project: Project }) {
       <div className="flex flex-col justify-center p-6 sm:p-9 lg:col-span-6">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <Tag tone="accent">{project.status}</Tag>
-          <span className="label-mono text-ink-3">{project.category}</span>
-          {year ? <span className="label-mono text-ink-3">{year}</span> : null}
+          <span className="label-sc text-ink-3">{project.category}</span>
+          {year ? <span className="label-sc text-ink-3">{year}</span> : null}
         </div>
 
         <h3 className="mt-5 text-heading-sm font-medium text-ink">{project.title}</h3>

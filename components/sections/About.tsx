@@ -29,7 +29,7 @@ export function About() {
               className="border-t border-line pt-6"
             >
               <div className="flex items-baseline gap-3">
-                <span className="label-mono text-accent">
+                <span className="label-sc text-accent">
                   {block.index}
                 </span>
                 <h3 className="text-subheading font-medium text-ink">

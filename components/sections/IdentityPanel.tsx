@@ -47,7 +47,7 @@ export function IdentityPanel() {
 
       <figure className="relative overflow-hidden rounded-lg border border-line bg-elevated shadow-[var(--shadow-elevated)]">
         <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
-          <span className="label-mono text-ink-3">Profile</span>
+          <span className="label-sc text-ink-3">Profile</span>
           {availability ? (
             <span className="flex items-center gap-2 text-right text-[0.75rem] text-ink-2">
               <span
@@ -93,7 +93,7 @@ export function IdentityPanel() {
           <dl className="divide-y divide-line">
             {rows.map((row) => (
               <div key={row.label} className="flex items-baseline gap-4 px-4 py-3">
-                <dt className="label-mono w-20 shrink-0 text-ink-3">{row.label}</dt>
+                <dt className="label-sc w-20 shrink-0 text-ink-3">{row.label}</dt>
                 <dd className="min-w-0 flex-1 text-right text-[0.8125rem] text-ink-2">
                   {row.value ?? <span className="text-ink-3">Not added yet</span>}
                 </dd>
@@ -115,7 +115,7 @@ export function IdentityPanel() {
             className="group flex items-center gap-4 border-t border-line bg-surface px-4 py-4 transition-colors duration-200 hover:bg-sunken"
           >
             <span className="min-w-0 flex-1">
-              <span className="label-mono flex items-center gap-2 text-accent">
+              <span className="label-sc flex items-center gap-2 text-accent">
                 <span
                   aria-hidden="true"
                   className="h-1.5 w-1.5 rounded-full bg-accent"

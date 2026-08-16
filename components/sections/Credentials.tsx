@@ -33,7 +33,7 @@ export function Credentials() {
 
         <div className="grid grid-cols-1 gap-x-14 gap-y-14 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <h3 className="label-mono flex items-center gap-2 text-ink-3">
+            <h3 className="label-sc flex items-center gap-2 text-ink-3">
               <Icon name="graduation-cap" size={15} className="text-accent" />
               Education
             </h3>
@@ -51,7 +51,7 @@ export function Credentials() {
                       <h4 className="text-subheading font-medium text-ink">
                         {item.qualification}
                       </h4>
-                      <span className="label-mono shrink-0 text-ink-3">
+                      <span className="label-sc shrink-0 text-ink-3">
                         {period ?? "Years to be added"}
                       </span>
                     </div>
@@ -78,7 +78,7 @@ export function Credentials() {
           </div>
 
           <div className="lg:col-span-5">
-            <h3 className="label-mono flex items-center gap-2 text-ink-3">
+            <h3 className="label-sc flex items-center gap-2 text-ink-3">
               <Icon name="award" size={15} className="text-accent" />
               Certifications
             </h3>
@@ -107,7 +107,7 @@ export function Credentials() {
                         {cert.issuer}
                       </span>
                       {date ? (
-                        <span className="label-mono ml-auto text-ink-3">{date}</span>
+                        <span className="label-sc ml-auto text-ink-3">{date}</span>
                       ) : null}
                     </div>
                   </>

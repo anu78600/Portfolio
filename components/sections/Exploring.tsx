@@ -43,7 +43,7 @@ export function Exploring() {
                 >
                   <Icon name={item.icon} size={15} />
                 </span>
-                <span className="label-mono text-ink-3">In progress</span>
+                <span className="label-sc text-ink-3">In progress</span>
               </span>
 
               <h3 className="mt-4 text-subheading font-medium text-ink">

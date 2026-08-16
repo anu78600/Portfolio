@@ -84,7 +84,7 @@ export default async function CaseStudyPage({
 
           <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
             <Reveal className="lg:col-span-8">
-              <p className="label-mono text-accent">{project.category}</p>
+              <p className="label-sc text-accent">{project.category}</p>
               <h1 className="mt-4 text-title font-medium text-ink">
                 {project.title}
               </h1>
@@ -96,19 +96,19 @@ export default async function CaseStudyPage({
             <Reveal delay={80} className="lg:col-span-4">
               <dl className="rounded-lg border border-line bg-elevated">
                 <div className="flex items-baseline justify-between gap-4 border-b border-line px-4 py-3">
-                  <dt className="label-mono text-ink-3">Status</dt>
+                  <dt className="label-sc text-ink-3">Status</dt>
                   <dd>
                     <Tag tone="accent">{project.status}</Tag>
                   </dd>
                 </div>
                 <div className="flex items-baseline justify-between gap-4 border-b border-line px-4 py-3">
-                  <dt className="label-mono text-ink-3">Year</dt>
+                  <dt className="label-sc text-ink-3">Year</dt>
                   <dd className="text-[0.8125rem] text-ink-2">
                     {year ?? <span className="text-ink-3">To be added</span>}
                   </dd>
                 </div>
                 <div className="px-4 py-3">
-                  <dt className="label-mono text-ink-3">Methods &amp; topics</dt>
+                  <dt className="label-sc text-ink-3">Methods &amp; topics</dt>
                   <dd className="mt-2.5">
                     <TagRow items={project.methods} />
                   </dd>
@@ -165,7 +165,7 @@ export default async function CaseStudyPage({
           href={`/work/${next.slug}`}
           className="group flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
         >
-          <span className="label-mono text-ink-3">Next project</span>
+          <span className="label-sc text-ink-3">Next project</span>
           <span className="flex items-center gap-3 text-subheading font-medium text-ink transition-colors group-hover:text-accent">
             {next.title}
             <Icon

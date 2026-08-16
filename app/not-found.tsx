@@ -18,7 +18,7 @@ export default function NotFound() {
   return (
     <main id="main" className="container-page flex min-h-[70dvh] items-center py-20">
       <div className="max-w-xl">
-        <p className="label-mono text-accent">Error 404</p>
+        <p className="label-sc text-accent">Error 404</p>
 
         <h1 className="mt-5 text-title font-medium text-ink">
           This one isn&apos;t on the roadmap.
@@ -39,7 +39,7 @@ export default function NotFound() {
         </div>
 
         <nav aria-label="Sections" className="mt-12 border-t border-line pt-6">
-          <p className="label-mono text-ink-3">Or jump to</p>
+          <p className="label-sc text-ink-3">Or jump to</p>
           <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
             {navSections.map((section) => (
               <li key={section.id}>

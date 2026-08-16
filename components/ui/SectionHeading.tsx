@@ -38,8 +38,8 @@ export function SectionHeading({
   return (
     <header className={cn("mb-10 sm:mb-14", className)}>
       <Reveal className="flex items-center gap-4">
-        <span className="label-mono text-accent">{index}</span>
-        <span className="label-mono text-ink-3">{label}</span>
+        <span className="label-sc text-accent">{index}</span>
+        <span className="label-sc text-ink-3">{label}</span>
         <span aria-hidden="true" className="rule-fade h-px flex-1" />
         {action ? <div className="hidden sm:block">{action}</div> : null}
       </Reveal>

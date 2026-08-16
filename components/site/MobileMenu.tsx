@@ -74,7 +74,7 @@ export function MobileMenu({
     >
       <div className="flex h-full flex-col">
         <div className="container-page flex h-16 shrink-0 items-center justify-between border-b border-line">
-          <span className="label-mono text-ink-3">Menu</span>
+          <span className="label-sc text-ink-3">Menu</span>
           <button
             type="button"
             onClick={onClose}
@@ -104,7 +104,7 @@ export function MobileMenu({
                       active ? "text-accent" : "text-ink hover:text-accent",
                     )}
                   >
-                    <span className="label-mono w-6 shrink-0 text-ink-3 tabular-nums">
+                    <span className="label-sc w-6 shrink-0 text-ink-3 tabular-nums">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span className="text-[1.375rem] font-medium tracking-[-0.02em]">

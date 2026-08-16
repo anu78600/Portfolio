@@ -24,8 +24,8 @@ function CardMeta({ project }: { project: Project }) {
   const year = real(project.year);
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="label-mono truncate text-ink-3">{project.category}</span>
-      {year ? <span className="label-mono shrink-0 text-ink-3">{year}</span> : null}
+      <span className="label-sc truncate text-ink-3">{project.category}</span>
+      {year ? <span className="label-sc shrink-0 text-ink-3">{year}</span> : null}
     </div>
   );
 }

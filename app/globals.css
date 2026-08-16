@@ -17,6 +17,12 @@
 :root {
   color-scheme: light;
 
+  /* Light text on a dark ground optically thickens. This is a one-token
+     correction that no static-font site can make, and it is why the dark
+     theme does not go mushy. WCAG measures colour, not stroke. */
+  --w-body: 400;
+  --w-heading: 600;
+
   /* COUNTERFOIL — laid paper, iron-gall ink, hand red.
      Light is the design; dark is the derived variant. Three inks with sources
      you can name: black is what was printed, red is what a person added by
@@ -71,6 +77,9 @@
 
 [data-theme="dark"] {
   color-scheme: dark;
+
+  --w-body: 380;
+  --w-heading: 570;
 
   /* Warm ink, hue 72 — not a cool petrol ground. Cool near-black plus any
      metallic is the trading-terminal signature, and this site is read by HR
@@ -146,76 +155,68 @@
   --color-plate-ink: var(--plate-ink);
   --color-plate-ink-2: var(--plate-ink-2);
 
-  /* Type families */
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo,
-    monospace;
+  /* Type families. The serif is the reading face and the default; the grotesk
+     is for headings and controls; the mono is for stamped metadata. */
+  --font-serif: var(--font-serif), Noto Serif, "Times New Roman", serif;
+  --font-sans: var(--font-sans), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, Menlo, monospace;
 
-  /* Type scale — fluid, and every step anchored to the SAME two widths: 390px
-     (the modal phone) and 1248px (--page-max, where the measure stops growing,
-     so it is the only principled place for type to stop growing).
+  /* Type scale.
+     Authored at 390px against Source Serif 4's metrics. Body is 19px, not 17:
+     Source Serif's x-height is 0.4910 against Geist's 0.5320, so holding the
+     old token would have shipped a 7.7% legibility regression disguised as a
+     font swap. Tracking sits next to each size so the pairing is enforced by
+     the token rather than by memory. */
 
-     Previously the five steps hit their ceilings at 1000 / 1090 / 1091 / 1106 /
-     1200px, so between 1090 and 1200 the display was frozen while the title was
-     still growing and the hero's two lines visibly converged as the window
-     widened. Shared endpoints make every ratio monotonic in viewport width. */
+  --text-display: clamp(2.75rem, 1.4rem + 5.5vw, 4.25rem);
+  --text-display--line-height: 0.94;
+  --text-display--letter-spacing: -0.015em;
 
-  --text-display: clamp(2.5rem, 1.364rem + 4.66vw, 5rem); /* 40 → 80 */
-  --text-display--line-height: 0.98;
-  --text-display--letter-spacing: -0.035em;
+  --text-title: clamp(1.5rem, 1.1rem + 1.7vw, 2.125rem);
+  --text-title--line-height: 1.2;
+  --text-title--letter-spacing: -0.018em;
 
-  --text-title: clamp(2rem, 1.432rem + 2.33vw, 3.25rem); /* 32 → 52 */
-  --text-title--line-height: 1.06;
-  --text-title--letter-spacing: -0.03em;
+  --text-heading: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-heading--line-height: 1.25;
+  --text-heading--letter-spacing: -0.012em;
 
-  --text-heading: clamp(1.625rem, 1.341rem + 1.17vw, 2.25rem); /* 26 → 36 */
-  --text-heading--line-height: 1.12;
-  --text-heading--letter-spacing: -0.025em;
+  --text-heading-sm: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
+  --text-heading-sm--line-height: 1.28;
+  --text-heading-sm--letter-spacing: -0.01em;
 
-  /* The 1.727 gap between heading and subheading was the widest in the system
-     and sat exactly where a project-card title belongs — which is why the lead
-     and featured cards both reached up to `heading` and ended up rendering at
-     the identical 38px as the section h2 directly above them. */
-  --text-heading-sm: clamp(1.375rem, 1.204rem + 0.7vw, 1.75rem); /* 22 → 28 */
-  --text-heading-sm--line-height: 1.18;
-  --text-heading-sm--letter-spacing: -0.022em;
+  --text-subheading: clamp(1.0625rem, 1.02rem + 0.19vw, 1.125rem);
+  --text-subheading--line-height: 1.3;
+  --text-subheading--letter-spacing: -0.008em;
 
-  --text-subheading: clamp(1.25rem, 1.136rem + 0.47vw, 1.5rem); /* 20 → 24 */
-  --text-subheading--line-height: 1.25;
-  --text-subheading--letter-spacing: -0.018em;
+  --text-lede: clamp(1.25rem, 1.21rem + 0.16vw, 1.3125rem);
+  --text-lede--line-height: 1.5;
+  --text-lede--letter-spacing: -0.005em;
 
-  --text-lede: clamp(1.0625rem, 0.977rem + 0.35vw, 1.25rem); /* 17 → 20 */
-  --text-lede--line-height: 1.6;
-  --text-lede--letter-spacing: -0.008em;
-
-  /* The band where ~90% of the page's words live. Previously undeclared, which
-     is what produced 57 bracketed text-[…] values across 18 files. Two axes:
-     body/body-sm are prose, ui is interface, meta/micro are metadata. */
-  --text-body: 1rem;
+  /* Body tracking is exactly zero. A text serif at text size is already
+     correctly spaced; a -0.003em nobody can see is a tell that the number was
+     picked to look like typography. */
+  --text-body: 1.1875rem;
   --text-body--line-height: 1.62;
-  --text-body--letter-spacing: -0.003em;
+  --text-body--letter-spacing: 0em;
 
-  --text-body-sm: 0.9375rem;
+  --text-body-sm: 1rem;
   --text-body-sm--line-height: 1.55;
+  --text-body-sm--letter-spacing: 0.005em;
 
-  --text-ui: 0.875rem;
+  --text-ui: 0.9375rem;
   --text-ui--line-height: 1.45;
 
-  --text-meta: 0.8125rem;
-  --text-meta--line-height: 1.45;
+  --text-meta: 0.75rem;
+  --text-meta--line-height: 1.4;
+  --text-meta--letter-spacing: 0.04em;
 
-  --text-micro: 0.75rem;
-  --text-micro--line-height: 1.4;
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1.2;
+  --text-micro--letter-spacing: 0.1em;
 
-  /* Mono label. 11px → 12px: it appears ~40 times, and at 11px against an 80px
-     hero name it reads as "a caption I didn't have a size for". Tracking
-     0.13em → 0.085em, because 0.13 is a proportional-caps value and a
-     monospaced face already carries a uniform wide advance — uppercase mono at
-     0.13em is a third widening applied to a face that needed none. */
-  --text-label: 0.75rem;
-  --text-label--line-height: 1.3333;
-  --text-label--letter-spacing: 0.085em;
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.3;
+  --text-label--letter-spacing: 0.06em;
 
   /* Radii — restrained. Nothing on this site is a pill except a status dot. */
   --radius-sm: 6px;
@@ -268,7 +269,10 @@
   body {
     background-color: var(--bg);
     color: var(--text-primary);
-    font-family: var(--font-sans);
+    font-family: var(--font-serif);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-optical-sizing: auto;
     font-synthesis-weight: none;
     /* `cv11` was Inter's single-storey-a variant; Geist has no cv axes at all,
        so the site was declaring a feature its typeface does not ship — the
@@ -283,7 +287,30 @@
   h2,
   h3,
   h4 {
+    font-family: var(--font-sans);
+    font-weight: var(--w-heading);
     text-wrap: balance;
+  }
+
+  /* Figure routing — three sets, deliberately.
+     Years align down a column in the ledger; "2020-2023" inside a sentence
+     stops looking like a spreadsheet leaked into the prose. The same year
+     renders two ways on one page, and the boundary is legible as intent:
+     inside a column versus inside a sentence. */
+  :root,
+  body {
+    font-variant-numeric: proportional-nums lining-nums;
+  }
+
+  p,
+  li {
+    font-variant-numeric: oldstyle-nums proportional-nums;
+  }
+
+  .label-sc,
+  time,
+  [data-meta] {
+    font-variant-numeric: tabular-nums lining-nums slashed-zero;
   }
 
   p {
@@ -416,15 +443,33 @@
   }
 }
 
-/* Small uppercase mono label used for section numbers, metadata and eyebrows */
-@utility label-mono {
-  font-family: var(--font-mono);
+/* The label layer — real small caps, not letterspaced uppercase.
+   `all-small-caps` (not `small-caps`) so both cases convert, and the source
+   text is left in normal case so copy-paste, screen readers and search
+   snippets stay clean. Small caps sit at x-height, so they read as part of the
+   text column rather than as UI chrome bolted on top.
+
+   Held at --ink-3. Small caps carry less ink per glyph than lowercase, so this
+   layer targets >= 5.5:1 rather than the 4.5:1 floor. */
+@utility label-sc {
+  font-family: var(--font-serif);
   font-size: var(--text-label);
   line-height: var(--text-label--line-height);
   letter-spacing: var(--text-label--letter-spacing);
+  font-weight: 600;
+  font-variant-caps: all-small-caps;
+  font-variant-numeric: tabular-nums lining-nums slashed-zero;
+  font-feature-settings: "opsz" 9;
+}
+
+/* Stamped metadata: folios, dates, the live URL. */
+@utility meta-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  line-height: var(--text-meta--line-height);
+  letter-spacing: var(--text-meta--letter-spacing);
   text-transform: uppercase;
-  font-weight: 500;
-  font-variant-numeric: slashed-zero;
+  font-variant-numeric: tabular-nums lining-nums slashed-zero;
 }
 
 /* Gradient keyword.

@@ -14,7 +14,7 @@ import { isDev } from "@/lib/content";
 export function PendingNote({ hint }: { hint?: string }) {
   return (
     <div className="mt-4 border-l-2 border-dashed border-line-strong pl-5">
-      <p className="label-mono text-ink-3">Not yet published</p>
+      <p className="label-sc text-ink-3">Not yet published</p>
       <p className="mt-2 max-w-xl text-[0.9375rem] leading-relaxed text-ink-2">
         This part of the work exists but has not been written up for the web
         yet. No findings are stated here rather than approximated.

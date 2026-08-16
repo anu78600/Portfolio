@@ -52,7 +52,7 @@ export function Hero() {
                 aria-hidden="true"
                 className="h-1.5 w-1.5 rounded-full bg-accent"
               />
-              <p className="label-mono text-accent">{profile.eyebrow}</p>
+              <p className="label-sc text-accent">{profile.eyebrow}</p>
             </Reveal>
 
             <Reveal immediate>

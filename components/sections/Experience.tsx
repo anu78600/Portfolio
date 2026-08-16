@@ -50,7 +50,7 @@ export function Experience() {
                   <div className="flex items-center gap-3">
                     <span
                       aria-hidden="true"
-                      className="label-mono grid h-8 w-8 shrink-0 place-items-center rounded-md border border-line bg-surface text-accent"
+                      className="label-sc grid h-8 w-8 shrink-0 place-items-center rounded-md border border-line bg-surface text-accent"
                     >
                       {String(index + 1).padStart(2, "0")}
                     </span>
@@ -59,7 +59,7 @@ export function Experience() {
                     </h3>
                   </div>
 
-                  <p className="label-mono mt-3.5 text-ink-3">
+                  <p className="label-sc mt-3.5 text-ink-3">
                     {period ?? "Dates to be added"}
                   </p>
                   {location ? (

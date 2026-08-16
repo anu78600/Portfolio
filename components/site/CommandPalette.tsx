@@ -270,7 +270,7 @@ export function CommandPalette({
                 spellCheck={false}
                 className="h-14 flex-1 bg-transparent text-[0.9375rem] text-ink outline-none placeholder:text-ink-3"
               />
-              <kbd className="label-mono hidden shrink-0 rounded-sm border border-line px-1.5 py-1 text-ink-3 sm:block">
+              <kbd className="label-sc hidden shrink-0 rounded-sm border border-line px-1.5 py-1 text-ink-3 sm:block">
                 Esc
               </kbd>
             </div>
@@ -295,7 +295,7 @@ export function CommandPalette({
                   return (
                     <li key={action.id}>
                       {showGroup ? (
-                        <p className="label-mono px-3 pt-3 pb-1.5 text-ink-3">
+                        <p className="label-sc px-3 pt-3 pb-1.5 text-ink-3">
                           {action.group}
                         </p>
                       ) : null}
@@ -358,7 +358,7 @@ export function PaletteTrigger() {
     >
       <Icon name="search" size={14} />
       <span>Search</span>
-      <kbd className="label-mono rounded-sm border border-line bg-bg px-1.5 py-1 text-ink-3">
+      <kbd className="label-sc rounded-sm border border-line bg-bg px-1.5 py-1 text-ink-3">
         {isMac ? "⌘" : "Ctrl"} K
       </kbd>
     </button>
