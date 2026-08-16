@@ -108,12 +108,12 @@ export const aboutBlocks: AboutBlock[] = [
   {
     index: "01",
     title: "Background",
-    body: "A BCA first, then the MBA. Most people reach business school from commerce. I came from code, and it shows in what I notice: the process before the strategy, the machinery before the plan.",
+    body: "A BCA first, then the MBA. Most people reach business school from commerce. I came from *code*, and it shows in what I notice: the process before the strategy, the machinery before the plan.",
   },
   {
     index: "02",
     title: "How I work",
-    body: "Define the question. Find what actually speaks to it. Reduce the answer to one page someone can act on. AI made that loop faster. It did not make it easier to know which question was worth asking, and that part still takes the longest.",
+    body: "Define the question. Find what actually speaks to it. Reduce the answer to one page someone can act on. AI made that loop *faster*. It did not make it easier to know which question was worth asking, and that part still takes the longest.",
   },
   {
     index: "03",

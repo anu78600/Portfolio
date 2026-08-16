@@ -1,4 +1,5 @@
 import { aboutBlocks } from "@/content/profile";
+import { Prose } from "@/components/ui/Prose";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
@@ -44,7 +45,9 @@ export function About({ children }: { children?: React.ReactNode }) {
                   {block.title}
                 </h3>
               </div>
-              <p className="mt-4 leading-relaxed text-ink-2">{block.body}</p>
+              <p className="mt-4 leading-relaxed text-ink-2">
+                <Prose>{block.body}</Prose>
+              </p>
             </Reveal>
           ))}
         </div>

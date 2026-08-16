@@ -28,7 +28,7 @@ export const projects: Project[] = [
     summary:
       "A personal finance suite for students. It tracks trades, charts, credit cards, and the money you lent a friend that you have both half-forgotten.",
     thesis:
-      "Student money is scattered, and the messiest part is the part no app touches. Udhar is real debt. It lives in memory, in screenshots, and in a slightly awkward feeling. Nobody builds for it, so everybody tracks it badly. Quiet Compound puts it beside the trades and the cards, and keeps all of it on your own device, because a tool you are not honest in is worthless.",
+      "Student money is scattered, and the messiest part is the part *no app touches*. Udhar is real debt. It lives in memory, in screenshots, and in a slightly awkward feeling. Nobody builds for it, so everybody tracks it badly. Quiet Compound puts it beside the trades and the cards, and keeps all of it on your own device, because a tool you are not honest in is worthless.",
     methods: [
       "Product design",
       "Personal finance",

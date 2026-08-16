@@ -2,6 +2,7 @@ import type { Project } from "@/content/types";
 import { real } from "@/lib/content";
 import { ButtonLink } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
+import { Prose } from "@/components/ui/Prose";
 import { Reveal } from "@/components/ui/Reveal";
 import { Tag, TagRow } from "@/components/ui/Tag";
 import { ProjectPlate } from "./ProjectPlate";
@@ -59,7 +60,7 @@ export function LeadProject({ project }: { project: Project }) {
         <h3 className="mt-5 text-heading-sm font-medium text-ink">{project.title}</h3>
 
         <p className="mt-4 max-w-xl text-lede leading-relaxed text-ink-2">
-          {project.thesis}
+          <Prose>{project.thesis}</Prose>
         </p>
 
         <TagRow items={project.methods} className="mt-6" />

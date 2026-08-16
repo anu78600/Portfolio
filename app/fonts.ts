@@ -44,6 +44,14 @@ export const serif = localFont({
       weight: "370 650",
       style: "normal",
     },
+    {
+      /* Already committed, already paid for in repo weight, and previously
+         undeclared — so it did not exist as far as the browser was concerned.
+         A page with no italic anywhere reads as generated rather than written. */
+      path: "./fonts/SourceSerif4-Italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
   ],
   variable: "--font-serif",
   display: "swap",
