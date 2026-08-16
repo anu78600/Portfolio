@@ -18,7 +18,7 @@ export const skillGroups: SkillGroup[] = [
     icon: "sparkles",
     title: "AI & Emerging Technology",
     description:
-      "Where most of my attention goes — used seriously enough to know where these systems break.",
+      "Where most of my attention goes. Used seriously enough to know where these systems break.",
     items: [
       { name: "Prompt engineering", note: "Professionally, freelance" },
       { name: "Model training & evaluation", note: "AI Trainer, Outlier" },
@@ -52,7 +52,7 @@ export const skillGroups: SkillGroup[] = [
     icon: "trending-up",
     title: "Finance & Analytics",
     description:
-      "Reading a business through its numbers, and a market through its price behaviour.",
+      "Reading a business through its numbers. Certified in equity markets by IIM Bangalore, February 2025.",
     items: [
       { name: "Equity market analysis", note: "Certified — IIM Bangalore" },
       { name: "Investment research" },
@@ -69,7 +69,7 @@ export const skillGroups: SkillGroup[] = [
     icon: "layers",
     title: "Building & Communication",
     description:
-      "Analysis is only worth what someone can act on — so what gets shipped matters as much as the work behind it.",
+      "Analysis is worth what someone can act on. So what ships matters as much as the work behind it.",
     items: [
       { name: "AI-assisted development", note: "Two products built, one live" },
       { name: "HTML" },

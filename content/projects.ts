@@ -25,14 +25,14 @@ export const projects: Project[] = [
     weight: "flagship",
     year: "2026",
     summary:
-      "A local-first trading journal and personal finance tracker. Your data stays on your device and syncs privately only if you choose to sign in.",
+      "A personal finance suite for students. It tracks trades, charts, credit cards, and the money you lent a friend that you have both half-forgotten.",
     thesis:
-      "A trading journal only works if you are honest in it, and people are not honest in tools they do not trust. So the architecture became the product decision: entries are written to your own device by default and sync to a private account only if you sign in. The interface is a paper folio rather than a dashboard — ruled lines, handwriting, a folio number, a 'reviewed' stamp — because the habit worth building is reflection, not more screen-watching.",
+      "Student money is scattered, and the messiest part is the part no app touches. Udhar is real debt. It lives in memory, in screenshots, and in a slightly awkward feeling. Nobody builds for it, so everybody tracks it badly. Quiet Compound puts it beside the trades and the cards, and keeps all of it on your own device, because a tool you are not honest in is worthless.",
     methods: [
       "Product design",
+      "Personal finance",
       "Local-first architecture",
       "Trading journal",
-      "Personal finance",
       "AI-assisted development",
       "Vercel",
     ],
@@ -44,23 +44,39 @@ export const projects: Project[] = [
     externalLabel: "Open the live app",
     caseStudy: [
       {
-        heading: "What it does",
+        heading: "The problem",
         body: [
-          "Trades and money in one journal: log an entry, record the thesis behind it, and come back to review what actually happened. Live NSE market status sits alongside the sign-in, so the app knows whether the market is open before you do.",
-          "It is local-first by default. Data is written to your device, and only reaches a private account if you sign in — a deliberate stance for a tool whose entire value depends on being told the truth.",
+          "A student's money is scattered across places that do not talk to each other, and the messiest parts are the ones no finance app bothers with. Udhar is the clearest example: money lent to a friend or borrowed from family is real debt, but it lives in memory and screenshots, and it is socially awkward to chase. Nobody builds for it, so everybody tracks it badly or not at all.",
+          "The same goes for a second credit card, or a trade taken for a reason already forgotten. Each is small on its own. Together they are why someone can be careful with money and still have no idea where they stand.",
+        ],
+      },
+      {
+        heading: "What it does",
+        points: [
+          "Trading journal — log the entry and the thinking behind it, then review what actually happened",
+          "Smart charts — the market view, alongside live NSE status",
+          "Udhar tracker — informal lending and borrowing, treated as the real debt it is",
+          "Credit-card tracker — built for more than one card, and the cycles that come with them",
+        ],
+        body: ["The suite is broader than this list, and still growing."],
+      },
+      {
+        heading: "Why it is local-first",
+        body: [
+          "Data is written to your own device by default and only syncs to a private account if you choose to sign in. That is an architectural decision made for a behavioural reason: the app only works if you are honest in it, and people are not honest in tools they do not trust with money they are embarrassed about.",
         ],
       },
       {
         heading: "Why it looks like a notebook",
         body: [
-          "Almost every trading tool is a dashboard, and dashboards reward watching. A journal rewards reviewing. The folio treatment — ruled paper, a handwritten entry, a folio number, a 'reviewed' stamp, a line reading \"no FOMO · no revenge\" — is there to set the behaviour the product is actually trying to encourage.",
+          "Almost every finance tool is a dashboard, and dashboards reward watching. A journal rewards reviewing. The folio treatment — ruled paper, a handwritten entry, a folio number, a “reviewed” stamp, a line reading “no FOMO · no revenge” — sets the behaviour the product is trying to encourage.",
         ],
       },
       {
         heading: "Build, stack and the hard parts",
         pending: true,
         body: [
-          "[ADD BUILD DETAIL — stack, how local-first sync was implemented, what proved hardest, further screenshots]",
+          "[ADD BUILD DETAIL — stack, how local-first sync was implemented, what proved hardest, screenshots of the modules]",
         ],
       },
       {
@@ -80,9 +96,9 @@ export const projects: Project[] = [
     weight: "featured",
     year: "2026",
     summary:
-      "A reminders app for daily tasks, designed so that adding and managing a reminder stays fast.",
+      "A reminders app. The entire design brief was that adding one should be faster than the thought that made you want to.",
     thesis:
-      "A reminder app only earns its place if capturing a reminder is faster than the thought that prompted it. The interface was kept deliberately plain for exactly that reason — nearly all of the value sits in how little friction there is between opening the app and being finished with it.",
+      "A reminder app earns its place or it does not. Capture has to beat the thought that prompted it. So the interface stayed plain, and almost every feature I considered lost to the cost of one more step.",
     methods: ["Product design", "Productivity", "AI-assisted development"],
     caseStudy: [
       {
@@ -113,7 +129,7 @@ export const projects: Project[] = [
     summary:
       "Analysing the role of agentic AI in global logistics, with special reference to the shipping sector.",
     thesis:
-      "Logistics has spent a decade getting better at seeing itself — sensors, tracking, dashboards. Agentic AI proposes something different: systems that hold a goal, plan against it and act, rather than reporting a status and waiting for a human. This study asks what that shift means for the shipping sector specifically, where decisions are slow, capital-heavy, jurisdictionally tangled and unusually exposed to disruption.",
+      "Logistics spent a decade learning to see itself. Sensors, tracking, dashboards. Agentic AI proposes something else: systems that hold a goal and act on it, instead of reporting a status and waiting for a human. This study asks what that means for shipping, where decisions are slow, capital-heavy, and tangled across jurisdictions.",
     methods: [
       "Agentic AI",
       "Global supply chain",
@@ -262,9 +278,9 @@ export const projects: Project[] = [
     weight: "standard",
     year: "[ADD YEAR]",
     summary:
-      "An organisational study of how digitising HR processes at IFFCO changed the work of the HR function — centred on the iGROW performance development system.",
+      "How digitising HR processes at IFFCO changed the work of the HR function, centred on the iGROW performance development system.",
     thesis:
-      "Digital transformation in HR is usually described in terms of the software. The more interesting question is what happens to the function around it: which judgements move from a conversation into a form field, what becomes visible that previously was not, and where the human work relocates rather than disappears.",
+      "Digital transformation in HR gets described in terms of the software. The more interesting question is what happens to the function around it. Which judgements move out of a conversation and into a form field. What becomes visible that was not. Where the human work relocates instead of disappearing.",
     methods: [
       "HR process analysis",
       "iGROW Performance Development System",
@@ -314,9 +330,9 @@ export const projects: Project[] = [
     weight: "standard",
     year: "[ADD YEAR]",
     summary:
-      "Reading a Godrej dealership business through its financial statements — what the numbers say about how the operation is actually run.",
+      "Reading a Godrej dealership through its financial statements, and what those numbers say about how it is actually run.",
     thesis:
-      "A single-location retail dealership is a good place to learn financial analysis honestly, because there is nowhere for the numbers to hide. Working capital, inventory turns and margin structure are not abstractions at that scale — they map directly onto decisions someone made about stock, credit and pricing.",
+      "A single-location dealership is an honest place to learn financial analysis. There is nowhere for the numbers to hide. Working capital and inventory turns are not abstractions at that scale. Each one maps onto a decision somebody actually made about stock, credit or price.",
     methods: [
       "Financial statement analysis",
       "Ratio analysis",
@@ -364,9 +380,9 @@ export const projects: Project[] = [
     weight: "standard",
     year: "[ADD YEAR]",
     summary:
-      "A product concept for autonomous surface collection of marine waste, worked through as a business proposition rather than a gadget.",
+      "A concept for autonomous collection of floating marine waste, worked through as a business proposition instead of a gadget.",
     thesis:
-      "Marine plastic is not primarily a collection-technology problem — it is an economics and coverage problem. The concept was an exercise in taking a sustainability idea and pressing it against the questions that decide whether it could exist: who operates it, who pays for it, and at what scale it stops being symbolic.",
+      "Marine plastic is not really a collection-technology problem. It is an economics and coverage problem. The exercise was taking a sustainability idea and pressing it against the questions that decide whether it can exist at all. Who operates it. Who pays. At what scale it stops being symbolic.",
     methods: [
       "Product concept",
       "Sustainability",
@@ -406,9 +422,9 @@ export const projects: Project[] = [
     weight: "standard",
     year: "[ADD YEAR]",
     summary:
-      "A connected exercise mat concept, designed around the moment a user actually needs feedback rather than around the sensors available.",
+      "A connected exercise mat, designed around the moment someone actually needs feedback instead of around the sensors available.",
     thesis:
-      "Most connected fitness products fail on the same point: they measure what is easy to measure and report it after the fact. The design question here was narrower and harder — what feedback is useful while a person is mid-posture, and what would they simply ignore?",
+      "Most connected fitness products fail the same way. They measure what is easy and report it afterwards. The harder question is what feedback helps while someone is mid-posture. And what they would simply ignore.",
     methods: ["Product concept", "User-centred design", "Health technology"],
     caseStudy: [
       {
@@ -443,9 +459,9 @@ export const projects: Project[] = [
     weight: "standard",
     year: "[ADD YEAR]",
     summary:
-      "An industry and product report on Patagonia, examining sustainability as a business strategy rather than as a communications exercise.",
+      "An industry and product report on Patagonia, treating sustainability as a business strategy instead of a communications exercise.",
     thesis:
-      "Patagonia is the standard reference for environmental positioning in consumer goods, which makes it the most useful and the most difficult case to study. The report's interest was in the parts that are structural — supply chain, materials, ownership, repair — rather than the parts that are brand.",
+      "Patagonia is the standard reference for environmental positioning in consumer goods. That makes it both the most useful case and the most difficult one. The report went after the structural parts: supply chain, materials, ownership, repair. Not the brand.",
     methods: [
       "Industry analysis",
       "Sustainability strategy",

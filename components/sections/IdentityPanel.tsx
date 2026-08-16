@@ -126,7 +126,7 @@ export function IdentityPanel() {
                 {leadProject.title}
               </span>
               <span className="mt-0.5 block truncate text-[0.8125rem] text-ink-3">
-                Trading journal · local-first
+                Trades, cards, udhar · local-first
               </span>
             </span>
             <Icon

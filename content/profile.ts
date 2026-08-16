@@ -16,15 +16,16 @@ export const profile: Profile = {
 
   // Three verbs, three real domains: HR (hire), finance and consulting
   // (decide), international business and logistics (move).
-  headline:
-    "Applying AI and analytics to the way organisations hire, decide and move.",
-  // The three verbs are the whole positioning — HR, finance/strategy,
-  // international business. They get the one gradient on the site.
-  headlineAccent: "hire, decide and move",
+  // Short, and it takes a position. The old line was a tricolon sitting under
+  // an eyebrow that was also a tricolon — two identical rhythms are the first
+  // thing a scanner registers, and they register as pattern, not as meaning.
+  headline: "Most AI work stops at the demo. I want the part after.",
+  headlineAccent: "the part after",
 
   intro: [
-    "MBA in Human Resource Management and International Business, built on a computer applications degree.",
-    "I train and evaluate AI models, freelance as a prompt engineer, and ship products of my own — pointed at where that meets real business decisions: HR processes, financial analysis and global logistics.",
+    "MBA in HR and international business, built on a computer applications degree. Top ten per cent, then top three.",
+    "I grade model output at Outlier and take freelance prompt work. Versioned and logged, so an improvement is something I can point at.",
+    "Quiet Compound is what I would show you first. It is live. I built it alone.",
   ],
 
   jobTitle: "Business & AI Professional",
@@ -107,21 +108,21 @@ export const aboutBlocks: AboutBlock[] = [
   {
     index: "01",
     title: "Background",
-    body: "A BCA gave me the technical literacy; the MBA gave me the commercial frame. The dual specialisation in Human Resource Management and International Business means I tend to read an organisation from two directions at once — the people running a process, and the market that process is serving.",
+    body: "A BCA first, then the MBA. Most people reach business school from commerce. I came from code, and it shows in what I notice: the process before the strategy, the machinery before the plan.",
   },
   {
     index: "02",
     title: "How I work",
-    body: "I start with the question rather than the tool. Most of my work is the same loop: define the problem precisely, find the data or the literature that speaks to it, analyse it, then reduce the result to something a decision-maker can act on in a page. AI has changed the speed of that loop, not the discipline of it.",
+    body: "Define the question. Find what actually speaks to it. Reduce the answer to one page someone can act on. AI made that loop faster. It did not make it easier to know which question was worth asking, and that part still takes the longest.",
   },
   {
     index: "03",
-    title: "Working with AI, not around it",
-    body: "Training and evaluating model output at Outlier taught me where these systems fail, which is more useful than knowing where they succeed. Freelance prompt engineering turned that into a method — versioned prompts, logged iterations, changes I can point at rather than describe.",
+    title: "Working with AI",
+    body: "At Outlier I grade model output. Mostly you learn where a model is confidently wrong. That turns out to be more useful than knowing where it is right. Freelance prompt work made it a habit: version everything, log the change, keep the variant that won.",
   },
   {
     index: "04",
     title: "What I want to build",
-    body: "A career on the operational edge of AI adoption — the point where a model stops being a demonstration and becomes part of how a business hires, decides, prices or ships. My research on agentic AI in the shipping sector is the first serious attempt at that.",
+    body: "The part of AI adoption nobody demos: where a model stops being impressive and starts being load-bearing in how a business hires, prices or ships. My dissertation on agentic AI in shipping is a first attempt at it.",
   },
 ];

@@ -28,7 +28,7 @@ export const experience: ExperienceItem[] = [
     period: "Jun 2026",
     location: "Remote",
     summary:
-      "Evaluation work at the level where model behaviour is actually decided — grading output, and seeing first-hand where a model's fluency and its correctness come apart.",
+      "Grading model output, which is where model behaviour actually gets decided. You watch fluency and correctness come apart in real time.",
     contributions: [
       "Trained and evaluated model responses for accuracy and helpfulness",
       "Worked on output quality for an image generation model",
@@ -49,9 +49,9 @@ export const experience: ExperienceItem[] = [
     period: "Jul 2025 — Present",
     location: "Remote",
     summary:
-      "Prompt engineering treated as a discipline rather than a knack: versioned, logged, and adapted to whatever the client's domain demands.",
+      "Prompt work, treated as engineering. Versioned, logged, adapted to whatever the client's domain turns out to need.",
     contributions: [
-      "Refine prompts iteratively against client requirements, comparing variants rather than judging by feel",
+      "Compare prompt variants against client requirements instead of judging by feel",
       "Keep iteration logs of prompt variants, so an improvement is traceable to a specific change",
       "Adapt prompt-engineering frameworks across different industry contexts",
     ],
@@ -69,11 +69,11 @@ export const experience: ExperienceItem[] = [
     period: "Aug 2025 — Sep 2025",
     location: "Uttar Pradesh, India",
     summary:
-      "A first look inside a large cooperative's HR function — the operational layer underneath the policy, and the point at which HR processes meet the systems that record them.",
+      "Two months inside the HR function of one of India's largest fertiliser cooperatives. The layer underneath the policy, where processes meet the systems that record them.",
     contributions: [
       "Maintained employee records in line with HR policy and procedure",
       "Supported employee engagement initiatives run by the HR team",
-      "Observed and documented HR workflows, mapping how compliance is handled in practice rather than on paper",
+      "Documented HR workflows, mapping how compliance is handled in practice and not on paper",
     ],
     skills: [
       "HR operations",

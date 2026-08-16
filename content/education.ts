@@ -81,27 +81,27 @@ export const learning: LearningItem[] = [
     topic: "Agentic AI",
     applicationTo: "Business automation",
     detail:
-      "Moving from systems that answer to systems that plan and act — and working out which business decisions can survive that.",
+      "Systems that plan and act, not just answer. The open question is which business decisions can survive being handed over.",
   },
   {
     icon: "compass",
     topic: "Applied data analytics",
     applicationTo: "Decision intelligence",
     detail:
-      "Getting from a dataset to a decision without losing the assumptions along the way.",
+      "Getting from a dataset to a decision without quietly losing the assumptions on the way.",
   },
   {
     icon: "trending-up",
     topic: "Financial markets",
     applicationTo: "Systematic analysis",
     detail:
-      "Building rule-based views of equities rather than discretionary ones — currently through TradingView and Pine Script.",
+      "Rule-based views of equities instead of discretionary ones. TradingView and Pine Script, mostly.",
   },
   {
     icon: "layers",
     topic: "Shipping products",
     applicationTo: "AI-assisted development",
     detail:
-      "Two apps live so far. The interesting part is how much of the build AI can carry, and exactly where it stops being useful.",
+      "One app live, one built and not deployed. The interesting part is how much of a build AI can carry, and exactly where it stops.",
   },
 ];

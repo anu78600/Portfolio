@@ -83,7 +83,9 @@
 
   --text-primary: oklch(0.965 0.004 85);
   --text-secondary: oklch(0.8 0.008 85);
-  --text-muted: oklch(0.67 0.01 85);
+  /* 0.67 measured 4.40:1 against --surface-overlay, where the command palette
+     puts muted text — a real AA failure. Raised until it clears. */
+  --text-muted: oklch(0.69 0.01 85);
 
   /* Antique brass, matched to the live product: --accent lands on #d8b346
      against its #D9B540, and --accent-hover on #eacc65 against its #E8CD66.
