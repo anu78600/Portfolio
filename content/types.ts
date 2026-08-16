@@ -195,6 +195,15 @@ export interface Certification {
   credentialUrl?: Todo | string;
 }
 
+export interface Goal {
+  /** Editorial index, "01" or "02". There is no "03" by design. */
+  index: string;
+  /** When this is — "Next role", "Alongside it". */
+  horizon: string;
+  title: string;
+  body: string;
+}
+
 export interface LearningItem {
   /** Icon name from components/ui/Icon. */
   icon: "sparkles" | "trending-up" | "compass" | "layers";

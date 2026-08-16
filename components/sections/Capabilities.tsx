@@ -1,7 +1,7 @@
 import { skillGroups } from "@/content/skills";
 import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/ui/Reveal";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SubHeading } from "@/components/ui/SubHeading";
 
 /**
  * Capabilities.
@@ -13,19 +13,11 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
  */
 export function Capabilities() {
   return (
-    <section
-      id="skills"
-      aria-labelledby="skills-title"
-      className="section-y border-t border-line"
-    >
-      <div className="container-page">
-        <SectionHeading
-          index="04"
-          label="Capabilities"
-          id="skills-title"
-          title="Grouped by what each one is for."
-          lede="Tools are listed where I use them for something specific, not to lengthen the list."
-        />
+    <div id="skills" className="mt-20 scroll-mt-24">
+      <SubHeading
+        label="Capabilities"
+        lede="Grouped by what each one is for. Tools appear where I use them for something specific, not to lengthen the list."
+      />
 
         <div className="grid grid-cols-1 gap-x-14 gap-y-12 lg:grid-cols-2">
           {skillGroups.map((group, index) => (
@@ -73,8 +65,7 @@ export function Capabilities() {
               </ul>
             </Reveal>
           ))}
-        </div>
       </div>
-    </section>
+    </div>
   );
 }

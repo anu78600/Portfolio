@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { certifications, education, learning } from "@/content/education";
+import { certifications, education } from "@/content/education";
+import { goals } from "@/content/goals";
 import { experience } from "@/content/experience";
 import { profile } from "@/content/profile";
 import { projects } from "@/content/projects";
@@ -218,12 +219,25 @@ export default function ResumePage() {
             </ul>
           </Block>
 
-          <Block title="Currently exploring" icon="compass">
-            <p className="text-[0.9375rem] leading-relaxed text-ink-2">
-              {learning
-                .map((item) => `${item.topic} → ${item.applicationTo}`)
-                .join("  ·  ")}
-            </p>
+          <Block title="Where I'm going" icon="compass">
+            <ol className="flex flex-col gap-3">
+              {goals.map((goal) => (
+                <li key={goal.index}>
+                  <h3 className="text-[0.9375rem] font-medium">
+                    {goal.title}
+                    <span className="ml-2 font-normal text-ink-3">
+                      {goal.horizon}
+                    </span>
+                  </h3>
+                  <p
+                    data-compact-hide
+                    className="mt-1 text-[0.9375rem] leading-relaxed text-ink-2"
+                  >
+                    {goal.body}
+                  </p>
+                </li>
+              ))}
+            </ol>
           </Block>
         </article>
       </div>

@@ -161,11 +161,24 @@ HR-tech, consulting, AI generalist), which reads as unfocused. Two goals stated
 at a level *above* those four tracks let the breadth look deliberate instead of
 scattered. Do not let this list grow to three, four or five.
 
-Sections that survive fold into the three acts rather than sitting beside them:
-experience and education become evidence inside act one; capabilities and
-certifications become supporting detail rather than their own chapters;
-"currently exploring" is absorbed into act three, which is what it was always
-gesturing at. Contact remains the closing call.
+**Implemented 17 Aug.** The page is now exactly three numbered movements:
+
+```
+01  What I have done   About prose + Roles + Capabilities + On the record
+02  What I have built   Quiet Compound (lead) + ReminderPro
+03  Where I am going    two goals, and two is a ceiling
+    Contact
+```
+
+Only the acts carry folio numbers. Blocks inside an act use `SubHeading`, which
+is deliberately unnumbered — if every block had a number, the numbering would
+stop meaning "one of three movements" and start meaning "a heading", which is
+what the old eight-section site did. Nav is Done / Built / Going / Contact.
+
+`content/goals.ts` holds Act 3 and documents the two-item ceiling in a comment
+so it is a decision rather than an accident. **The goals are the only content on
+this site that cannot be verified from the inventory — they are statements of
+intent and need his sign-off in his own voice.**
 
 ---
 

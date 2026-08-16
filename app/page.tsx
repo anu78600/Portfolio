@@ -3,24 +3,26 @@ import { Capabilities } from "@/components/sections/Capabilities";
 import { Contact } from "@/components/sections/Contact";
 import { Credentials } from "@/components/sections/Credentials";
 import { Experience } from "@/components/sections/Experience";
-import { Exploring } from "@/components/sections/Exploring";
+import { Direction } from "@/components/sections/Direction";
 import { Hero } from "@/components/sections/Hero";
 import { Snapshot } from "@/components/sections/Snapshot";
 import { Work } from "@/components/sections/Work";
 
 /**
- * Homepage composition.
+ * Homepage composition — three acts.
  *
- * Order is the main design decision on this page.
+ *   01  What I have done      background, roles, capabilities, credentials
+ *   02  What I have built     the two shipped products, framed by the problem
+ *   03  Where I am going      two goals, and two is a ceiling
  *
- * Work leads with shipped products rather than with research. A live URL a
- * recruiter can open in one click outranks an unpublished dissertation, and
- * Quiet Compound is the most verifiable thing on the whole profile. The
- * agentic-AI research keeps a wide card and a full case study — including its
- * framing diagram — but no longer occupies the page's first chapter.
+ * His directive, and it replaced an eight-section catalogue. The catalogue was
+ * well organised and that was the problem: a list has no momentum, and nobody
+ * retells a list after closing the tab. Past, present, direction is a shape a
+ * reader can hold.
  *
- * Experience sits high because it is the question every recruiter asks first,
- * and it now carries three roles, two of them AI work, so it earns the slot.
+ * Everything that used to be its own chapter now sits inside an act. Skills and
+ * certifications are supporting detail, not movements. "Currently exploring"
+ * became Act 3, which is what it was always gesturing at.
  *
  * `page-rails` draws the two vertical hairlines that run the height of the
  * document and mark the content column. It is the one structural motif holding
@@ -31,12 +33,17 @@ export default function HomePage() {
     <main id="main" className="page-rails">
       <Hero />
       <Snapshot />
-      <About />
-      <Experience />
+
+      {/* Act one carries Roles, Capabilities and On-the-record as children,
+          so the page has three numbered movements rather than eight chapters. */}
+      <About>
+        <Experience />
+        <Capabilities />
+        <Credentials />
+      </About>
+
       <Work />
-      <Capabilities />
-      <Credentials />
-      <Exploring />
+      <Direction />
       <Contact />
     </main>
   );

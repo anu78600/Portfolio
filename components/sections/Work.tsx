@@ -27,8 +27,8 @@ export function Work() {
     >
       <div className="container-page">
         <SectionHeading
-          index="03"
-          label="Selected work"
+          index="02"
+          label="What I have built"
           id="work-title"
           title="Two things I built."
           lede="One is live and you can open it right now. The other is finished and not deployed, which is stated rather than hidden."

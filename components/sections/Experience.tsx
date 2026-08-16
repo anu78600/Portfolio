@@ -2,7 +2,7 @@ import { experience } from "@/content/experience";
 import { real } from "@/lib/content";
 import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/ui/Reveal";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SubHeading } from "@/components/ui/SubHeading";
 import { TagRow } from "@/components/ui/Tag";
 
 /**
@@ -18,18 +18,11 @@ import { TagRow } from "@/components/ui/Tag";
  */
 export function Experience() {
   return (
-    <section
-      id="experience"
-      aria-labelledby="experience-title"
-      className="section-y border-t border-line"
-    >
-      <div className="container-page">
-        <SectionHeading
-          index="02"
-          label="Experience"
-          id="experience-title"
-          title="Inside an HR function."
-        />
+    <div className="mt-16">
+      <SubHeading
+        label="Roles"
+        lede="Reverse chronological. Two of the three are AI work."
+      />
 
         <ol className="flex flex-col gap-12">
           {experience.map((item, index) => {
@@ -96,8 +89,7 @@ export function Experience() {
               </Reveal>
             );
           })}
-        </ol>
-      </div>
-    </section>
+      </ol>
+    </div>
   );
 }

@@ -3,20 +3,28 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 /**
- * About.
+ * Act one — what I have done.
+ *
+ * Opens with the four numbered blocks, then carries Roles, Capabilities and
+ * On-the-record as children rather than as sibling sections, so the page keeps
+ * exactly three numbered movements instead of eight equal chapters.
  *
  * Four short, numbered movements — background, method, learning, direction —
  * instead of one autobiographical block. A recruiter reads the one they care
  * about and skips the rest, which is how this section is actually used.
  */
-export function About() {
+export function About({ children }: { children?: React.ReactNode }) {
   return (
-    <section id="about" aria-labelledby="about-title" className="section-y">
+    <section
+      id="record"
+      aria-labelledby="record-title"
+      className="section-y border-t border-line"
+    >
       <div className="container-page">
         <SectionHeading
           index="01"
-          label="About"
-          id="about-title"
+          label="What I have done"
+          id="record-title"
           title="Two disciplines, pointed at one question."
           lede="A computer applications degree and an MBA, aimed at the same problem: how organisations actually make decisions, and what changes when AI is in the loop."
         />
@@ -40,6 +48,7 @@ export function About() {
             </Reveal>
           ))}
         </div>
+        {children}
       </div>
     </section>
   );

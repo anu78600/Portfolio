@@ -17,16 +17,11 @@ export interface NavSection {
 }
 
 export const navSections: NavSection[] = [
-  { id: "about", label: "About", hint: "Background, approach and direction" },
-  { id: "experience", label: "Experience", hint: "Outlier AI, freelance, IFFCO" },
-  { id: "work", label: "Work", hint: "Shipped products, analysis and research" },
-  { id: "skills", label: "Skills", hint: "Capabilities by domain" },
+  { id: "record", label: "Done", hint: "Background, roles, capabilities, credentials" },
+  { id: "work", label: "Built", hint: "Quiet Compound and ReminderPro" },
+  { id: "direction", label: "Going", hint: "Where this is heading" },
   { id: "contact", label: "Contact", hint: "Email and LinkedIn" },
 ];
 
 /** Sections observed by the scroll spy, including ones not in the nav. */
-export const spySections: string[] = [
-  "top",
-  ...navSections.map((s) => s.id),
-  "credentials",
-];
+export const spySections: string[] = ["top", ...navSections.map((s) => s.id)];

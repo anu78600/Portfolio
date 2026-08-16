@@ -2,7 +2,7 @@ import { certifications, education } from "@/content/education";
 import { real } from "@/lib/content";
 import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/ui/Reveal";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SubHeading } from "@/components/ui/SubHeading";
 import { Tag } from "@/components/ui/Tag";
 
 /**
@@ -18,18 +18,11 @@ import { Tag } from "@/components/ui/Tag";
  */
 export function Credentials() {
   return (
-    <section
-      id="credentials"
-      aria-labelledby="credentials-title"
-      className="section-y border-t border-line bg-surface"
-    >
-      <div className="container-page">
-        <SectionHeading
-          index="05"
-          label="Education & certifications"
-          id="credentials-title"
-          title="What's on the record."
-        />
+    <div id="credentials" className="mt-20 scroll-mt-24">
+      <SubHeading
+        label="On the record"
+        lede="Degrees and certificates, with the standings that can be checked."
+      />
 
         <div className="grid grid-cols-1 gap-x-14 gap-y-14 lg:grid-cols-12">
           <div className="lg:col-span-7">
@@ -140,8 +133,7 @@ export function Credentials() {
               })}
             </ul>
           </div>
-        </div>
       </div>
-    </section>
+    </div>
   );
 }
