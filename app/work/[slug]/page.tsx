@@ -9,7 +9,6 @@ import { Icon } from "@/components/ui/Icon";
 import { PendingNote } from "@/components/ui/PendingNote";
 import { Reveal } from "@/components/ui/Reveal";
 import { Tag, TagRow } from "@/components/ui/Tag";
-import { AgenticFramework } from "@/components/work/AgenticFramework";
 import { ProjectPlate } from "@/components/work/ProjectPlate";
 
 export function generateStaticParams() {
@@ -144,16 +143,6 @@ export default async function CaseStudyPage({
             />
           </Reveal>
         </div>
-
-        {/* The research keeps its framing diagram — it moved here with the
-            homepage chapter, rather than being dropped. */}
-        {project.diagram === "agentic-framework" ? (
-          <div className="container-page pt-10">
-            <Reveal>
-              <AgenticFramework />
-            </Reveal>
-          </div>
-        ) : null}
 
         <div className="container-page py-14 sm:py-20">
           <div className="max-w-2xl">

@@ -4,24 +4,20 @@ import { LeadProject } from "@/components/work/LeadProject";
 import { FeaturedProjectCard, ProjectCard } from "@/components/work/ProjectCard";
 
 /**
- * Selected work.
+ * Selected work — two shipped products.
  *
- * Three tiers, and the tiering is the argument: one lead block for the shipped
- * product a visitor can open and use right now, two wide cards for the next
- * strongest pieces, and a grid for the academic body of work.
+ * The six academic projects were cut deliberately. They were theory, and none
+ * of them had a problem statement; a section where six of eight entries open
+ * with "this study asks" trains the reader to skim. Two things that exist beat
+ * eight things that were considered.
  *
- * A flat grid of eight equal cards pushes the ranking decision onto the
- * visitor, and they will not make it — they will scan two and leave. Stating an
- * opinion about which work matters most is this section's real job.
- *
- * There is deliberately no filter UI. The categories already sit on every card,
- * and a filter row costs a click and a decision to reveal work that is one
- * scroll away.
+ * The lead block and the wide card carry the ranking argument between them:
+ * one product gets a live link and a full treatment, the other gets a card and
+ * an honest note that it was never deployed.
  */
 export function Work() {
   const lead = projects.find((project) => project.weight === "flagship");
   const featured = projects.filter((project) => project.weight === "featured");
-  const standard = projects.filter((project) => project.weight === "standard");
 
   return (
     <section
@@ -34,8 +30,8 @@ export function Work() {
           index="03"
           label="Selected work"
           id="work-title"
-          title="Products I've shipped, and the research behind how I think."
-          lede="One of these is live and you can open it right now. Where a write-up is not finished, the case study says so instead of filling the gap."
+          title="Two things I built."
+          lede="One is live and you can open it right now. The other is finished and not deployed, which is stated rather than hidden."
         />
 
         {lead ? <LeadProject project={lead} /> : null}
@@ -51,11 +47,6 @@ export function Work() {
           ))}
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:mt-16 sm:grid-cols-2 lg:grid-cols-3">
-          {standard.map((project, index) => (
-            <ProjectCard key={project.slug} project={project} delay={index * 60} />
-          ))}
-        </div>
       </div>
     </section>
   );

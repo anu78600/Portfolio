@@ -33,7 +33,7 @@ read as premium.
 | Source of truth | `Anupam_Resume_Updated 1.1.pdf`, supplied 16 Aug 2026 |
 | Roles | AI Trainer @ Outlier AI (Jun 2026, remote) · Prompt Engineer, freelance (Jul 2025 – present, remote) · HR Trainee Intern @ IFFCO (Aug–Sep 2025, Uttar Pradesh) |
 | Shipped | **Quiet Compound** — live at quiet-compound.vercel.app · **ReminderPro** — built, no known deployment |
-| Research | MBA dissertation: agentic AI in global logistics, shipping sector. Findings NOT supplied. |
+| Research | MBA dissertation: agentic AI in global logistics, shipping sector. Findings NOT supplied. **Cut as a project 17 Aug**; survives only as an education note and one line in About. |
 | Certificates | Generative AI Foundations (Udemy, Aug 2025) · Stock Market Using AI (issuer unknown, Aug 2025) · Equity Stock Market (IIM Bangalore, Feb 2025) · GenAI-Powered Data Analytics (Tata/Forage) · Product Management (EA/Forage) |
 | No GitHub | Confirmed by him. Portfolio repo `github.com/anu78600/Portfolio` is his first. |
 
@@ -124,7 +124,7 @@ ships. Three real bugs were caught this way.
 | Decision | Why |
 |---|---|
 | Work leads with **shipped products**, research second | A live URL a recruiter opens in one click outranks an unpublished dissertation. His call, 16 Aug. |
-| All five academic projects kept | Useful for the consulting/graduate track. His call. |
+| **All six academic projects cut** (17 Aug) | Reverses the 16 Aug "keep all five". His call: they are theory-based and "do not add value". Correct — none had a problem statement, and a section where six of eight entries open with "this study asks" trains the reader to skim. Only Quiet Compound and ReminderPro remain. |
 | No GitHub link on site (until repo is public) | An empty profile linked from a portfolio is worse than no link. Revisit once `Portfolio` is pushed. |
 | No contact form | Needs a backend to be real; a form that silently fails loses the message and the trust. |
 | `/resume` as a route, not a homepage toggle | Shareable, linkable, printable, unambiguous. Renders from the same content files so they cannot drift. |

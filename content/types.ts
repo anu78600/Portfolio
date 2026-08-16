@@ -141,7 +141,7 @@ export interface Project {
   /** Methods, tools and frameworks actually used. */
   methods: string[];
   /** Drives layout: `featured` gets the wide card, `standard` the grid. */
-  weight: "flagship" | "featured" | "standard";
+  weight: "flagship" | "featured";
   /** Year or range. Placeholder-safe. */
   year: Todo | string;
   caseStudy: CaseStudySection[];
@@ -155,12 +155,6 @@ export interface Project {
   imageAlt?: string;
   /** Optional portrait-orientation shot, used on the case study page. */
   imageMobile?: string;
-  /**
-   * Optional diagram rendered on the case study page, below the plate.
-   * Keeps a bespoke visual attached to the project that needs it without
-   * every project carrying an empty slot.
-   */
-  diagram?: "agentic-framework";
   /** Optional external link, e.g. a published PDF. */
   externalUrl?: Todo | string;
   externalLabel?: string;
