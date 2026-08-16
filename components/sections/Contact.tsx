@@ -27,9 +27,8 @@ export function Contact() {
       aria-labelledby="contact-title"
       className="section-y border-t border-line"
     >
-      <div className="container-page">
+      <div className="container-counterfoil">
         <SectionHeading
-          index="07"
           label="Contact"
           id="contact-title"
           title="Let's connect."

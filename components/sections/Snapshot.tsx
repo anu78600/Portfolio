@@ -40,7 +40,7 @@ function cellClasses(index: number) {
 export function Snapshot() {
   return (
     <section aria-label="Professional snapshot" className="border-y border-line">
-      <div className="container-page">
+      <div className="container-counterfoil">
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
           {domains.map((domain, index) => (
             <Reveal

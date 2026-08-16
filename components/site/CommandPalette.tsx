@@ -43,7 +43,7 @@ export function CommandPalette({
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -227,7 +227,17 @@ export function CommandPalette({
     }
   };
 
-  let lastGroup = "";
+  // Grouped for rendering, but each item keeps its flat index so arrow-key
+  // navigation and aria-activedescendant continue to work off one sequence.
+  const grouped = results.reduce<{ group: string; items: { action: Action; index: number }[] }[]>(
+    (acc, action, index) => {
+      const last = acc[acc.length - 1];
+      if (last && last.group === action.group) last.items.push({ action, index });
+      else acc.push({ group: action.group, items: [{ action, index }] });
+      return acc;
+    },
+    [],
+  );
 
   return (
       <dialog
@@ -275,7 +285,13 @@ export function CommandPalette({
               </kbd>
             </div>
 
-            <ul
+            {/* A listbox, not a <ul>. An <li> is not a valid child of a
+                listbox, so wrapping each option in one made the browser
+                silently discard the "option" role on every command — an
+                accessibility-tree dump of the open palette returned zero
+                selectable options. Grouped with role="group" so the section
+                headings are announced rather than skipped. */}
+            <div
               ref={listRef}
               id="command-results"
               role="listbox"
@@ -283,52 +299,50 @@ export function CommandPalette({
               className="max-h-[min(24rem,50dvh)] overflow-y-auto p-2"
             >
               {results.length === 0 ? (
-                <li className="px-3 py-8 text-center text-[0.875rem] text-ink-3">
+                <p className="px-3 py-8 text-center text-ui text-ink-3">
                   No matches for “{query}”
-                </li>
+                </p>
               ) : (
-                results.map((action, index) => {
-                  const showGroup = action.group !== lastGroup;
-                  lastGroup = action.group;
-                  const active = index === cursor;
-
-                  return (
-                    <li key={action.id}>
-                      {showGroup ? (
-                        <p className="label-sc px-3 pt-3 pb-1.5 text-ink-3">
-                          {action.group}
-                        </p>
-                      ) : null}
-                      <button
-                        type="button"
-                        id={`command-${action.id}`}
-                        role="option"
-                        aria-selected={active}
-                        data-active={active}
-                        onMouseMove={() => setCursor(index)}
-                        onClick={() => runAction(action)}
-                        className={cn(
-                          "flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left",
-                          active ? "bg-surface text-ink" : "text-ink-2",
-                        )}
-                      >
-                        <Icon
-                          name={action.icon}
-                          size={16}
-                          className={cn("shrink-0", active ? "text-accent" : "text-ink-3")}
-                        />
-                        <span className="min-w-0 flex-1 truncate text-[0.9375rem]">
-                          {action.label}
-                        </span>
-                        <span className="hidden shrink-0 truncate text-[0.8125rem] text-ink-3 sm:block sm:max-w-[45%]">
-                          {action.hint}
-                        </span>
-                      </button>
-                    </li>
-                  );
-                })
+                grouped.map(({ group, items }) => (
+                  <div key={group} role="group" aria-label={group}>
+                    <p className="label-sc px-3 pt-3 pb-1.5 text-ink-3" aria-hidden="true">
+                      {group}
+                    </p>
+                    {items.map(({ action, index }) => {
+                      const active = index === cursor;
+                      return (
+                        <button
+                          key={action.id}
+                          type="button"
+                          id={`command-${action.id}`}
+                          role="option"
+                          aria-selected={active}
+                          data-active={active}
+                          onMouseMove={() => setCursor(index)}
+                          onClick={() => runAction(action)}
+                          className={cn(
+                            "flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left",
+                            active ? "bg-surface text-ink" : "text-ink-2",
+                          )}
+                        >
+                          <Icon
+                            name={action.icon}
+                            size={16}
+                            className={cn("shrink-0", active ? "text-accent" : "text-ink-3")}
+                          />
+                          <span className="min-w-0 flex-1 truncate text-ui">
+                            {action.label}
+                          </span>
+                          <span className="hidden shrink-0 truncate text-meta text-ink-3 sm:block sm:max-w-[45%]">
+                            {action.hint}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ))
               )}
-            </ul>
+            </div>
           </div>
         </div>
       </dialog>

@@ -20,8 +20,8 @@ export function SectionHeading({
   action,
   className,
 }: {
-  /** Editorial number, e.g. "02". */
-  index: string;
+  /** Editorial number, e.g. "02". Omit for anything that is not an act. */
+  index?: string;
   /** Small uppercase label, e.g. "Selected work". */
   label: string;
   /** The visible section heading. */
@@ -41,12 +41,14 @@ export function SectionHeading({
         {/* The folio hangs in the stub, outside the margin rule. It is the
             clearest statement of the whole grid: numbers live in the margin,
             prose lives in the column, and nothing crosses. */}
-        <span
-          aria-hidden="true"
-          className="stub-item label-sc top-1 pr-3 text-accent"
-        >
-          {index}
-        </span>
+        {index ? (
+          <span
+            aria-hidden="true"
+            className="stub-item label-sc top-1 pr-3 text-accent"
+          >
+            {index}
+          </span>
+        ) : null}
         <span className="label-sc text-ink-3">{label}</span>
         <span aria-hidden="true" className="rule-fade h-px flex-1" />
         {action ? <div className="hidden sm:block">{action}</div> : null}

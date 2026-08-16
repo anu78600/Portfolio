@@ -39,7 +39,10 @@
      ever depends on seeing it, it must use --border-strong instead. */
   --border: oklch(0.88 0.013 84);
   --border-hover: oklch(0.845 0.013 84);
-  --border-strong: oklch(0.615 0.016 80);
+  /* 0.615 measured 2.90:1 against --surface-sunken, below the 3:1 floor this
+     token is contractually held to. --border and --accent-line are exempt;
+     this one is not. */
+  --border-strong: oklch(0.58 0.016 80);
 
   --text-primary: oklch(0.245 0.02 62);
   --text-secondary: oklch(0.415 0.018 62);
@@ -279,7 +282,8 @@
        literal fingerprint of an Inter-based starter. `optimizeLegibility` is
        no-op-to-harmful here. Greyscale smoothing is applied only to light-on-
        dark, where it belongs; blanket antialiasing thins dark-on-light text. */
-    font-feature-settings: "ss01";
+    /* No font-feature-settings. Source Serif 4 ships no stylistic set, and
+       declaring one would be the same error as the `cv11` this replaced. */
   }
 
   /* Headings inherit tight tracking; body copy stays neutral */
@@ -408,14 +412,31 @@
   }
 }
 
+/* Symmetric gutters. For routes with no stub content — the résumé, the 404 —
+   where reserving the margin would only make the page look misaligned. */
 @utility container-page {
   width: 100%;
   max-width: var(--page-max);
   margin-inline: auto;
   padding-inline: var(--page-gutter);
-  /* Prose sits inside the margin rule. Metadata is pulled back out into the
-     stub with `stub-item`, which is the only thing allowed to cross. */
-  padding-inline-start: calc(var(--page-gutter) + var(--stub) + var(--stub-gap));
+}
+
+/* Reserves the stub, so prose sits inside the margin rule.
+   Only from 40rem. Below that the stub cost 86 of 390 horizontal pixels and
+   dropped the measure to 25 characters per line, to carry four two-digit
+   numbers — a newspaper column on the one platform that matters here. The
+   folio moves inline instead; see `stub-item`. */
+@utility container-counterfoil {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+
+  @media (width >= 40rem) {
+    padding-inline-start: calc(
+      var(--page-gutter) + var(--stub) + var(--stub-gap)
+    );
+  }
 }
 
 /* THE MARGIN RULE.
@@ -429,6 +450,15 @@
    the stub carry the information, and they sit at --ink-3. */
 @utility counterfoil {
   position: relative;
+
+  /* No rule below 40rem: with no stub there is nothing hanging off it, and
+     "a rule only earns its place when content hangs off it" is the whole
+     argument for having one. */
+  @media (width < 40rem) {
+    &::before {
+      display: none;
+    }
+  }
 
   &::before {
     content: "";
@@ -449,14 +479,19 @@
    to the left of the margin rule. Right-aligned so folios and years form a
    clean edge against the rule rather than a ragged one. */
 @utility stub-item {
-  position: absolute;
-  /* Pull back out of the prose column and across the gutter, so the element
-     lands in the stub. `left: 0` would resolve against the nearest positioned
-     ancestor — which is inside the column — and put it on top of the text. */
-  left: calc(-1 * (var(--stub) + var(--stub-gap)));
-  width: var(--stub);
-  text-align: right;
+  /* Inline below 40rem, where there is no stub to hang in. */
+  position: static;
   pointer-events: none;
+
+  @media (width >= 40rem) {
+    position: absolute;
+    /* Pull back out of the prose column and across the gutter so the element
+       lands in the stub. `left: 0` would resolve against the nearest
+       positioned ancestor — inside the column — and land on the text. */
+    left: calc(-1 * (var(--stub) + var(--stub-gap)));
+    width: var(--stub);
+    text-align: right;
+  }
 }
 
 /* The label layer — real small caps, not letterspaced uppercase.
@@ -475,7 +510,11 @@
   font-weight: 600;
   font-variant-caps: all-small-caps;
   font-variant-numeric: tabular-nums lining-nums slashed-zero;
-  font-feature-settings: "opsz" 9;
+  /* `opsz` is a variation axis, not a feature tag. Written as a feature it
+     does nothing, and with automatic optical sizing on, the labels would
+     render at ~14 — the opposite of the intent. Set the axis properly. */
+  font-variation-settings: "opsz" 9;
+  font-optical-sizing: none;
 }
 
 /* Stamped metadata: folios, dates, the live URL. */
@@ -881,7 +920,8 @@ html {
     --text-primary: #000000;
     --text-secondary: #27272a;
     --text-muted: #52525b;
-    --accent: #1e1b4b;
+    --accent: #5a1f15;
+    --accent-line: #d4d4d8;
     --accent-soft: #ffffff;
     --rail: transparent;
     --shadow-subtle: none;
@@ -907,6 +947,26 @@ html {
   .text-gradient-accent {
     background-image: none !important;
     color: var(--accent) !important;
+  }
+
+  /* The plate sets its own tokens, so the page-level reset above does not
+     reach inside it. Printers drop background colours by default, so without
+     this the entire Quiet Compound block prints as a white hole — measured
+     1.16:1. It is the section about the only product actually shipped. */
+  .folio-product {
+    --bg: #fff;
+    --surface: #fff;
+    --surface-elevated: #fff;
+    --surface-sunken: #fff;
+    --text-primary: #000;
+    --text-secondary: #27272a;
+    --text-muted: #52525b;
+    --accent: #5a1f15;
+    --border: #d4d4d8;
+    color: #000 !important;
+    background: none !important;
+    box-shadow: none !important;
+    border-color: #a1a1aa !important;
   }
 
   a[data-print-url]::after {

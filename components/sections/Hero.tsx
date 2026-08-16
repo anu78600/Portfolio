@@ -44,7 +44,7 @@ export function Hero() {
       aria-labelledby="hero-name"
       className="relative pt-14 pb-16 sm:pt-20 sm:pb-24 lg:pt-28 lg:pb-32"
     >
-      <div className="container-page">
+      <div className="container-counterfoil">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
             <Reveal immediate className="flex items-center gap-2.5">
@@ -93,7 +93,10 @@ export function Hero() {
               immediate
               className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center"
             >
-              <div className="grid grid-cols-2 gap-3 xs:flex xs:flex-wrap xs:items-center">
+              {/* Stacked full-width below 480px. Forcing two columns gave each button
+                  ~102px for a 137px un-wrappable label, so a third of the primary
+                  call to action printed paper-on-paper and was invisible. */}
+              <div className="flex flex-col items-stretch gap-3 xs:flex-row xs:flex-wrap xs:items-center">
                 <ButtonLink href="#work" icon="arrow-down" iconPosition="trailing">
                   View selected work
                 </ButtonLink>

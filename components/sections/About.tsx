@@ -20,7 +20,7 @@ export function About({ children }: { children?: React.ReactNode }) {
       aria-labelledby="record-title"
       className="section-y border-t border-line"
     >
-      <div className="container-page">
+      <div className="container-counterfoil">
         <SectionHeading
           index="01"
           label="What I have done"

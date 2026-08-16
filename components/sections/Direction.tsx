@@ -21,7 +21,7 @@ export function Direction() {
       aria-labelledby="direction-title"
       className="section-y border-t border-line"
     >
-      <div className="container-page">
+      <div className="container-counterfoil">
         <SectionHeading
           index="03"
           label="Where I'm going"

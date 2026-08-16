@@ -27,9 +27,9 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#191714",
+          background: "#f8f5f0",
           padding: "72px 80px",
-          color: "#f5f3ef",
+          color: "#281e17",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
@@ -41,8 +41,8 @@ export default function OpengraphImage() {
               width: 46,
               height: 46,
               borderRadius: 8,
-              border: "1px solid #4a443a",
-              color: "#d8b346",
+              border: "1px solid #8a847a",
+              color: "#892f20",
               fontSize: 16,
               fontWeight: 600,
             }}
@@ -54,7 +54,7 @@ export default function OpengraphImage() {
               fontSize: 19,
               letterSpacing: "0.16em",
               textTransform: "uppercase",
-              color: "#d8b346",
+              color: "#892f20",
             }}
           >
             {profile.eyebrow}
@@ -78,7 +78,7 @@ export default function OpengraphImage() {
               fontSize: 34,
               lineHeight: 1.35,
               letterSpacing: "-0.02em",
-              color: "#bdb8ae",
+              color: "#534a42",
               maxWidth: 900,
             }}
           >
@@ -92,15 +92,15 @@ export default function OpengraphImage() {
             alignItems: "center",
             gap: 16,
             paddingTop: 28,
-            borderTop: "1px solid #363029",
+            borderTop: "1px solid #dbd7ce",
             fontSize: 21,
-            color: "#948d82",
+            color: "#675f57",
           }}
         >
           MBA — HR &amp; International Business
-          <span style={{ color: "#4a443a" }}>·</span>
+          <span style={{ color: "#dbd7ce" }}>·</span>
           BCA
-          <span style={{ color: "#4a443a" }}>·</span>
+          <span style={{ color: "#dbd7ce" }}>·</span>
           Agentic AI research
         </div>
       </div>

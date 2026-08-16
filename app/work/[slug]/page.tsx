@@ -69,7 +69,7 @@ export default async function CaseStudyPage({
   return (
     <main id="main" className="counterfoil">
       <article>
-        <header className="container-page pt-10 pb-12 sm:pt-14">
+        <header className="container-counterfoil pt-10 pb-12 sm:pt-14">
           <Link
             href="/#work"
             className="group inline-flex items-center gap-2 text-[0.875rem] text-ink-3 transition-colors hover:text-ink"
@@ -130,7 +130,7 @@ export default async function CaseStudyPage({
           </div>
         </header>
 
-        <div className="container-page">
+        <div className="container-counterfoil">
           <Reveal className="relative aspect-[2/1] overflow-hidden rounded-lg border border-line sm:aspect-[21/9]">
             <ProjectPlate
               kind={project.kind}
@@ -144,7 +144,7 @@ export default async function CaseStudyPage({
           </Reveal>
         </div>
 
-        <div className="container-page py-14 sm:py-20">
+        <div className="container-counterfoil py-14 sm:py-20">
           <div className="max-w-2xl">
             {project.caseStudy.map((section, sectionIndex) => (
               <Section
@@ -159,7 +159,7 @@ export default async function CaseStudyPage({
 
       <nav
         aria-label="More work"
-        className="container-page border-t border-line py-10"
+        className="container-counterfoil border-t border-line py-10"
       >
         <Link
           href={`/work/${next.slug}`}
