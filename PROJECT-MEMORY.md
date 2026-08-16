@@ -218,6 +218,15 @@ and IntersectionObserver, which is where that comes back.
 
 ---
 
+## 4d. Standing instruction — commit AND publish
+
+**His instruction, 17 Aug 2026: commit and push after every set of changes.**
+This is durable authorisation for pushing to `github.com/anu78600/Portfolio`
+(public). Do not ask again each time; just verify the build first.
+
+Order every time: typecheck -> build -> verify (overflow probe, contrast against
+compiled CSS where colour changed) -> commit -> push. Never push a red build.
+
 ## 5. Hard-won gotchas
 
 - **`pkill` does not work in this environment.** Stale `next start` processes
