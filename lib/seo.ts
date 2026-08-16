@@ -1,0 +1,86 @@
+import { profile } from "@/content/profile";
+import { certifications, education } from "@/content/education";
+import { real, realOr } from "@/lib/content";
+
+export const siteName = realOr(profile.name, "Personal site");
+
+export const siteDescription =
+  "MBA in Human Resource Management and International Business, working at the " +
+  "intersection of AI, analytics and strategy. Research on agentic AI in global " +
+  "logistics, with special reference to the shipping sector.";
+
+export const siteUrl = profile.siteUrl.replace(/\/$/, "");
+
+/**
+ * JSON-LD.
+ *
+ * Only fields backed by supplied information are emitted — a placeholder never
+ * becomes structured data. Publishing `sameAs: "[ADD LINKEDIN URL]"` would put
+ * a fabricated claim into a machine-readable format, which is exactly where a
+ * wrong fact does the most damage.
+ */
+export function buildJsonLd() {
+  const name = real(profile.name);
+  const email = real(profile.email);
+  const location = real(profile.location);
+
+  const sameAs = profile.socials
+    .filter((social) => social.key !== "email")
+    .map((social) => real(social.href))
+    .filter((href): href is string => Boolean(href));
+
+  const person: Record<string, unknown> = {
+    "@type": "Person",
+    "@id": `${siteUrl}/#person`,
+    jobTitle: profile.jobTitle,
+    description: siteDescription,
+    knowsAbout: [
+      "Generative AI",
+      "Agentic AI",
+      "Data analytics",
+      "Financial statement analysis",
+      "Human resource management",
+      "International business",
+      "Digital transformation",
+    ],
+    alumniOf: education.map((item) => ({
+      "@type": "EducationalOrganization",
+      name: item.institution,
+    })),
+    hasCredential: certifications.map((cert) => ({
+      "@type": "EducationalOccupationalCredential",
+      name: cert.name,
+      credentialCategory: "certificate",
+      recognizedBy: { "@type": "Organization", name: cert.issuer },
+    })),
+  };
+
+  if (name) person.name = name;
+  if (email) person.email = email;
+  if (location) person.address = { "@type": "PostalAddress", addressLocality: location };
+  if (sameAs.length) person.sameAs = sameAs;
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      person,
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        url: siteUrl,
+        name: siteName,
+        description: siteDescription,
+        inLanguage: "en",
+        publisher: { "@id": `${siteUrl}/#person` },
+      },
+      {
+        "@type": "ProfilePage",
+        "@id": `${siteUrl}/#profilepage`,
+        url: siteUrl,
+        name: `${siteName} — ${profile.jobTitle}`,
+        about: { "@id": `${siteUrl}/#person` },
+        isPartOf: { "@id": `${siteUrl}/#website` },
+      },
+    ],
+  };
+}

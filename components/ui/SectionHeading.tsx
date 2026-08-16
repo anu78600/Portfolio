@@ -1,0 +1,57 @@
+import type { ReactNode } from "react";
+import { cn } from "@/lib/cn";
+import { Reveal } from "./Reveal";
+
+/**
+ * The section header used by every section on the page.
+ *
+ * Editorial numbering + a small mono label + a hairline that runs to the edge
+ * of the content column. Repeating this exact structure is what gives the page
+ * its vertical rhythm — the sections read as chapters of one document rather
+ * than as a stack of unrelated cards.
+ */
+export function SectionHeading({
+  index,
+  label,
+  title,
+  lede,
+  id,
+  align = "start",
+  action,
+  className,
+}: {
+  /** Editorial number, e.g. "02". */
+  index: string;
+  /** Small uppercase label, e.g. "Selected work". */
+  label: string;
+  /** The visible section heading. */
+  title: ReactNode;
+  /** Optional single paragraph beneath the heading. */
+  lede?: string;
+  /** Id for the <h2>, used by aria-labelledby on the section. */
+  id?: string;
+  align?: "start" | "wide";
+  /** Optional control rendered opposite the label on wide screens. */
+  action?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <header className={cn("mb-10 sm:mb-14", className)}>
+      <Reveal className="flex items-center gap-4">
+        <span className="label-mono text-accent">{index}</span>
+        <span className="label-mono text-ink-3">{label}</span>
+        <span aria-hidden="true" className="rule-fade h-px flex-1" />
+        {action ? <div className="hidden sm:block">{action}</div> : null}
+      </Reveal>
+
+      <Reveal delay={60} className={cn("mt-6", align === "start" && "max-w-3xl")}>
+        <h2 id={id} className="text-heading font-medium text-ink">
+          {title}
+        </h2>
+        {lede ? (
+          <p className="mt-4 max-w-2xl text-lede text-ink-2">{lede}</p>
+        ) : null}
+      </Reveal>
+    </header>
+  );
+}

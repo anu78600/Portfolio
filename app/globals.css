@@ -1,0 +1,683 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DESIGN TOKENS
+
+   Two deliberately designed themes — not one theme inverted. The dark palette
+   sits on a deep charcoal with a faint cool cast (never pure black, which
+   crushes shadow detail and raises perceived contrast to an uncomfortable
+   level). The light palette is editorial: near-white paper, ink-dark text,
+   hairline rules.
+
+   Every colour is authored in OKLCH so that lightness steps are perceptually
+   even across both themes and the accent keeps the same chroma as it moves.
+   Text pairings were checked against WCAG 2.2 AA (4.5:1 body, 3:1 large/UI).
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+
+  /* Surfaces. The ground is dropped so pure-white cards read as raised sheets.
+     Previously --surface-elevated (#fff) sat on --bg at 1.018:1 with no resting
+     shadow — i.e. every card was white on almost-white, which is the default
+     Bootstrap card and exactly what a recruiter sees opening this at midday. */
+  --bg: oklch(0.978 0.004 262);
+  --surface: oklch(0.955 0.005 262);
+  --surface-elevated: oklch(1 0 0);
+  --surface-sunken: oklch(0.94 0.006 262);
+  --surface-overlay: oklch(1 0 0);
+
+  /* Lines. `--border` is the decorative hairline; `--border-hover` is the
+     interactive rung, so a card hover is a lift rather than a flash;
+     `--border-strong` outlines real controls and is held at ≥3:1. */
+  --border: oklch(0.885 0.006 262);
+  --border-hover: oklch(0.84 0.008 262);
+  --border-strong: oklch(0.62 0.012 262);
+
+  --text-primary: oklch(0.215 0.012 262);
+  --text-secondary: oklch(0.385 0.013 262);
+  --text-muted: oklch(0.465 0.014 262);
+
+  /* Accent — one colour, used sparingly */
+  --accent: oklch(0.465 0.19 268);
+  --accent-hover: oklch(0.395 0.185 268);
+  --accent-contrast: oklch(0.995 0 0);
+  --accent-soft: oklch(0.945 0.032 268);
+  --accent-line: oklch(0.78 0.09 268);
+
+  --focus: oklch(0.465 0.19 268);
+
+  /* Layered, low-alpha, negative spread — the wide blur is pulled back under
+     the element instead of blooming sideways into a grey halo. */
+  --shadow-subtle:
+    0 1px 1px oklch(0.2 0.02 262 / 0.04),
+    0 2px 4px -2px oklch(0.2 0.02 262 / 0.06);
+  --shadow-elevated:
+    0 1px 1px oklch(0.2 0.02 262 / 0.04),
+    0 4px 8px -4px oklch(0.2 0.02 262 / 0.08),
+    0 16px 24px -8px oklch(0.2 0.02 262 / 0.06);
+
+  --header-bg: oklch(0.978 0.004 262 / 0.72);
+  --rail: oklch(0.885 0.006 262 / 0.9);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Lightness ladder: 0.175 / 0.205 / 0.240 / 0.275 / 0.310 / 0.345 / 0.400 /
+     0.550 — deltas of 0.030–0.035 through the dark region, matching the step
+     size Radix holds there.
+
+     Chroma RISES with lightness (0.004 → 0.016). Perceived saturation is
+     roughly C/L, so the previous flat chroma made the darkest and largest
+     field the most visibly tinted thing on the page — which is what produced
+     the blue-black cast. */
+  --surface-sunken: oklch(0.175 0.004 265);
+  --bg: oklch(0.205 0.005 265);
+  --surface: oklch(0.24 0.007 265);
+  --surface-elevated: oklch(0.275 0.009 265);
+  --surface-overlay: oklch(0.31 0.01 265);
+
+  --border: oklch(0.345 0.012 265);
+  --border-hover: oklch(0.4 0.014 265);
+  --border-strong: oklch(0.55 0.016 265);
+
+  --text-primary: oklch(0.965 0.004 265);
+  --text-secondary: oklch(0.8 0.01 265);
+  --text-muted: oklch(0.67 0.013 265);
+
+  /* All five sit inside the sRGB ceiling at hue 268, so the family is
+     hue-stable and identical on sRGB and P3 panels. Previously --focus was
+     authored 67% over the ceiling and silently clipped to oklch(0.802 0.100
+     261) — the hue drifted 268 → 261 across the ramp. Hover now INTENSIFIES
+     (darker, more chroma): above L 0.70 this hue has no chroma headroom left,
+     so a lighter hover necessarily desaturated. */
+  --accent: oklch(0.73 0.13 268);
+  --accent-hover: oklch(0.685 0.155 268);
+  --accent-contrast: oklch(0.16 0.02 265);
+  --accent-soft: oklch(0.305 0.055 268);
+  --accent-line: oklch(0.48 0.09 268);
+
+  --focus: oklch(0.76 0.115 268);
+
+  /* Elevation in dark is a luminance step first, then a 1px top inset
+     highlight simulating a light source above the page, then the hairline,
+     and only last a soft cast shadow. The inset must be zero-blur and
+     zero-spread — add blur and it becomes a smudge instead of a bevel. */
+  --shadow-subtle:
+    inset 0 1px 0 0 oklch(1 0 0 / 0.04),
+    0 1px 2px oklch(0 0 0 / 0.18);
+  --shadow-elevated:
+    inset 0 1px 0 0 oklch(1 0 0 / 0.06),
+    0 2px 6px -2px oklch(0 0 0 / 0.28),
+    0 12px 32px -12px oklch(0 0 0 / 0.45);
+
+  --header-bg: oklch(0.205 0.005 265 / 0.72);
+  --rail: oklch(0.345 0.012 265 / 0.9);
+}
+
+@theme inline {
+  /* Colours */
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-elevated: var(--surface-elevated);
+  --color-sunken: var(--surface-sunken);
+  --color-line: var(--border);
+  --color-line-hover: var(--border-hover);
+  --color-line-strong: var(--border-strong);
+  --color-overlay: var(--surface-overlay);
+  --color-ink: var(--text-primary);
+  --color-ink-2: var(--text-secondary);
+  --color-ink-3: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-line: var(--accent-line);
+
+  /* Type families */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo,
+    monospace;
+
+  /* Type scale — fluid, and every step anchored to the SAME two widths: 390px
+     (the modal phone) and 1248px (--page-max, where the measure stops growing,
+     so it is the only principled place for type to stop growing).
+
+     Previously the five steps hit their ceilings at 1000 / 1090 / 1091 / 1106 /
+     1200px, so between 1090 and 1200 the display was frozen while the title was
+     still growing and the hero's two lines visibly converged as the window
+     widened. Shared endpoints make every ratio monotonic in viewport width. */
+
+  --text-display: clamp(2.5rem, 1.364rem + 4.66vw, 5rem); /* 40 → 80 */
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.035em;
+
+  --text-title: clamp(2rem, 1.432rem + 2.33vw, 3.25rem); /* 32 → 52 */
+  --text-title--line-height: 1.06;
+  --text-title--letter-spacing: -0.03em;
+
+  --text-heading: clamp(1.625rem, 1.341rem + 1.17vw, 2.25rem); /* 26 → 36 */
+  --text-heading--line-height: 1.12;
+  --text-heading--letter-spacing: -0.025em;
+
+  /* The 1.727 gap between heading and subheading was the widest in the system
+     and sat exactly where a project-card title belongs — which is why the lead
+     and featured cards both reached up to `heading` and ended up rendering at
+     the identical 38px as the section h2 directly above them. */
+  --text-heading-sm: clamp(1.375rem, 1.204rem + 0.7vw, 1.75rem); /* 22 → 28 */
+  --text-heading-sm--line-height: 1.18;
+  --text-heading-sm--letter-spacing: -0.022em;
+
+  --text-subheading: clamp(1.25rem, 1.136rem + 0.47vw, 1.5rem); /* 20 → 24 */
+  --text-subheading--line-height: 1.25;
+  --text-subheading--letter-spacing: -0.018em;
+
+  --text-lede: clamp(1.0625rem, 0.977rem + 0.35vw, 1.25rem); /* 17 → 20 */
+  --text-lede--line-height: 1.6;
+  --text-lede--letter-spacing: -0.008em;
+
+  /* The band where ~90% of the page's words live. Previously undeclared, which
+     is what produced 57 bracketed text-[…] values across 18 files. Two axes:
+     body/body-sm are prose, ui is interface, meta/micro are metadata. */
+  --text-body: 1rem;
+  --text-body--line-height: 1.62;
+  --text-body--letter-spacing: -0.003em;
+
+  --text-body-sm: 0.9375rem;
+  --text-body-sm--line-height: 1.55;
+
+  --text-ui: 0.875rem;
+  --text-ui--line-height: 1.45;
+
+  --text-meta: 0.8125rem;
+  --text-meta--line-height: 1.45;
+
+  --text-micro: 0.75rem;
+  --text-micro--line-height: 1.4;
+
+  /* Mono label. 11px → 12px: it appears ~40 times, and at 11px against an 80px
+     hero name it reads as "a caption I didn't have a size for". Tracking
+     0.13em → 0.085em, because 0.13 is a proportional-caps value and a
+     monospaced face already carries a uniform wide advance — uppercase mono at
+     0.13em is a third widening applied to a face that needed none. */
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.3333;
+  --text-label--letter-spacing: 0.085em;
+
+  /* Radii — restrained. Nothing on this site is a pill except a status dot. */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* Elevation */
+  --shadow-subtle: var(--shadow-subtle);
+  --shadow-elevated: var(--shadow-elevated);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Dark variant, driven by the resolved data-theme attribute rather than the
+   media query — the inline script in the document head resolves system
+   preference to an explicit attribute before first paint, so this is always
+   accurate and never flashes. */
+/* Below Tailwind's smallest default breakpoint. The design is specified down
+   to 320px, where `sm` (640px) is far too coarse to switch a two-up row. */
+@theme {
+  --breakpoint-xs: 30rem;
+}
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BASE
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    /* Anchor targets clear the sticky header */
+    scroll-padding-top: 6rem;
+    /* Reserve the scrollbar gutter permanently. Without it, locking body
+       scroll to open the menu or the palette removes the scrollbar and shifts
+       the whole page sideways behind the overlay. */
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    /* `cv11` was Inter's single-storey-a variant; Geist has no cv axes at all,
+       so the site was declaring a feature its typeface does not ship — the
+       literal fingerprint of an Inter-based starter. `optimizeLegibility` is
+       no-op-to-harmful here. Greyscale smoothing is applied only to light-on-
+       dark, where it belongs; blanket antialiasing thins dark-on-light text. */
+    font-feature-settings: "ss01";
+  }
+
+  /* Headings inherit tight tracking; body copy stays neutral */
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  [data-theme="dark"] body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-contrast);
+  }
+
+  /* A single, strong, visible focus treatment everywhere. Outlines are never
+     removed — only replaced with something more legible. */
+  /* One strong focus treatment everywhere. Outlines are never removed, only
+     replaced with something more legible. No border-radius is set here — the
+     outline already follows each element's own corner radius, and forcing one
+     would square off the corners of rounded cards while they are focused. */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  /* Non-keyboard focus stays quiet */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Scrollbar — subtle, themed, never a design feature */
+  @supports selector(::-webkit-scrollbar) {
+    ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-strong);
+      border-radius: 999px;
+      border: 3px solid var(--bg);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+  }
+
+  /* Theme transition. Applied only while the toggle is switching so that
+     ordinary hover states are not dragged through a 300ms colour tween. */
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition: background-color 260ms var(--ease-out),
+      border-color 260ms var(--ease-out), color 260ms var(--ease-out),
+      fill 260ms var(--ease-out) !important;
+    transition-delay: 0s !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   LAYOUT PRIMITIVES
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Page geometry, hoisted to tokens so the container and the rails cannot
+   drift apart again. Plain :root rather than @theme, because the gutter
+   changes at breakpoints. */
+:root {
+  --page-max: 78rem; /* 1248px */
+  --page-gutter: 1.25rem;
+  --rail-inset: 0.5rem; /* air between the rail and the first character */
+}
+@media (width >= 40rem) {
+  :root {
+    --page-gutter: 2rem;
+  }
+}
+@media (width >= 64rem) {
+  :root {
+    --page-gutter: 3rem;
+  }
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+/* The vertical hairlines that mark the content column and run the height of
+   the page. This is the single structural motif that holds otherwise separate
+   sections together — it is why the site does not read as a stack of cards.
+
+   The rails were previously pinned to the VIEWPORT while .container-page is
+   max-width + margin-inline:auto, so above 1248px the column centred and the
+   rails did not follow: ~90px outside the text at 1440px, ~330px at 1920px.
+   Meanwhile every other vertical mark on the page — the section-heading rules,
+   the Snapshot cell dividers — is column-aligned, so the page ran two
+   competing grids. The max() clamps below 1248px so nothing jumps at the
+   crossover, and --rail-inset keeps the hairline off the first character. */
+@utility page-rails {
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    width: 1px;
+    background: var(--rail);
+    pointer-events: none;
+    z-index: 0;
+  }
+  &::before {
+    left: calc(
+      max(0px, (100% - var(--page-max)) / 2) + var(--page-gutter) -
+        var(--rail-inset)
+    );
+  }
+  &::after {
+    right: calc(
+      max(0px, (100% - var(--page-max)) / 2) + var(--page-gutter) -
+        var(--rail-inset)
+    );
+  }
+}
+
+/* Small uppercase mono label used for section numbers, metadata and eyebrows */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  letter-spacing: var(--text-label--letter-spacing);
+  text-transform: uppercase;
+  font-weight: 500;
+  font-variant-numeric: slashed-zero;
+}
+
+/* Vertical rhythm for major sections */
+@utility section-y {
+  padding-block: clamp(4rem, 2rem + 7vw, 8rem);
+}
+
+/* Hairline rule that fades at the ends — softer than a hard border */
+@utility rule-fade {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--border) 12%,
+    var(--border) 88%,
+    transparent
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MOTION
+
+   One reveal primitive, used everywhere. Elements start slightly translated and
+   transparent, and are released by an IntersectionObserver adding
+   [data-revealed]. If JS never runs, the fallback in the no-js block below
+   makes everything visible — content is never dependent on script.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@layer components {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 620ms var(--ease-out), transform 620ms var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+    /* No `will-change` here on purpose. The homepage renders ~55 [data-reveal]
+       nodes, so hinting them all would ask the compositor for ~55 layers at
+       load — on a page whose whole argument is what happens on a mid-range
+       Android. Opacity and transform are already compositor-driven. */
+  }
+
+  [data-reveal][data-revealed] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Underline that grows from the left on hover — used for text links */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    transition: background-size 320ms var(--ease-out);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DIALOGS
+
+   The mobile menu and the command palette both use the native <dialog> element
+   so that focus trapping, Escape-to-close and background inertness come from
+   the platform rather than from hand-written key handlers.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@layer base {
+  dialog {
+    max-width: none;
+    max-height: none;
+    color: inherit;
+    background: transparent;
+  }
+
+  dialog::backdrop {
+    /* Animated below; declared here so it exists before the animation runs. */
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+dialog.mobile-menu[open] {
+  animation: menu-in 220ms var(--ease-out);
+}
+dialog.mobile-menu[open]::backdrop,
+dialog.command-palette[open]::backdrop {
+  animation: fade-in 200ms var(--ease-out);
+}
+dialog.command-palette[open] [data-palette-panel] {
+  animation: panel-in 220ms var(--ease-out);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   REDUCED MOTION
+   Everything decorative is removed; nothing becomes unreachable.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   GRAIN
+
+   Two jobs: it dithers away the 8-bit banding that a several-thousand-square-
+   pixel flat dark field produces on cheaper panels, and it is the only organic
+   irregularity on an otherwise mathematically perfect page — the cheapest
+   available signal that a surface is a material rather than a fill.
+
+   `feColorMatrix saturate 0` matters: raw feTurbulence is full-colour RGB
+   noise, which would scatter coloured speckle across a one-accent page.
+   Native <dialog> renders in the top layer, so the palette and mobile menu are
+   unaffected by this z-index.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+:root:not([data-theme="dark"]) body::after {
+  opacity: 0.014;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  body::after {
+    display: none;
+  }
+}
+
+/* JS-off fallback: reveal everything immediately. */
+.no-js [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PRINT
+
+   Printing the site produces a clean document: navigation, controls, decorative
+   rails and reveal animations are all removed, colours flatten to ink on paper,
+   and link destinations are printed inline so a paper copy stays useful.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@media print {
+  @page {
+    margin: 14mm 12mm;
+  }
+
+  :root,
+  [data-theme="dark"] {
+    color-scheme: light;
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-elevated: #ffffff;
+    --surface-sunken: #ffffff;
+    --border: #d4d4d8;
+    --border-hover: #d4d4d8;
+    --border-strong: #a1a1aa;
+    --surface-overlay: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #27272a;
+    --text-muted: #52525b;
+    --accent: #1e1b4b;
+    --accent-soft: #ffffff;
+    --rail: transparent;
+    --shadow-subtle: none;
+    --shadow-elevated: none;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  body::after {
+    display: none !important;
+  }
+
+  [data-print="hide"],
+  header[data-site-header],
+  nav[data-site-nav],
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  a[data-print-url]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.75em;
+    color: #52525b;
+    word-break: break-all;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  section {
+    break-inside: avoid-page;
+    padding-block: 0.75rem !important;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid-page;
+  }
+}

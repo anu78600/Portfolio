@@ -1,0 +1,14 @@
+# Normalise line endings in the repository to LF regardless of the platform
+# the commit was made on. Without this, a Windows checkout stores CRLF and every
+# clone on macOS or Linux — or any CI runner — shows the whole tree as modified.
+* text=auto eol=lf
+
+# Binary assets: never touch these.
+*.woff2 binary
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.webp   binary
+*.avif   binary
+*.pdf    binary
+*.ico    binary
