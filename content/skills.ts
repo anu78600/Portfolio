@@ -15,6 +15,7 @@ import type { SkillGroup } from "./types";
 export const skillGroups: SkillGroup[] = [
   {
     id: "ai",
+    icon: "sparkles",
     title: "AI & Emerging Technology",
     description:
       "Where most of my attention goes — used seriously enough to know where these systems break.",
@@ -33,6 +34,7 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     id: "business",
+    icon: "briefcase",
     title: "Business & Management",
     description:
       "The MBA core — dual specialisation in Human Resource Management and International Business.",
@@ -47,6 +49,7 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     id: "finance",
+    icon: "trending-up",
     title: "Finance & Analytics",
     description:
       "Reading a business through its numbers, and a market through its price behaviour.",
@@ -63,6 +66,7 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     id: "building",
+    icon: "layers",
     title: "Building & Communication",
     description:
       "Analysis is only worth what someone can act on — so what gets shipped matters as much as the work behind it.",

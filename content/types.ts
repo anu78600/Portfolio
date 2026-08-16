@@ -38,6 +38,12 @@ export interface Profile {
   eyebrow: string;
   /** The single sentence that positions the person. Kept under ~120 chars. */
   headline: string;
+  /**
+   * Exact substring of `headline` to render with the accent gradient. Must
+   * appear in `headline` verbatim, or nothing is highlighted and the sentence
+   * still renders correctly.
+   */
+  headlineAccent?: string;
   /** Two to three lines of supporting hero copy. */
   intro: string[];
   /** Used for the résumé header and the JSON-LD `jobTitle`. */
@@ -163,6 +169,8 @@ export interface Project {
 export interface SkillGroup {
   id: string;
   title: string;
+  /** Icon name from components/ui/Icon — one glyph per capability domain. */
+  icon: "sparkles" | "briefcase" | "trending-up" | "layers";
   /** Why this cluster exists — one sentence, not a slogan. */
   description: string;
   items: { name: string; note?: string }[];
@@ -194,6 +202,8 @@ export interface Certification {
 }
 
 export interface LearningItem {
+  /** Icon name from components/ui/Icon. */
+  icon: "sparkles" | "trending-up" | "compass" | "layers";
   topic: string;
   /** What the topic is being pointed at — the "→" half. */
   applicationTo: string;

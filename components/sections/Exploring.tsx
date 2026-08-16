@@ -36,11 +36,13 @@ export function Exploring() {
               delay={index * 60}
               className="border-t border-line pt-5"
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2.5">
                 <span
                   aria-hidden="true"
-                  className="h-1.5 w-1.5 rounded-full bg-accent"
-                />
+                  className="grid h-8 w-8 shrink-0 place-items-center rounded-md border border-line bg-surface text-accent"
+                >
+                  <Icon name={item.icon} size={15} />
+                </span>
                 <span className="label-mono text-ink-3">In progress</span>
               </span>
 

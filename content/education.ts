@@ -77,24 +77,28 @@ export const certifications: Certification[] = [
  */
 export const learning: LearningItem[] = [
   {
+    icon: "sparkles",
     topic: "Agentic AI",
     applicationTo: "Business automation",
     detail:
       "Moving from systems that answer to systems that plan and act — and working out which business decisions can survive that.",
   },
   {
+    icon: "compass",
     topic: "Applied data analytics",
     applicationTo: "Decision intelligence",
     detail:
       "Getting from a dataset to a decision without losing the assumptions along the way.",
   },
   {
+    icon: "trending-up",
     topic: "Financial markets",
     applicationTo: "Systematic analysis",
     detail:
       "Building rule-based views of equities rather than discretionary ones — currently through TradingView and Pine Script.",
   },
   {
+    icon: "layers",
     topic: "Shipping products",
     applicationTo: "AI-assisted development",
     detail:

@@ -6,6 +6,16 @@ import { useEffect, useRef, useState } from "react";
 export const HEADER_OFFSET = 72;
 
 /**
+ * Must match `scroll-padding-top` in globals.css (6rem).
+ *
+ * The scroll-spy line has to sit at or below where an anchored section
+ * actually comes to rest. With the line above that point, clicking a nav link
+ * scrolls the target to 96px, the line is still at 80px, and the *previous*
+ * section stays highlighted — the nav contradicts the page you are looking at.
+ */
+export const SCROLL_PADDING = 96;
+
+/**
  * Tracks which section is currently under the header, plus how far down the
  * document the reader is.
  *
@@ -39,7 +49,7 @@ export function useScrollState(sectionIds: string[]) {
       // the line under the header is the one being read. Every present section
       // is measured (no early break) so `lastPresent` is genuinely the final
       // one on the page and not just where a break happened to land.
-      const line = scrollY + HEADER_OFFSET + 8;
+      const line = scrollY + SCROLL_PADDING + 4;
       let current = "";
       let lastPresent = "";
 

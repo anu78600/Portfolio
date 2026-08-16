@@ -18,6 +18,9 @@ export const profile: Profile = {
   // (decide), international business and logistics (move).
   headline:
     "Applying AI and analytics to the way organisations hire, decide and move.",
+  // The three verbs are the whole positioning — HR, finance/strategy,
+  // international business. They get the one gradient on the site.
+  headlineAccent: "hire, decide and move",
 
   intro: [
     "MBA in Human Resource Management and International Business, built on a computer applications degree.",

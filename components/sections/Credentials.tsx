@@ -33,7 +33,10 @@ export function Credentials() {
 
         <div className="grid grid-cols-1 gap-x-14 gap-y-14 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <h3 className="label-mono text-ink-3">Education</h3>
+            <h3 className="label-mono flex items-center gap-2 text-ink-3">
+              <Icon name="graduation-cap" size={15} className="text-accent" />
+              Education
+            </h3>
             <ol className="mt-5">
               {education.map((item, index) => {
                 const period = real(item.period);
@@ -75,7 +78,10 @@ export function Credentials() {
           </div>
 
           <div className="lg:col-span-5">
-            <h3 className="label-mono text-ink-3">Certifications</h3>
+            <h3 className="label-mono flex items-center gap-2 text-ink-3">
+              <Icon name="award" size={15} className="text-accent" />
+              Certifications
+            </h3>
             <ul className="mt-5 border-t border-line">
               {certifications.map((cert, index) => {
                 const url = real(cert.credentialUrl);

@@ -17,103 +17,99 @@
 :root {
   color-scheme: light;
 
-  /* Surfaces. The ground is dropped so pure-white cards read as raised sheets.
-     Previously --surface-elevated (#fff) sat on --bg at 1.018:1 with no resting
-     shadow — i.e. every card was white on almost-white, which is the default
-     Bootstrap card and exactly what a recruiter sees opening this at midday. */
-  --bg: oklch(0.978 0.004 262);
-  --surface: oklch(0.955 0.005 262);
+  /* Warm paper, not cool white. A gold accent on a blue-white ground fights
+     itself; on warm paper it sits. Hue 85 matches the ground of the product
+     this palette is derived from. */
+  --bg: oklch(0.976 0.005 85);
+  --surface: oklch(0.945 0.008 85);
   --surface-elevated: oklch(1 0 0);
-  --surface-sunken: oklch(0.94 0.006 262);
+  --surface-sunken: oklch(0.92 0.01 85);
   --surface-overlay: oklch(1 0 0);
 
-  /* Lines. `--border` is the decorative hairline; `--border-hover` is the
-     interactive rung, so a card hover is a lift rather than a flash;
-     `--border-strong` outlines real controls and is held at ≥3:1. */
-  --border: oklch(0.885 0.006 262);
-  --border-hover: oklch(0.84 0.008 262);
-  --border-strong: oklch(0.62 0.012 262);
+  --border: oklch(0.888 0.009 85);
+  --border-hover: oklch(0.84 0.011 85);
+  --border-strong: oklch(0.62 0.014 85);
 
-  --text-primary: oklch(0.215 0.012 262);
-  --text-secondary: oklch(0.385 0.013 262);
-  --text-muted: oklch(0.465 0.014 262);
+  --text-primary: oklch(0.215 0.012 80);
+  --text-secondary: oklch(0.385 0.013 82);
+  --text-muted: oklch(0.465 0.014 84);
 
-  /* Accent — one colour, used sparingly */
-  --accent: oklch(0.465 0.19 268);
-  --accent-hover: oklch(0.395 0.185 268);
+  /* Deep bronze — the same hue family as the dark theme's gold, taken down
+     until it passes 4.5:1 as body-size link text. Bright gold on near-white
+     is roughly 3:1 and fails outright, which is the single trap in porting a
+     warm accent across themes. */
+  --accent: oklch(0.53 0.105 90);
+  --accent-hover: oklch(0.455 0.09 90);
   --accent-contrast: oklch(0.995 0 0);
-  --accent-soft: oklch(0.945 0.032 268);
-  --accent-line: oklch(0.78 0.09 268);
+  --accent-soft: oklch(0.968 0.03 92);
+  --accent-line: oklch(0.8 0.09 90);
 
-  --focus: oklch(0.465 0.19 268);
+  --focus: oklch(0.53 0.105 90);
 
-  /* Layered, low-alpha, negative spread — the wide blur is pulled back under
-     the element instead of blooming sideways into a grey halo. */
   --shadow-subtle:
-    0 1px 1px oklch(0.2 0.02 262 / 0.04),
-    0 2px 4px -2px oklch(0.2 0.02 262 / 0.06);
+    0 1px 1px oklch(0.2 0.02 85 / 0.05),
+    0 2px 4px -2px oklch(0.2 0.02 85 / 0.07);
   --shadow-elevated:
-    0 1px 1px oklch(0.2 0.02 262 / 0.04),
-    0 4px 8px -4px oklch(0.2 0.02 262 / 0.08),
-    0 16px 24px -8px oklch(0.2 0.02 262 / 0.06);
+    0 1px 1px oklch(0.2 0.02 85 / 0.04),
+    0 4px 8px -4px oklch(0.2 0.02 85 / 0.08),
+    0 16px 24px -8px oklch(0.2 0.02 85 / 0.06);
 
-  --header-bg: oklch(0.978 0.004 262 / 0.72);
-  --rail: oklch(0.885 0.006 262 / 0.9);
+  --header-bg: oklch(0.976 0.005 85 / 0.72);
+  --rail: oklch(0.888 0.009 85 / 0.9);
+
+  /* Ambient glow. One radial, from above, at 5% — the product's exact value. */
+  --glow: oklch(0.73 0.138 90 / 0.05);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
 
-  /* Lightness ladder: 0.175 / 0.205 / 0.240 / 0.275 / 0.310 / 0.345 / 0.400 /
-     0.550 — deltas of 0.030–0.035 through the dark region, matching the step
-     size Radix holds there.
+  /* Warm charcoal. The source product uses a blue-tinted slate (chroma .042 at
+     hue 265), but blue ground under a gold accent is a complementary pairing
+     that turns garish, and a high-chroma darkest field is what reads as a
+     dated blue-black cast. Hue 75 at very low chroma keeps the ground neutral
+     to the eye while letting the gold sit warm on top of it.
 
-     Chroma RISES with lightness (0.004 → 0.016). Perceived saturation is
-     roughly C/L, so the previous flat chroma made the darkest and largest
-     field the most visibly tinted thing on the page — which is what produced
-     the blue-black cast. */
-  --surface-sunken: oklch(0.175 0.004 265);
-  --bg: oklch(0.205 0.005 265);
-  --surface: oklch(0.24 0.007 265);
-  --surface-elevated: oklch(0.275 0.009 265);
-  --surface-overlay: oklch(0.31 0.01 265);
+     Ladder 0.175 / 0.205 / 0.240 / 0.275, chroma rising with lightness. */
+  --surface-sunken: oklch(0.175 0.005 75);
+  --bg: oklch(0.205 0.006 75);
+  --surface: oklch(0.24 0.008 75);
+  --surface-elevated: oklch(0.275 0.01 75);
+  --surface-overlay: oklch(0.31 0.011 75);
 
-  --border: oklch(0.345 0.012 265);
-  --border-hover: oklch(0.4 0.014 265);
-  --border-strong: oklch(0.55 0.016 265);
+  --border: oklch(0.345 0.012 78);
+  --border-hover: oklch(0.4 0.014 78);
+  --border-strong: oklch(0.55 0.016 80);
 
-  --text-primary: oklch(0.965 0.004 265);
-  --text-secondary: oklch(0.8 0.01 265);
-  --text-muted: oklch(0.67 0.013 265);
+  --text-primary: oklch(0.965 0.004 85);
+  --text-secondary: oklch(0.8 0.008 85);
+  --text-muted: oklch(0.67 0.01 85);
 
-  /* All five sit inside the sRGB ceiling at hue 268, so the family is
-     hue-stable and identical on sRGB and P3 panels. Previously --focus was
-     authored 67% over the ceiling and silently clipped to oklch(0.802 0.100
-     261) — the hue drifted 268 → 261 across the ramp. Hover now INTENSIFIES
-     (darker, more chroma): above L 0.70 this hue has no chroma headroom left,
-     so a lighter hover necessarily desaturated. */
-  --accent: oklch(0.73 0.13 268);
-  --accent-hover: oklch(0.685 0.155 268);
-  --accent-contrast: oklch(0.16 0.02 265);
-  --accent-soft: oklch(0.305 0.055 268);
-  --accent-line: oklch(0.48 0.09 268);
+  /* Antique brass, matched to the live product: --accent lands on #d8b346
+     against its #D9B540, and --accent-hover on #eacc65 against its #E8CD66.
+     All five sit inside the sRGB gamut at hue 90, so the accent is identical
+     on sRGB and P3 panels. Hover goes lighter here rather than more saturated
+     — unlike a blue, this hue still has chroma headroom above L 0.78. */
+  --accent: oklch(0.78 0.132 90);
+  --accent-hover: oklch(0.85 0.127 93);
+  --accent-contrast: oklch(0.19 0.02 80);
+  --accent-soft: oklch(0.3 0.05 90);
+  --accent-line: oklch(0.5 0.09 90);
 
-  --focus: oklch(0.76 0.115 268);
+  --focus: oklch(0.82 0.13 90);
 
-  /* Elevation in dark is a luminance step first, then a 1px top inset
-     highlight simulating a light source above the page, then the hairline,
-     and only last a soft cast shadow. The inset must be zero-blur and
-     zero-spread — add blur and it becomes a smudge instead of a bevel. */
   --shadow-subtle:
-    inset 0 1px 0 0 oklch(1 0 0 / 0.04),
-    0 1px 2px oklch(0 0 0 / 0.18);
+    inset 0 1px 0 0 oklch(1 0 0 / 0.045),
+    0 1px 2px oklch(0 0 0 / 0.2);
   --shadow-elevated:
-    inset 0 1px 0 0 oklch(1 0 0 / 0.06),
-    0 2px 6px -2px oklch(0 0 0 / 0.28),
-    0 12px 32px -12px oklch(0 0 0 / 0.45);
+    inset 0 1px 0 0 oklch(1 0 0 / 0.065),
+    0 2px 6px -2px oklch(0 0 0 / 0.3),
+    0 12px 32px -12px oklch(0 0 0 / 0.48);
 
-  --header-bg: oklch(0.205 0.005 265 / 0.72);
-  --rail: oklch(0.345 0.012 265 / 0.9);
+  --header-bg: oklch(0.205 0.006 75 / 0.72);
+  --rail: oklch(0.345 0.012 78 / 0.9);
+
+  --glow: oklch(0.73 0.138 90 / 0.06);
 }
 
 @theme inline {
@@ -207,10 +203,10 @@
   --text-label--letter-spacing: 0.085em;
 
   /* Radii — restrained. Nothing on this site is a pill except a status dot. */
-  --radius-sm: 4px;
+  --radius-sm: 6px;
   --radius-md: 8px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
 
   /* Elevation */
   --shadow-subtle: var(--shadow-subtle);
@@ -254,8 +250,30 @@
     scrollbar-gutter: stable;
   }
 
-  body {
+  html {
     background-color: var(--bg);
+  }
+
+  /* Ambient glow — one gold radial from above the fold, at 5-6% opacity.
+     Ported at the source product's exact geometry. It is fixed so it stays a
+     property of the viewport rather than stretching over a 10,000px document,
+     and sits at z-index -1 so it paints above the root background and below
+     all content without needing a stacking context on anything else. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at 50% -10%,
+      var(--glow),
+      transparent 55%
+    );
+  }
+
+  body {
+    background-color: transparent;
     color: var(--text-primary);
     font-family: var(--font-sans);
     font-synthesis-weight: none;
@@ -414,6 +432,46 @@
   text-transform: uppercase;
   font-weight: 500;
   font-variant-numeric: slashed-zero;
+}
+
+/* Gradient keyword.
+   Used on exactly one phrase in the hero — the three verbs the whole
+   positioning turns on. Both gradient stops are accent-family colours that
+   already pass AA on the page ground, so every point along the ramp is
+   readable; a gradient that runs into an unreadable colour halfway is the
+   usual way this effect breaks.
+
+   The three fallbacks below matter more than the effect itself. Without them
+   the text renders fully transparent — invisible — wherever background-clip is
+   unsupported, in Windows High Contrast mode, and on paper. */
+@utility text-gradient-accent {
+  background-image: linear-gradient(
+    100deg,
+    var(--accent) 0%,
+    var(--accent-hover) 52%,
+    var(--accent) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* background-clip:text crops descenders without a little breathing room */
+  padding-bottom: 0.06em;
+}
+
+@supports not ((background-clip: text) or (-webkit-background-clip: text)) {
+  .text-gradient-accent {
+    background-image: none;
+    color: var(--accent);
+  }
+}
+
+/* Windows High Contrast: transparent text disappears entirely. */
+@media (forced-colors: active) {
+  .text-gradient-accent {
+    forced-color-adjust: none;
+    background-image: none;
+    color: CanvasText;
+  }
 }
 
 /* Vertical rhythm for major sections */
@@ -604,6 +662,16 @@ body::after {
   transform: none;
 }
 
+/* Résumé density.
+   Compact collapses elaboration only — profile paragraphs and project
+   descriptions. Roles, dates, responsibilities, grades and credentials stay on
+   the page in both modes, because those are what a résumé is judged on and
+   hiding them behind a control would be the failure mode of an "interactive
+   résumé". Print honours whichever mode is selected. */
+[data-resume-density="compact"] [data-compact-hide] {
+  display: none;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    PRINT
 
@@ -643,6 +711,7 @@ body::after {
     background: #fff !important;
   }
 
+  body::before,
   body::after {
     display: none !important;
   }
@@ -657,6 +726,11 @@ body::after {
   [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .text-gradient-accent {
+    background-image: none !important;
+    color: var(--accent) !important;
   }
 
   a[data-print-url]::after {

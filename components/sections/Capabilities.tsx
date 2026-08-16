@@ -1,4 +1,5 @@
 import { skillGroups } from "@/content/skills";
+import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
@@ -33,10 +34,18 @@ export function Capabilities() {
               delay={index * 70}
               className="border-t border-line pt-6"
             >
-              <h3 className="text-subheading font-medium text-ink">
-                {group.title}
-              </h3>
-              <p className="mt-2.5 max-w-md text-[0.9375rem] leading-relaxed text-ink-2">
+              <div className="flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-line bg-surface text-accent"
+                >
+                  <Icon name={group.icon} size={17} />
+                </span>
+                <h3 className="text-subheading font-medium text-ink">
+                  {group.title}
+                </h3>
+              </div>
+              <p className="mt-3.5 max-w-md text-[0.9375rem] leading-relaxed text-ink-2">
                 {group.description}
               </p>
 

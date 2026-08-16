@@ -1,5 +1,6 @@
 import { experience } from "@/content/experience";
 import { real } from "@/lib/content";
+import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TagRow } from "@/components/ui/Tag";
@@ -43,14 +44,29 @@ export function Experience() {
                 className="grid grid-cols-1 gap-6 border-t border-line pt-8 lg:grid-cols-12 lg:gap-10"
               >
                 <div className="lg:col-span-4">
-                  <h3 className="text-subheading font-medium text-ink">
-                    {item.organisation}
-                  </h3>
-                  <p className="label-mono mt-2 text-ink-3">
+                  {/* Editorial numbering: the roles read as a sequence rather
+                      than as three unrelated blocks, and the badge gives the
+                      left column a fixed optical start. */}
+                  <div className="flex items-center gap-3">
+                    <span
+                      aria-hidden="true"
+                      className="label-mono grid h-8 w-8 shrink-0 place-items-center rounded-md border border-line bg-surface text-accent"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className="text-subheading font-medium text-ink">
+                      {item.organisation}
+                    </h3>
+                  </div>
+
+                  <p className="label-mono mt-3.5 text-ink-3">
                     {period ?? "Dates to be added"}
                   </p>
                   {location ? (
-                    <p className="mt-1 text-[0.8125rem] text-ink-3">{location}</p>
+                    <p className="mt-1.5 flex items-center gap-1.5 text-[0.8125rem] text-ink-3">
+                      <Icon name="map-pin" size={13} className="shrink-0" />
+                      {location}
+                    </p>
                   ) : null}
                 </div>
 

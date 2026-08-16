@@ -27,7 +27,17 @@ export type IconName =
   | "copy"
   | "check"
   | "download"
-  | "file-text";
+  | "file-text"
+  | "sparkles"
+  | "briefcase"
+  | "trending-up"
+  | "layers"
+  | "award"
+  | "graduation-cap"
+  | "compass"
+  | "map-pin"
+  | "minus"
+  | "plus";
 
 const paths: Record<IconName, React.ReactNode> = {
   // Brand marks are filled shapes; drawn to the same optical weight as the
@@ -85,6 +95,53 @@ const paths: Record<IconName, React.ReactNode> = {
       <path d="M13.5 3.5V9H19M8.5 13.5h7M8.5 17h4.5" />
     </>
   ),
+
+  // Domain glyphs — one per capability group, plus credential and place marks.
+  sparkles: (
+    <>
+      <path d="m12 3.5 1.7 4.3 4.3 1.7-4.3 1.7L12 15.5l-1.7-4.3L6 9.5l4.3-1.7L12 3.5Z" />
+      <path d="m18 15.5.85 2.15L21 18.5l-2.15.85L18 21.5l-.85-2.15L15 18.5l2.15-.85L18 15.5Z" />
+    </>
+  ),
+  briefcase: (
+    <>
+      <rect x="3" y="7.5" width="18" height="12.5" rx="2" />
+      <path d="M8.75 7.5V6a2 2 0 0 1 2-2h2.5a2 2 0 0 1 2 2v1.5M3 12.75h18" />
+    </>
+  ),
+  "trending-up": <path d="m3.5 16.5 5.5-5.5 3.5 3.5 8-8m0 0h-5.5m5.5 0V12" />,
+  layers: (
+    <>
+      <path d="m12 3.5 8.5 4.5-8.5 4.5L3.5 8 12 3.5Z" />
+      <path d="m3.5 13.5 8.5 4.5 8.5-4.5" />
+    </>
+  ),
+  award: (
+    <>
+      <circle cx="12" cy="9" r="5.5" />
+      <path d="m8.6 13.4-1.6 6.6 5-2.6 5 2.6-1.6-6.6" />
+    </>
+  ),
+  "graduation-cap": (
+    <>
+      <path d="M12 4 2.5 9 12 14l9.5-5L12 4Z" />
+      <path d="M6.75 11.4V16c0 1.7 2.35 3 5.25 3s5.25-1.3 5.25-3v-4.6" />
+    </>
+  ),
+  compass: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z" />
+    </>
+  ),
+  "map-pin": (
+    <>
+      <path d="M12 21s6.5-5.4 6.5-10.5a6.5 6.5 0 1 0-13 0C5.5 15.6 12 21 12 21Z" />
+      <circle cx="12" cy="10.5" r="2.5" />
+    </>
+  ),
+  minus: <path d="M5 12h14" />,
+  plus: <path d="M12 5v14M5 12h14" />,
 };
 
 interface IconProps extends Omit<SVGProps<SVGSVGElement>, "name"> {

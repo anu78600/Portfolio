@@ -93,38 +93,57 @@ fallbacks plus `lab()` at build time, so support is universal.
 
 Two themes designed separately, not inverted:
 
-- **Dark** — `#161719`. Deep charcoal, never black: black crushes shadow detail
-  and pushes text contrast to a level that's tiring to read for long. Chroma
-  *rises* with lightness (0.004 → 0.016) rather than staying flat — perceived
-  saturation is roughly C/L, so flat chroma makes the darkest and largest field
-  the most visibly tinted thing on the page, which is what produces the dated
-  blue-black cast.
-- **Light** — `#f6f8fa`. The ground is deliberately dropped off pure white so
-  that white cards read as raised sheets. At `#fcfdfe` the elevated surface sat
-  on the background at 1.018:1 — every card was white on white with a hairline
-  outline, which is the default Bootstrap card.
+- **Dark** — `#191714`. Warm charcoal, never black. Chroma *rises* with
+  lightness (0.005 → 0.016) rather than staying flat — perceived saturation is
+  roughly C/L, so flat chroma makes the darkest and largest field the most
+  visibly tinted thing on the page.
+- **Light** — `#f9f7f3`. Warm paper. The ground is deliberately off pure white
+  so white cards read as raised sheets, and warm rather than cool because a gold
+  accent on a blue-white ground fights itself.
 
-One accent: a periwinkle indigo (`#2e49c1` light, `#83a4ff` dark). It appears on
-links, the active nav underline, section numbers, primary buttons and exactly one
-element in each project plate. Nothing else.
+**The accent is derived from Quiet Compound**, the owner's live product, so the
+two sites read as one brand. Its real in-use golds were measured from the
+running site via CDP computed styles — `#D9B540` text and `#C9A227` fill in
+dark, `#8C6D16` fill in light. (The widely-quoted `#FBA71B` is only the
+`theme-color` meta tag and appears nowhere on screen.)
 
-Contrast was verified against the *compiled* output, not the source:
+The derived ramp lands almost exactly on those values: `#d8b346` dark accent,
+`#eacc65` dark hover. Light mode cannot use the product's `#B08A1C` link gold —
+it measures 3.10:1 on a warm ground and fails AA for body text, which is a real
+bug in the source. Light instead uses `#83680b`, effectively the product's own
+darker button gold, at 5.08:1.
+
+Contrast was solved rather than eyeballed: `scratchpad/gold.py` converts OKLCH →
+linear sRGB, checks the chroma ceiling at each lightness, and binary-searches
+the lightness that hits a target ratio. Every value below is inside the sRGB
+gamut at hue 90, so the accent is identical on sRGB and P3 panels.
 
 | Pair | Light | Dark |
 |---|---|---|
-| Body text on background | 16.4:1 | 16.2:1 |
-| Secondary text on background | 9.2:1 | 9.6:1 |
-| Muted text on background | 6.5:1 | 6.0:1 |
-| Muted text on elevated surface | 6.9:1 | 4.9:1 |
-| Accent on background | 7.0:1 | 7.4:1 |
-| Text on accent fill | 7.3:1 | 8.0:1 |
-| Control borders (`--border-strong`) | 3.4:1 | 3.7:1 |
-| Focus ring on background | 7.0:1 | 8.3:1 |
+| Body text on background | 16.8:1 | 16.1:1 |
+| Secondary text on background | 9.4:1 | 9.5:1 |
+| Muted text on background | 6.7:1 | 6.0:1 |
+| Muted text on elevated surface | 7.0:1 | 4.9:1 |
+| Accent on background | 5.1:1 | 8.9:1 |
+| Accent on elevated surface | 5.3:1 | 7.4:1 |
+| Accent on accent-soft (tags) | 4.8:1 | 6.8:1 |
+| Text on accent fill | 5.2:1 | 9.2:1 |
+| Focus ring on background | 5.1:1 | 10.2:1 |
+| Control borders (`--border-strong`) | 3.5:1 | 3.7:1 |
 
-All five accent-family tokens sit inside the sRGB gamut at hue 268. Three of
-them previously did not — `--focus` was authored 67% over the chroma ceiling
-and was silently clipped, which dragged the hue from 268 to 261 and made the
-accent render as a different colour on P3 panels than on sRGB.
+**Ambient glow.** One gold radial from above the fold, at 5–6% opacity —
+the product's exact geometry, `circle at 50% -10% … transparent 55%`. It is
+fixed to the viewport rather than the document, so it does not stretch over a
+10,000px page, and sits at `z-index: -1` above the root background and below all
+content. The grain layer (`body::after`) is the same `feTurbulence` technique
+the product uses, arrived at independently.
+
+**What was deliberately not taken from the product:** its blue-tinted slate
+ground (chroma 0.042 at hue 265). Blue ground under a gold accent is a
+complementary pairing that turns garish, and a high-chroma darkest field is the
+main cause of a dated blue-black cast. The eyebrow dot was ported to the hero
+only — the section headings already carry an accent number, a mono label and a
+hairline rule, and a dot there would be a fourth competing mark on one line.
 
 `--border` is the decorative hairline and carries no contrast requirement;
 `--border-strong` outlines actual controls and is held at ≥3:1 for WCAG 2.2
