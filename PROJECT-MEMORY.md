@@ -253,11 +253,17 @@ compiled CSS, not from reasoning about intent.
 
 ## 5. Hard-won gotchas
 
-- **`pkill` does not work in this environment.** Stale `next start` processes
-  keep serving old build manifests and you will screenshot a stale page and draw
-  false conclusions. Kill via PowerShell `Get-CimInstance Win32_Process … |
-  Stop-Process -Force`, then confirm the served CSS filename matches the one on
-  disk before trusting any screenshot.
+- **`pkill` DOES NOT WORK HERE. Use `scripts/serve.ps1`.** This has now bitten
+  twice. When `pkill` silently fails you get two Next servers; the stale one
+  keeps port 3000 and serves an old file manifest, so **the stylesheet 404s and
+  the browser renders raw unstyled HTML** — default bullets, no layout, skill
+  names running into their notes. It looks exactly like the site is broken. It
+  is not. Symptom to recognise instantly: the page's own CSS URL returns HTTP
+  404 with a 9-byte body.
+
+  `scripts/serve.ps1` kills every next process, asserts none survived, builds,
+  starts one server, and then **fetches the page's own stylesheet and fails if
+  it is not 200**. Always use it. Never hand-roll the restart again.
 - **Headless Chrome `--window-size` is not mobile emulation.** It clips instead
   of reflowing, which looks exactly like a horizontal-overflow bug. Use CDP
   `Emulation.setDeviceMetricsOverride`. `scratchpad/shoot.mjs` does this and also
