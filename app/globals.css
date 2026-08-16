@@ -17,101 +17,109 @@
 :root {
   color-scheme: light;
 
-  /* Warm paper, not cool white. A gold accent on a blue-white ground fights
-     itself; on warm paper it sits. Hue 85 matches the ground of the product
-     this palette is derived from. */
-  --bg: oklch(0.976 0.005 85);
-  --surface: oklch(0.945 0.008 85);
-  --surface-elevated: oklch(1 0 0);
-  --surface-sunken: oklch(0.92 0.01 85);
-  --surface-overlay: oklch(1 0 0);
+  /* COUNTERFOIL — laid paper, iron-gall ink, hand red.
+     Light is the design; dark is the derived variant. Three inks with sources
+     you can name: black is what was printed, red is what a person added by
+     hand, brass is what the product looks like and resolves ONLY inside the
+     product's own block (.folio-product). */
 
-  --border: oklch(0.888 0.009 85);
-  --border-hover: oklch(0.84 0.011 85);
-  --border-strong: oklch(0.62 0.014 85);
+  --bg: oklch(0.972 0.008 84);
+  --surface: oklch(0.945 0.012 84);
+  --surface-elevated: oklch(0.988 0.006 84);
+  --surface-sunken: oklch(0.918 0.014 84);
+  --surface-overlay: oklch(0.988 0.006 84);
 
-  --text-primary: oklch(0.215 0.012 80);
-  --text-secondary: oklch(0.385 0.013 82);
-  --text-muted: oklch(0.465 0.014 84);
+  /* Rules. `--border` is decorative BY CONTRACT: if anything informational
+     ever depends on seeing it, it must use --border-strong instead. */
+  --border: oklch(0.88 0.013 84);
+  --border-hover: oklch(0.845 0.013 84);
+  --border-strong: oklch(0.615 0.016 80);
 
-  /* Deep bronze — the same hue family as the dark theme's gold, taken down
-     until it passes 4.5:1 as body-size link text. Bright gold on near-white
-     is roughly 3:1 and fails outright, which is the single trap in porting a
-     warm accent across themes. */
-  --accent: oklch(0.53 0.105 90);
-  --accent-hover: oklch(0.455 0.09 90);
-  --accent-contrast: oklch(0.995 0 0);
-  --accent-soft: oklch(0.968 0.03 92);
-  --accent-line: oklch(0.8 0.09 90);
+  --text-primary: oklch(0.245 0.02 62);
+  --text-secondary: oklch(0.415 0.018 62);
+  --text-muted: oklch(0.49 0.016 64);
 
-  --focus: oklch(0.53 0.105 90);
+  /* The hand. Red is a hairline, a link, a ring, a stamp border and one
+     handwritten phrase. Never a fill, never beside a number, never next to
+     green. Ceiling is roughly 3% of painted pixels. */
+  --accent: oklch(0.435 0.125 32);
+  --accent-hover: oklch(0.375 0.115 30);
+  --accent-contrast: oklch(0.972 0.008 84);
+  --accent-soft: oklch(0.955 0.02 33);
+  --accent-line: oklch(0.74 0.1 33);
+
+  --focus: oklch(0.435 0.125 32);
+
+  /* Brass. Scoped to the product plate; see .folio-product below. */
+  --brass: oklch(0.8 0.132 92);
+  --brass-mark: oklch(0.64 0.115 90);
+  --plate-ground: oklch(0.2 0.018 80);
+  --plate-ink: oklch(0.95 0.008 90);
+  --plate-ink-2: oklch(0.8 0.012 90);
 
   --shadow-subtle:
-    0 1px 1px oklch(0.2 0.02 85 / 0.05),
-    0 2px 4px -2px oklch(0.2 0.02 85 / 0.07);
+    0 1px 1px oklch(0.25 0.02 62 / 0.05),
+    0 2px 4px -2px oklch(0.25 0.02 62 / 0.07);
   --shadow-elevated:
-    0 1px 1px oklch(0.2 0.02 85 / 0.04),
-    0 4px 8px -4px oklch(0.2 0.02 85 / 0.08),
-    0 16px 24px -8px oklch(0.2 0.02 85 / 0.06);
+    0 1px 1px oklch(0.25 0.02 62 / 0.04),
+    0 4px 8px -4px oklch(0.25 0.02 62 / 0.07),
+    0 16px 24px -8px oklch(0.25 0.02 62 / 0.05);
 
-  --header-bg: oklch(0.976 0.005 85 / 0.72);
-  --rail: oklch(0.888 0.009 85 / 0.9);
-
-  /* Ambient glow. One radial, from above, at 5% — the product's exact value. */
-  --glow: oklch(0.73 0.138 90 / 0.05);
+  --header-bg: oklch(0.972 0.008 84 / 0.78);
+  --rail: oklch(0.88 0.013 84 / 0.9);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
 
-  /* Warm charcoal. The source product uses a blue-tinted slate (chroma .042 at
-     hue 265), but blue ground under a gold accent is a complementary pairing
-     that turns garish, and a high-chroma darkest field is what reads as a
-     dated blue-black cast. Hue 75 at very low chroma keeps the ground neutral
-     to the eye while letting the gold sit warm on top of it.
+  /* Warm ink, hue 72 — not a cool petrol ground. Cool near-black plus any
+     metallic is the trading-terminal signature, and this site is read by HR
+     and consulting recruiters, not traders.
 
-     Ladder 0.175 / 0.205 / 0.240 / 0.275, chroma rising with lightness. */
-  --surface-sunken: oklch(0.175 0.005 75);
-  --bg: oklch(0.205 0.006 75);
-  --surface: oklch(0.24 0.008 75);
-  --surface-elevated: oklch(0.275 0.01 75);
-  --surface-overlay: oklch(0.31 0.011 75);
+     Light-on-dark body text sits at L >= 0.77 throughout. Dark mode needs
+     roughly 55% more lightness separation than light for the same perceived
+     contrast, and WCAG 2 does not know that. */
 
-  --border: oklch(0.345 0.012 78);
-  --border-hover: oklch(0.4 0.014 78);
-  --border-strong: oklch(0.55 0.016 80);
+  --surface-sunken: oklch(0.162 0.009 72);
+  --bg: oklch(0.198 0.01 72);
+  --surface: oklch(0.238 0.012 72);
+  --surface-elevated: oklch(0.272 0.013 72);
+  --surface-overlay: oklch(0.31 0.014 72);
 
-  --text-primary: oklch(0.965 0.004 85);
-  --text-secondary: oklch(0.8 0.008 85);
-  /* 0.67 measured 4.40:1 against --surface-overlay, where the command palette
-     puts muted text — a real AA failure. Raised until it clears. */
-  --text-muted: oklch(0.69 0.01 85);
+  --border: oklch(0.348 0.014 74);
+  --border-hover: oklch(0.4 0.015 74);
+  --border-strong: oklch(0.56 0.017 76);
 
-  /* Antique brass, matched to the live product: --accent lands on #d8b346
-     against its #D9B540, and --accent-hover on #eacc65 against its #E8CD66.
-     All five sit inside the sRGB gamut at hue 90, so the accent is identical
-     on sRGB and P3 panels. Hover goes lighter here rather than more saturated
-     — unlike a blue, this hue still has chroma headroom above L 0.78. */
-  --accent: oklch(0.78 0.132 90);
-  --accent-hover: oklch(0.85 0.127 93);
-  --accent-contrast: oklch(0.19 0.02 80);
-  --accent-soft: oklch(0.3 0.05 90);
-  --accent-line: oklch(0.5 0.09 90);
+  --text-primary: oklch(0.945 0.008 88);
+  --text-secondary: oklch(0.84 0.011 88);
+  --text-muted: oklch(0.772 0.013 88);
 
-  --focus: oklch(0.82 0.13 90);
+  /* Coral, not scarlet. A dark-mode red has to lift to stay legible, and
+     lifting a hue-32 red walks it toward coral. That is correct. */
+  --accent: oklch(0.775 0.098 38);
+  --accent-hover: oklch(0.84 0.078 42);
+  --accent-contrast: oklch(0.198 0.01 72);
+  --accent-soft: oklch(0.29 0.045 32);
+  --accent-line: oklch(0.5 0.095 34);
+
+  --focus: oklch(0.775 0.098 38);
+
+  --brass: oklch(0.8 0.132 92);
+  --brass-mark: oklch(0.64 0.115 90);
+  --plate-ground: oklch(0.262 0.02 80);
+  --plate-ink: oklch(0.95 0.008 90);
+  --plate-ink-2: oklch(0.8 0.012 90);
 
   --shadow-subtle:
     inset 0 1px 0 0 oklch(1 0 0 / 0.045),
     0 1px 2px oklch(0 0 0 / 0.2);
   --shadow-elevated:
-    inset 0 1px 0 0 oklch(1 0 0 / 0.065),
+    inset 0 1px 0 0 oklch(1 0 0 / 0.06),
     0 2px 6px -2px oklch(0 0 0 / 0.3),
-    0 12px 32px -12px oklch(0 0 0 / 0.48);
+    0 12px 32px -12px oklch(0 0 0 / 0.45);
 
-  --header-bg: oklch(0.205 0.006 75 / 0.72);
-  --rail: oklch(0.345 0.012 78 / 0.9);
-
-  --glow: oklch(0.73 0.138 90 / 0.06);
+  --header-bg: oklch(0.198 0.01 72 / 0.78);
+  --rail: oklch(0.348 0.014 74 / 0.9);
 }
 
 @theme inline {
@@ -132,6 +140,11 @@
   --color-accent-contrast: var(--accent-contrast);
   --color-accent-soft: var(--accent-soft);
   --color-accent-line: var(--accent-line);
+  --color-brass: var(--brass);
+  --color-brass-mark: var(--brass-mark);
+  --color-plate: var(--plate-ground);
+  --color-plate-ink: var(--plate-ink);
+  --color-plate-ink-2: var(--plate-ink-2);
 
   /* Type families */
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
@@ -252,30 +265,8 @@
     scrollbar-gutter: stable;
   }
 
-  html {
-    background-color: var(--bg);
-  }
-
-  /* Ambient glow — one gold radial from above the fold, at 5-6% opacity.
-     Ported at the source product's exact geometry. It is fixed so it stays a
-     property of the viewport rather than stretching over a 10,000px document,
-     and sits at z-index -1 so it paints above the root background and below
-     all content without needing a stacking context on anything else. */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background: radial-gradient(
-      circle at 50% -10%,
-      var(--glow),
-      transparent 55%
-    );
-  }
-
   body {
-    background-color: transparent;
+    background-color: var(--bg);
     color: var(--text-primary);
     font-family: var(--font-sans);
     font-synthesis-weight: none;
@@ -713,7 +704,6 @@ body::after {
     background: #fff !important;
   }
 
-  body::before,
   body::after {
     display: none !important;
   }

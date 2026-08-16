@@ -74,37 +74,48 @@ statistics. Do not let these back in.
 
 ---
 
-## 3. Brand: derived from Quiet Compound
+## 3. Brand and palette — "Counterfoil"
 
-The portfolio's accent is taken from his live product so the two read as one
-brand. Values were **measured** from the running site via CDP computed styles,
-not guessed.
+The site now runs the **Counterfoil** direction from `REDESIGN.md`: warm laid
+paper, iron-gall ink, and red as "the hand". Three inks with nameable sources —
+**black is what was printed, red is what a person added by hand, brass is what
+the product looks like.**
 
-| | Dark | Light |
+| | Light | Dark |
 |---|---|---|
-| Quiet Compound accent text | `#D9B540` | `#B08A1C` |
-| Quiet Compound fill | `#C9A227` | `#8C6D16` |
-| Portfolio accent (derived) | `#d8b346` | `#83680b` |
+| Paper / ground | `#f8f5f0` | `#181511` |
+| Ink | `#281e17` | `#efede7` |
+| Red (links, focus, hand) | `#892f20` | `#eda088` |
+| Brass (product plate only) | `#dcbb4d` | `#dcbb4d` |
 
-Quiet Compound is Tailwind v4 on **stock palette tokens** — it has no custom
-design system. Fonts: Inter, Caveat (handwriting), Fraunces (serif). Its glow is
-a single radial at 5–6% opacity, `circle at 50% -10% … transparent 55%`. Its
-grain is an SVG `feTurbulence` data URI.
+**Brass is contained.** It resolves only inside the product plate — never the
+header, footer, a hover or the favicon. Gold everywhere reads as a
+trading-signals site; gold contained to the product's own block reads as
+quoting the product. This needs a lint rule, not a convention.
+
+Brass values still derive from Quiet Compound, measured from the running site
+via CDP: `#D9B540` text / `#C9A227` fill in dark, `#8C6D16` in light. The
+widely-quoted `#FBA71B` is only its `theme-color` meta tag and appears nowhere
+on screen.
 
 **Known bug in his product:** its light-mode link gold `#B08A1C` measures
-**3.10:1** — below AA for body text. The portfolio uses a darker value. Do not
-"fix" the portfolio to match his lighter gold.
+3.10:1, below AA for body text. Do not copy that value.
 
-**Deliberately not taken from the product:** its blue-tinted slate ground
-(chroma 0.042 at hue 265). Blue ground under a gold accent is complementary and
-turns garish, and a high-chroma darkest field is the main cause of a dated
-blue-black cast.
+**Hard rules.** Light-on-dark body text at L >= 0.77; dark-on-light at L <= 0.51
+(dark mode needs ~55% more lightness separation for the same perceived contrast
+and WCAG 2 does not know that). `--border` and `--accent-line` are decorative
+*by contract* — if anything informational depends on seeing them, it must use
+`--border-strong` or `--red-mark`. No red on a fill, beside a number, or next to
+green; ceiling roughly 3% of painted pixels.
 
-Colour work is solved, not eyeballed: `scratchpad/gold.py` converts OKLCH →
-linear sRGB, checks the chroma ceiling at each lightness, and binary-searches
-the lightness that hits a target WCAG ratio. **Always verify against the
-compiled CSS, not the source** — Lightning CSS rewrites values, and two real
-bugs were caught this way.
+**The ambient glow is deleted.** There is no light source in a printed page, and
+that radial was simultaneously the crypto tell and the template tell.
+
+Colour is solved, not eyeballed: `scratchpad/gold.py` converts OKLCH to linear
+sRGB, checks the chroma ceiling, and binary-searches for a target ratio.
+**Always verify against compiled CSS** — Lightning CSS rewrites values and
+Tailwind's `@theme inline` aliasing means the source token name is not what
+ships. Three real bugs were caught this way.
 
 ---
 
