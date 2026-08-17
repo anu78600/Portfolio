@@ -251,6 +251,39 @@ analyst the repo path and make it read files rather than reason from the diff;
 the most valuable findings this session all came from reading shipped code and
 compiled CSS, not from reasoning about intent.
 
+## 4e. The verification harness — `npm run verify`
+
+141 checks, ~30s, exits non-zero. Needs a production server on `BASE_URL` and
+headless Chrome on `--remote-debugging-port=9222`.
+
+```
+powershell -ExecutionPolicy Bypass -File scripts/serve.ps1
+npm run verify
+```
+
+Every check exists because something real got through:
+
+| Group | What it catches |
+|---|---|
+| contrast | Full Cartesian product of (text x surface) in light, dark AND inside `.folio-product`, read from **compiled** CSS. Found a defect the 2-agent audit missed on its first run. |
+| print | Emulates print, asserts every text colour clears 4.5:1 **against white** — because printers drop backgrounds. This is the check that would have caught the plate printing as a white hole at 1.16:1. |
+| layout | Overflow at 9 widths x 2 themes with real device emulation. |
+| share | The OG card responds 200, is a valid PNG, is 1200x630, and is not blank. It broke twice: wrong palette once, failed to render once. |
+| structure | One h1, a main landmark, a skip link, alt on every image — and **that the stylesheet actually loaded**, which catches the stale-server failure. |
+| assets | Brass appears nowhere outside the plate. |
+
+Two things learned building it, both worth keeping:
+
+- **Do not `process.exit()`** — it tears down the CDP socket mid-flight, trips a
+  libuv assertion on Windows and returns 127, which destroys the exit status. A
+  harness whose exit code cannot be trusted cannot gate anything. Set
+  `process.exitCode` and let the loop drain.
+- **Verify the harness fails.** The first "break a token and check it fails"
+  test passed with exit 0 because the sed targeted a value that no longer
+  existed. A harness proven only in the passing direction proves nothing.
+
+---
+
 ## 5. Hard-won gotchas
 
 - **`pkill` DOES NOT WORK HERE. Use `scripts/serve.ps1`.** This has now bitten

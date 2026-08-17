@@ -100,7 +100,12 @@
 
   --border: oklch(0.348 0.014 74);
   --border-hover: oklch(0.4 0.015 74);
-  --border-strong: oklch(0.56 0.017 76);
+  /* 0.56 cleared every dark surface except --surface-overlay, where it
+     measured 2.82:1 against the 3:1 floor this token is contractually held to.
+     The post-phase-5 audit missed it because it tested four surfaces; the
+     verification harness tests the full Cartesian product and caught it on the
+     first run. 0.60 gives 3.33:1 worst case. */
+  --border-strong: oklch(0.6 0.017 76);
 
   --text-primary: oklch(0.945 0.008 88);
   --text-secondary: oklch(0.84 0.011 88);
