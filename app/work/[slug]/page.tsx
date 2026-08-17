@@ -89,8 +89,16 @@ export default async function CaseStudyPage({
             Back to selected work
           </Link>
 
-          <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
-            <Reveal className="lg:col-span-8">
+          {/* `items-start`, and 7/5 rather than 8/4.
+              The grid stretched both columns to the taller one, so the prose
+              column ran 93px past the end of the thesis as dead space, and the
+              header's own padding added 48 more — a 141px void under the copy
+              on a page whose first screen is mostly copy.
+              The metadata column was the tall one because at 255px every tag
+              took a whole row. At 342px they pair up, which is most of the
+              height back. Widening the sidebar is what shortens the page. */}
+          <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start lg:gap-14">
+            <Reveal className="lg:col-span-7">
               <p className="label-sc text-accent">{project.category}</p>
               <h1 className="mt-4 text-title font-medium text-ink">
                 {project.title}
@@ -105,7 +113,7 @@ export default async function CaseStudyPage({
               </p>
             </Reveal>
 
-            <Reveal delay={80} className="lg:col-span-4">
+            <Reveal delay={80} className="lg:col-span-5">
               <dl className="rounded-lg border border-line bg-elevated">
                 <div className="flex items-baseline justify-between gap-4 border-b border-line px-4 py-3">
                   <dt className="label-sc text-ink-3">Status</dt>
