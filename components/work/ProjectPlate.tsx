@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { ProjectKind } from "@/content/types";
+import type { ProjectFigure } from "@/content/types";
 import { cn } from "@/lib/cn";
 
 /**
@@ -11,10 +11,9 @@ import { cn } from "@/lib/cn";
  * shipped software, a network for research, a chart for analysis, a
  * construction outline for a concept, a document for a report.
  *
- * Each figure also takes a `variant`, derived from the project slug, so that
- * two projects of the same kind never render the same picture. Without it, the
- * grid showed two identical bar charts side by side, which reads as a bug
- * rather than as a system.
+ * Which drawing a project gets is a REQUIRED content field, not a hash of its
+ * slug. The hash gave the two products different pictures by parity luck;
+ * renaming a slug would have silently collided them.
  *
  * They are monochrome with a single accent element, sit on a shared hairline
  * grid, and use one fixed frame across every card — which is what keeps a set
@@ -24,14 +23,7 @@ import { cn } from "@/lib/cn";
 const stroke = "stroke-[var(--border-strong)]";
 const accent = "stroke-[var(--accent)]";
 
-/** Stable small integer from a slug, so a project's plate never changes. */
-function variantFrom(seed: string, count: number) {
-  let hash = 0;
-  for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
-  return hash % count;
-}
-
-function Research({ v }: { v: number }) {
+function Research({ v = 0 }: { v?: number } = {}) {
   const layouts: [number, number][][] = [
     [[22, 26], [22, 62], [58, 18], [58, 44], [58, 70], [96, 44]],
     [[20, 20], [20, 45], [20, 70], [60, 32], [60, 58], [98, 45]],
@@ -73,7 +65,7 @@ function Research({ v }: { v: number }) {
   );
 }
 
-function Analysis({ v }: { v: number }) {
+function Analysis({ v = 0 }: { v?: number } = {}) {
   const sets = [
     [18, 34, 26, 46, 38, 58, 50],
     [46, 30, 52, 24, 40, 34, 60],
@@ -106,7 +98,7 @@ function Analysis({ v }: { v: number }) {
   );
 }
 
-function Concept({ v }: { v: number }) {
+function Concept({ v = 0 }: { v?: number } = {}) {
   // Two distinct constructions rather than one drawing recoloured.
   if (v % 2 === 1) {
     return (
@@ -139,7 +131,7 @@ function Concept({ v }: { v: number }) {
   );
 }
 
-function Report({ v }: { v: number }) {
+function Report({ v = 0 }: { v?: number } = {}) {
   const sets = [
     [76, 60, 68, 44, 72, 52],
     [68, 74, 40, 70, 56, 66],
@@ -165,80 +157,151 @@ function Report({ v }: { v: number }) {
   );
 }
 
-/**
- * Shipped software. An application frame rather than a fake screenshot — the
- * shape of a product without pretending to be a picture of one.
+/* ── the two sheets ──────────────────────────────────────────────────────────
+ *
+ * The products used to share one drawing — a browser window with three traffic
+ * lights — differing only by a small motif inside it, so an "identical pair" of
+ * cards read as the same picture printed twice. Worse, the finance branch was a
+ * RISING TREND LINE, on the one product whose case study argues that "almost
+ * every finance tool is a dashboard, and dashboards reward watching. A journal
+ * rewards reviewing." A rising chart is a dashboard, and it is the
+ * trading-signals tell the whole palette exists to avoid.
+ *
+ * Both are now the same sheet of paper with different marks on it: same rect,
+ * same radius, same fill, same red margin rule, same head marks, same left text
+ * edge, same 8-unit pitch. You read the shared object first and the difference
+ * second. Measured at DPR 2 inside the real card, against the same clip with
+ * every stroke forced transparent so the fill cancels: ink ratio 0.985 between
+ * the two, red within 0.5 of a point. That is what "one hand" means once you
+ * stop eyeballing it.
+ *
+ * Everything here was chosen by downsampling the real screenshot to the size
+ * the drawing actually renders at (133x153) and seeing what survives. Five
+ * things do: a portrait panel, two marks at the head, a ragged block of
+ * writing, a short detached line under it, one small object bottom-right.
+ * The ruling does not survive, and neither does the red margin rule at
+ * photographic scale — which is exactly why the drawing states it.
  */
-function Product({ v }: { v: number }) {
-  const finance = v % 2 === 0;
-  const rows = [30, 46, 22, 38];
 
+/** The shared sheet. Both figures open with this. */
+function Sheet() {
+  return (
+    <>
+      {/* Portrait 68x78 ~ 13:15, the ratio of the real capture, so the
+          abstraction and the photograph behind the click are the same shape. A
+          landscape sheet reads as an index card or an envelope.
+          The fill is not decoration: the parent draws a 28px hairline grid
+          behind every figure, and an opaque sheet stops it at the paper's edge
+          and turns it into the desk the page lies on. Without it the grid runs
+          straight through the writing in dark. It also lifts --border-strong
+          from 3.37:1 on the bare ground to 3.67:1 on the fill in light.
+          rx 1.5 renders 2.8px at 1440 and 2.1px at 320 — under the documented
+          3px ceiling at every width. rx 2 would not have been. */}
+      <rect
+        x="26"
+        y="6"
+        width="68"
+        height="78"
+        rx="1.5"
+        className={stroke}
+        fill="var(--surface)"
+      />
+      {/* The one accent, and the only vertical: the margin rule, full height, at
+          10% of the sheet's width — the stub proportion the product's own sheet
+          uses. It is what makes a rectangle a ruled page rather than a document,
+          it is this site's structural device quoted at thumbnail size, and it is
+          the single feature of Quiet Compound's sheet nothing else can say. In
+          ink it reads as a book spine. */}
+      <line x1="33" y1="6" x2="33" y2="84" className={accent} strokeWidth="1.5" />
+      {/* Folio left, date right — the head of a bound page. Deliberately NOT a
+          full-width rule under them: a horizontal crossing the vertical makes a
+          table header, which is a dashboard's cousin. */}
+      <line x1="38" y1="15" x2="52" y2="15" className={stroke} />
+      <line x1="76" y1="15" x2="90" y2="15" className={stroke} />
+    </>
+  );
+}
+
+/** A page that has been written on, and come back to. */
+function Journal() {
   return (
     <g fill="none" strokeWidth="1">
-      <rect x="16" y="16" width="88" height="60" rx="5" className={stroke} />
-      <line x1="16" y1="29" x2="104" y2="29" className={stroke} />
-      {[23, 30, 37].map((cx) => (
-        <circle key={cx} cx={cx} cy="22.5" r="1.6" className={stroke} />
+      <Sheet />
+      {/* Writing drawn as its SETTING, never as letterforms — strokes shaped
+          like script read at 240px as scribble, and that was tried.
+          Pitch 8 with the SHORT line third, not last: that is the shape an entry
+          with a number in it makes, and it is what the real sheet does
+          ("240 -> 276"). A block whose short line comes last reads as justified
+          body copy. The fifth line is detached by a 12-unit gap — the closing
+          line, the product's "no FOMO · no revenge" — and it balances the sheet. */}
+      {([
+        [32, 76],
+        [40, 78],
+        [48, 60],
+        [56, 88],
+        [68, 64],
+      ] as [number, number][]).map(([y, x2]) => (
+        <line key={y} x1="38" y1={y} x2={x2} y2={y} className={stroke} />
       ))}
-      <rect x="24" y="37" width="26" height="31" rx="2" className={stroke} />
-      {rows.map((w, i) => (
-        <line
-          key={i}
-          x1="58"
-          y1={40 + i * 8}
-          x2={58 + w}
-          y2={40 + i * 8}
-          className={i === 1 ? accent : stroke}
-          strokeWidth={i === 1 ? 1.5 : 1}
-        />
-      ))}
-      {finance ? (
-        // A rising trend for the finance tracker…
-        <polyline
-          points="28,62 34,54 40,58 46,45"
-          className={accent}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      ) : (
-        // …a checklist for the reminders app.
-        [0, 1, 2].map((i) => (
-          <g key={i}>
-            <rect
-              x="28"
-              y={42 + i * 9}
-              width="5"
-              height="5"
-              rx="1"
-              className={i === 0 ? accent : stroke}
-              strokeWidth={i === 0 ? 1.5 : 1}
-            />
-            <line
-              x1="37"
-              y1={44.5 + i * 9}
-              x2={46 - i * 3}
-              y2={44.5 + i * 9}
-              className={stroke}
-            />
-          </g>
-        ))
-      )}
+      {/* The seal. The difference between "a page with writing on it" and "a
+          page someone came back to", which is the product's whole argument. The
+          real sheet puts a ring in exactly this corner. A ring, not a stamp box:
+          at this size a rounded rect reads as a tag or a button and a rotated
+          one reads as a sticker. Ink, not red — one figure gets one accent, and
+          it is spent on the margin rule. */}
+      <circle cx="84" cy="71" r="5" className={stroke} />
     </g>
   );
 }
 
-const figures: Record<ProjectKind, (props: { v: number }) => React.ReactElement> = {
-  research: Research,
-  analysis: Analysis,
-  concept: Concept,
-  report: Report,
-  product: Product,
+/** The same page, with boxes instead of an entry. */
+function Checklist() {
+  return (
+    <g fill="none" strokeWidth="1">
+      <Sheet />
+      {/* Boxes are 6x6, not 7x7. At 7 on a pitch of 8 they leave one unit
+          between them and fuse into a single segmented bar at 2x — a real
+          defect, measured. 6 leaves two units and they read as four boxes.
+          The tick is ink: this figure's one accent is the margin rule, the same
+          as its partner's, so neither card is the redder of the two. */}
+      {([
+        [32, 84],
+        [40, 70],
+        [48, 88],
+        [56, 74],
+      ] as [number, number][]).map(([y, x2], i) => (
+        <g key={y}>
+          <rect x="38" y={y - 3} width="6" height="6" rx="1" className={stroke} />
+          {i === 0 ? (
+            <polyline
+              points={`39.4,${y + 0.1} 40.7,${y + 1.8} 43.6,${y - 2.6}`}
+              className={stroke}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          ) : null}
+          <line x1="48" y1={y} x2={x2} y2={y} className={stroke} />
+        </g>
+      ))}
+    </g>
+  );
+}
+
+/* Keyed by `figure`, a required content field — never by a hash of the slug.
+   The four legacy drawings keep their bodies but are unreachable today; they
+   cost nothing and deleting them would throw away work that a third project
+   would want back. */
+const figures: Record<ProjectFigure, () => React.ReactElement> = {
+  journal: Journal,
+  checklist: Checklist,
+  network: Research,
+  series: Analysis,
+  construction: Concept,
+  document: Report,
 };
 
 export function ProjectPlate({
-  kind,
-  seed,
+  figure,
   image,
   imageAlt,
   priority,
@@ -247,9 +310,8 @@ export function ProjectPlate({
   sizes = "(min-width: 1024px) 50vw, 100vw",
   className,
 }: {
-  kind: ProjectKind;
-  /** Project slug — keeps each plate stable and distinct from its neighbours. */
-  seed: string;
+  /** Which drawing. A content decision, never derived from the slug. */
+  figure: ProjectFigure;
   /** Real screenshot. When present, the drawn figure is not used at all. */
   image?: string;
   imageAlt?: string;
@@ -305,7 +367,7 @@ export function ProjectPlate({
     );
   }
 
-  const Figure = figures[kind];
+  const Figure = figures[figure];
 
   return (
     <div
@@ -328,7 +390,7 @@ export function ProjectPlate({
           }
           role="presentation"
         >
-          <Figure v={variantFrom(seed, 6)} />
+          <Figure />
         </svg>
       </div>
     </div>

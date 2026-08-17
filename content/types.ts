@@ -90,6 +90,26 @@ export interface ExperienceItem {
   skills: string[];
 }
 
+/**
+ * Which drawn figure a project shows.
+ *
+ * Separate from `kind`, and REQUIRED. It used to be derived by hashing the slug
+ * and taking a parity — `quiet-compound` landed on 4 and `reminderpro` on 5, so
+ * they got different pictures purely by luck. Slugs are URLs and URLs change:
+ * rename either and both products would silently render the same drawing, with
+ * no type error, no failing test and nothing visible in a diff.
+ *
+ * Required rather than optional so that adding a project forces the decision
+ * instead of inheriting one.
+ */
+export type ProjectFigure =
+  | "journal"
+  | "checklist"
+  | "network"
+  | "series"
+  | "construction"
+  | "document";
+
 export type ProjectKind =
   | "research"
   | "analysis"
@@ -131,7 +151,9 @@ export interface Project {
   title: string;
   /** Short label used on cards, e.g. "Agentic AI · Logistics". */
   category: string;
+  /** A fact about the work. No longer chooses the picture — see `figure`. */
   kind: ProjectKind;
+  figure: ProjectFigure;
   status: ProjectStatus;
   /** Single sentence shown on the card. */
   summary: string;

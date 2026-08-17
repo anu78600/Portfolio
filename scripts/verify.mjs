@@ -512,7 +512,23 @@ async function checkContent(page, path) {
       if (a.timeline.source !== document.documentElement)
         stray.push(el.tagName + "." + String(el.className).slice(0, 40));
     }
-    return { text: [...new Set(text)], ld: [...new Set(ld)], stray };
+    /* Drawn figures must be pairwise distinct. The figure field is a required
+       union, so a typo is a type error — but two projects both correctly typed
+       "journal" is not, and that failure is silent: an "identical pair" of
+       cards becomes the same picture printed twice, which is exactly what
+       shipped while the drawing was chosen by hashing the slug. Compare the
+       rendered geometry, which is what a reader actually sees.
+       (No backticks in this comment: it lives inside a template literal.) */
+    const figures = [...document.querySelectorAll('#work svg[role="presentation"]')].map((s) =>
+      [...s.querySelectorAll("*")].map((n) =>
+        n.tagName + ":" + (n.getAttribute("points") || n.getAttribute("d") ||
+          [n.getAttribute("x"), n.getAttribute("y"), n.getAttribute("x1"),
+           n.getAttribute("y1"), n.getAttribute("cx")].join(",")),
+      ).join("|"),
+    );
+
+    return { text: [...new Set(text)], ld: [...new Set(ld)], stray,
+             figures: figures.length, distinct: new Set(figures).size };
   })()`);
 
   record("content", `${path}: no placeholder in visible text`,
@@ -521,6 +537,12 @@ async function checkContent(page, path) {
     probe.ld.length === 0, probe.ld.join(", "));
   record("motion", `${path}: every view() timeline sourced at <html>`,
     probe.stray.length === 0, probe.stray.join(", "));
+
+  if (probe.figures > 1) {
+    record("content", `${path}: drawn figures are pairwise distinct`,
+      probe.distinct === probe.figures,
+      `${probe.figures} figures, only ${probe.distinct} distinct`);
+  }
 }
 
 /* ── run ──────────────────────────────────────────────────────────────────── */

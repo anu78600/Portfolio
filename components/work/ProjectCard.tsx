@@ -93,8 +93,7 @@ export function FeaturedProjectCard({
       <Link href={`/work/${project.slug}`} className={cn(cardShell, "md:grid md:grid-cols-12")}>
         <div className="relative aspect-[16/10] overflow-clip border-b border-line md:col-span-5 md:aspect-auto md:min-h-[280px] md:border-r md:border-b-0">
           <ProjectPlate
-            kind={project.kind}
-            seed={project.slug}
+            figure={project.figure}
             drawn
             className={plateMotion}
           />

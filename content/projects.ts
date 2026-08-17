@@ -28,6 +28,7 @@ export const projects: Project[] = [
        away, and the rebuilt meta row sets both on one line. */
     category: "Personal finance",
     kind: "product",
+    figure: "journal",
     status: "Live product",
     year: "2026",
     summary:
@@ -109,6 +110,7 @@ export const projects: Project[] = [
        line on the page — and the honest version is the more impressive one. */
     category: "Productivity",
     kind: "product",
+    figure: "checklist",
     status: "Built · not deployed",
     year: "2026",
     summary:

@@ -162,8 +162,7 @@ export default async function CaseStudyPage({
                 className="relative aspect-[16/10] overflow-clip rounded-[3px] border border-line sm:aspect-[18/7]"
               >
                 <ProjectPlate
-                  kind={project.kind}
-                  seed={project.slug}
+                  figure={project.figure}
                   image={shot}
                   imageAlt={project.imageAlt}
                   priority
