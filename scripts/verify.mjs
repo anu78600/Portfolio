@@ -85,6 +85,15 @@ function checkContrast() {
       .find((t) => t["--bg"]),
     dark: blockOf(/\[data-theme=dark\]\{([^}]*)\}/),
     plate: blockOf(/\.folio-product\{([^}]*)\}/),
+    /* The dark plate is a SEPARATE block that overrides only some tokens, and
+       `blockOf` returns the first match — which is the light plate. So every
+       one of the checks below has been grading the light plate twice and the
+       dark plate never, which is how --border-strong shipped at 2.96:1 inside
+       it. Merge the override over the base, the way the cascade does. */
+    plateDark: {
+      ...blockOf(/\.folio-product\{([^}]*)\}/),
+      ...blockOf(/\[data-theme=dark\] \.folio-product\{([^}]*)\}/),
+    },
   };
 
   const TEXT = ["--text-primary", "--text-secondary", "--text-muted", "--accent"];
@@ -210,18 +219,30 @@ async function checkLayout(page, path, theme) {
     await page.send("Page.navigate", { url: BASE + path });
     await new Promise((r) => setTimeout(r, 900));
 
+    /*
+     * Two directions, because they fail differently.
+     *
+     * RIGHT overflow grows `scrollWidth` and the user can scroll to it.
+     * LEFT overflow does not: in LTR, content placed left of the origin is
+     * clipped and simply never reachable, so `scrollWidth - clientWidth` stays
+     * 0 and every check here passes while a third of the flagship block sits
+     * off the side of the phone. That is exactly what happened — the plate's
+     * unconditional -68px pull against an 18px gutter — and 141 checks called
+     * it green. Measure the boxes, not just the scroll extent.
+     */
     const probe = await page.evaluate(`(() => {
       const de = document.documentElement;
       const over = de.scrollWidth - de.clientWidth;
-      let worst = null;
-      if (over > 1) {
-        for (const el of document.querySelectorAll("body *")) {
-          const r = el.getBoundingClientRect();
-          if (r.width === 0 && r.height === 0) continue;
-          if (r.right > de.clientWidth + 1) { worst = el.tagName.toLowerCase() + "." + String(el.className).slice(0,60); break; }
-        }
+      let worst = null, under = 0, culprit = null;
+      for (const el of document.querySelectorAll("body *")) {
+        const r = el.getBoundingClientRect();
+        if (r.width === 0 && r.height === 0) continue;
+        if (r.width <= 1 && r.height <= 1) continue; /* sr-only */
+        const name = el.tagName.toLowerCase() + "." + String(el.className).slice(0, 60);
+        if (over > 1 && !worst && r.right > de.clientWidth + 1) worst = name;
+        if (r.left < under) { under = r.left; culprit = name; }
       }
-      return { over, worst };
+      return { over, worst, under: Math.round(under), culprit };
     })()`);
 
     record(
@@ -229,6 +250,12 @@ async function checkLayout(page, path, theme) {
       `${path} ${theme} @${width}`,
       probe.over <= 1,
       probe.over > 1 ? `${probe.over}px overflow — ${probe.worst}` : "",
+    );
+    record(
+      "layout",
+      `${path} ${theme} @${width} left edge`,
+      probe.under >= -1,
+      probe.under < -1 ? `${probe.under}px off-canvas — ${probe.culprit}` : "",
     );
   }
 }

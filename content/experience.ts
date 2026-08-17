@@ -46,7 +46,7 @@ export const experience: ExperienceItem[] = [
     id: "freelance-prompt-engineer",
     organisation: "Freelance",
     role: "Prompt Engineer",
-    period: "Jul 2025 — Present",
+    period: "Jul 2025–Present",
     location: "Remote",
     summary:
       "Prompt work, treated as engineering. Versioned, logged, adapted to whatever the client's domain turns out to need.",
@@ -66,7 +66,7 @@ export const experience: ExperienceItem[] = [
     id: "iffco-hr-trainee",
     organisation: "IFFCO",
     role: "HR Trainee Intern",
-    period: "Aug 2025 — Sep 2025",
+    period: "Aug 2025–Sep 2025",
     location: "Uttar Pradesh, India",
     summary:
       "Two months inside the HR function of one of India's largest fertiliser cooperatives. The layer underneath the policy, where processes meet the systems that record them.",

@@ -97,14 +97,13 @@ export type ProjectKind =
   | "report"
   | "product";
 
-export type ProjectStatus =
-  | "Flagship research"
-  | "Live product"
-  | "Personal product"
-  | "Academic research"
-  | "Academic analysis"
-  | "Concept"
-  | "Industry report";
+/**
+ * A closed set, because status is a factual claim and a free string invites
+ * inflation. The five academic values were removed with the six academic
+ * projects on 17 Aug 2026 — leaving them here is an open invitation to
+ * reintroduce cut work.
+ */
+export type ProjectStatus = "Live product" | "Built · not deployed";
 
 export interface CaseStudySection {
   heading: string;
@@ -153,8 +152,17 @@ export interface Project {
    */
   image?: string;
   imageAlt?: string;
-  /** Optional portrait-orientation shot, used on the case study page. */
-  imageMobile?: string;
+  /**
+   * A detail crop, for slots that are portrait or square — currently the lead
+   * plate on the home page. `image` stays the wide composition and is what the
+   * case-study banner (2/1, 21/9) uses.
+   *
+   * Two frames need two alts. One alt cannot honestly describe both: the wide
+   * shot's alt names a sign-in panel that the detail crop does not show, and a
+   * description of something not on screen is a fabrication like any other.
+   */
+  imageDetail?: string;
+  imageDetailAlt?: string;
   /** Optional external link, e.g. a published PDF. */
   externalUrl?: Todo | string;
   externalLabel?: string;

@@ -39,9 +39,13 @@ function cellClasses(index: number) {
 
 export function Snapshot() {
   return (
-    <section aria-label="Professional snapshot" className="border-y border-line">
+    <section aria-label="Professional snapshot">
       <div className="container-counterfoil">
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+        {/* The band's rules live on the list, not the section. On the section
+            they were full-bleed and cut straight through the vermilion margin
+            rule; the list sits inside `container-counterfoil`, so they now
+            start after it and the vertical rule stays unbroken. */}
+        <ul className="grid grid-cols-1 border-y border-line sm:grid-cols-2 lg:grid-cols-5">
           {domains.map((domain, index) => (
             <Reveal
               as="li"

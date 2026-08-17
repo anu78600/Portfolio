@@ -23,7 +23,9 @@ export function Work() {
     <section
       id="work"
       aria-labelledby="work-title"
-      className="section-y border-t border-line"
+      /* No top rule — see About. It crossed the margin rule and had nothing
+         hanging off it. */
+      className="section-y"
     >
       <div className="container-counterfoil">
         <SectionHeading

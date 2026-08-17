@@ -41,37 +41,94 @@ const strings = readdirSync(DIR)
 const text = strings.join("\n");
 const words = text.split(/\s+/).filter(Boolean).length;
 
-const sentences = text
-  .split(/(?<=[.!?])\s+/)
+/*
+ * Split WITHIN each string, never across the join. Bullets and labels do not
+ * end in a full stop, so splitting the joined text on `(?<=[.!?])\s+` welded
+ * every punctuation-less string to its neighbour: the "longest sentence" was
+ * reported as 66 words when it was two separate 12-word bullets. That also fed
+ * the flat-run detector garbage, which is worse — a diagnostic reporting a tic
+ * that is an artefact of its own parser.
+ */
+const sentences = strings
+  .flatMap((s) => s.split(/(?<=[.!?])\s+/))
   .map((s) => s.trim())
   .filter((s) => s.split(/\s+/).length > 1);
 
 const lens = sentences.map((s) => s.split(/\s+/).length);
 const short = lens.filter((n) => n < 8).length;
 
-// Three consecutive sentences all within ±25% of the middle one's length.
+/*
+ * Three consecutive sentences all within ±25% of the middle one's length —
+ * the monotonous rhythm that gives generated prose away.
+ *
+ * Scoped WITHIN a paragraph. Run globally it walked from the last sentence of
+ * one string into the first of the next, so four deliberately parallel bullets
+ * ("Trading journal — …", "Smart charts — …") scored as a flat run. Parallelism
+ * across list items is a rhetorical figure and good writing; monotony inside a
+ * paragraph is the tic. Only the second is worth flagging.
+ */
 let flatRuns = 0;
-for (let i = 1; i < lens.length - 1; i++) {
-  const [a, b, c] = [lens[i - 1], lens[i], lens[i + 1]];
-  if (Math.abs(a - b) <= b * 0.25 && Math.abs(c - b) <= b * 0.25) flatRuns++;
+for (const para of strings) {
+  const p = para
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim().split(/\s+/).length)
+    .filter((n) => n > 1);
+  for (let i = 1; i < p.length - 1; i++) {
+    const [a, b, c] = [p[i - 1], p[i], p[i + 1]];
+    if (Math.abs(a - b) <= b * 0.25 && Math.abs(c - b) <= b * 0.25) flatRuns++;
+  }
 }
 
 const count = (re) => (text.match(re) ?? []).length;
 
-const emDash = count(/—/g);
+/*
+ * The em-dash budget is about a WRITING tic — the model's habit of hanging an
+ * aside off a dash mid-sentence — so it must not count dashes that are doing
+ * a different job. `Term — gloss` is a definition list: "Udhar tracker —
+ * informal lending, treated as the real debt it is", "MBA — Human Resource
+ * Management". A human product writer writes exactly that, and four parallel
+ * bullets in that form are a deliberate structure, not a verbal habit.
+ *
+ * Nine of the fourteen dashes flagged here were that. Counting them made the
+ * budget unreachable without wrecking a feature list, which is how a smoke
+ * detector trains you to disconnect it.
+ *
+ * A dash is a gloss dash when it is the string's first, sits within the first
+ * 50 characters, and no sentence has ended before it. Prose asides fail all
+ * three: they arrive late, after at least one full stop or a long clause.
+ * (The bibliographic carve-out at `prose()` above is the same idea.)
+ */
+const glossDashes = strings.filter((s) => {
+  const i = s.indexOf("—");
+  return i > 0 && i < 50 && !s.slice(0, i).includes(".");
+}).length;
+
+const emDash = count(/—/g) - glossDashes;
 const per1k = (emDash / words) * 1000;
 const antithesis = count(/\brather than\b|\bnot just\b|\bisn't just\b|\bis not\b[^.]{0,40}\bit is\b/gi);
 const semicolons = count(/;/g);
 // "a, b and c" — three noun-ish beats in one clause.
 const tricolon = count(/\b\w+(?:\s\w+){0,2},\s\w+(?:\s\w+){0,2}\s+and\s+\w+(?:\s\w+){0,2}\b/g);
 
+/*
+ * Long stretches with nothing concrete in them — no name, no number, no thing
+ * you could point at. The most reliable tell of all, and the hardest to fake
+ * your way out of.
+ *
+ * "Specific" includes acronyms. The pattern was `[A-Z][a-z]{2,}`, which does
+ * not match AI, HR, MBA or NSE, so a sentence naming a dissertation on agentic
+ * AI in shipping scored as pure abstraction. Requiring a capitalised word to
+ * have lowercase letters after it is a rule about orthography, not aboutness.
+ */
+const SPECIFIC = /[A-Z][a-z]{2,}|[A-Z]{2,}|\d/;
 const noSpecific = strings.filter(
-  (s) => s.split(/\s+/).length > 25 && !/[A-Z][a-z]{2,}|\d/.test(s.slice(1)),
+  (s) => s.split(/\s+/).length > 25 && !SPECIFIC.test(s.slice(1)),
 ).length;
 
 const rows = [
   ["em dashes / 1,000 words", per1k.toFixed(2), "<= 4.00", per1k <= 4],
-  ["em dashes (absolute)", emDash, "-", null],
+  ["em dashes (prose asides)", emDash, "-", null],
+  ["em dashes (Term — gloss, exempt)", glossDashes, "-", null],
   ["semicolons (compensating tic)", semicolons, "watch", null],
   ["antithesis constructions", antithesis, "<= 2", antithesis <= 2],
   ["tricolons", tricolon, "<= 4", tricolon <= 4],

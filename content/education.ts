@@ -6,14 +6,14 @@ export const education: EducationItem[] = [
     qualification: "Master of Business Administration",
     specialisation: "Human Resource Management + International Business",
     institution: "Dr. A.P.J. Abdul Kalam Technical University (AKTU)",
-    period: "2024 — 2026",
+    period: "2024–2026",
     note: "Graduated in the top 10% of the batch. Dual specialisation, with research on agentic AI in global logistics and the shipping sector.",
   },
   {
     id: "bca",
     qualification: "Bachelor of Computer Applications",
     institution: "Awadhesh Pratap Singh University (APSU), Madhya Pradesh",
-    period: "2020 — 2023",
+    period: "2020–2023",
     note: "Graduated in the top 3% of the batch. The technical foundation underneath the commercial training — and the reason AI tooling reads as familiar rather than novel.",
   },
 ];

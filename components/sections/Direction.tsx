@@ -19,12 +19,14 @@ export function Direction() {
     <section
       id="direction"
       aria-labelledby="direction-title"
-      className="section-y border-t border-line"
+      /* No top rule — see About. It crossed the margin rule and had nothing
+         hanging off it. */
+      className="section-y"
     >
       <div className="container-counterfoil">
         <SectionHeading
           index="03"
-          label="Where I'm going"
+          label="Where I’m going"
           id="direction-title"
           title="Two things, not five."
           lede="Stated at the level above a job title, because the specific title is the part I am least attached to."
@@ -38,10 +40,10 @@ export function Direction() {
               delay={index * 70}
               className="border-t border-line pt-6"
             >
-              <div className="flex items-baseline gap-3">
-                <span className="label-sc text-accent">{goal.index}</span>
-                <span className="label-sc text-ink-3">{goal.horizon}</span>
-              </div>
+              {/* Horizon only. Numbering the goals inside numbered act 03 made
+                  the folio numbers mean nothing; the `<ol>` already carries the
+                  ordering semantically. */}
+              <span className="label-sc text-ink-3">{goal.horizon}</span>
               <h3 className="mt-4 text-heading-sm font-semibold text-ink">
                 {goal.title}
               </h3>

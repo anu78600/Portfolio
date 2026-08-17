@@ -20,7 +20,9 @@ export const projects: Project[] = [
   {
     slug: "quiet-compound",
     title: "Quiet Compound",
-    category: "Personal Finance · Shipped Product",
+    /* Not "· Shipped Product" — `status` says "Live product" eight pixels
+       away, and the rebuilt meta row sets both on one line. */
+    category: "Personal finance",
     kind: "product",
     status: "Live product",
     weight: "flagship",
@@ -40,7 +42,13 @@ export const projects: Project[] = [
     image: "/work/quiet-compound.png",
     imageAlt:
       "Quiet Compound's entry screen: a ruled paper folio with a handwritten trade entry on the left, and a sign-in panel showing live NSE market status on the right.",
-    imageMobile: "/work/quiet-compound-mobile.png",
+    /* The journal card, cropped out of the same capture — no recapture, no
+       invented UI. It names what is visibly in frame and deliberately does not
+       restate the entry's gain figure: describing the artefact is reporting,
+       repeating a return in the page's own voice is a claim. */
+    imageDetail: "/work/quiet-compound-journal.png",
+    imageDetailAlt:
+      "Quiet Compound's journal view: a ruled dark sheet with a red margin rule, the folio number QC·0247, a handwritten trade entry, the line “no FOMO · no revenge”, and a stamp reading REVIEWED.",
     externalUrl: "https://quiet-compound.vercel.app",
     externalLabel: "Open the live app",
     caseStudy: [
@@ -81,7 +89,7 @@ export const projects: Project[] = [
         ],
       },
       {
-        heading: "What I'd change",
+        heading: "What I’d change",
         pending: true,
         body: ["[ADD RETROSPECTIVE — what you would do differently next time]"],
       },
@@ -91,9 +99,14 @@ export const projects: Project[] = [
   {
     slug: "reminderpro",
     title: "ReminderPro",
-    category: "Productivity · Shipped Product",
+    /* The card previously read "PRODUCTIVITY · SHIPPED PRODUCT" while the
+       section lede two hundred pixels above said "finished and not deployed".
+       The record says built, no known deployment. On a site whose whole claim
+       is that nothing is invented, that contradiction was the most expensive
+       line on the page — and the honest version is the more impressive one. */
+    category: "Productivity",
     kind: "product",
-    status: "Personal product",
+    status: "Built · not deployed",
     weight: "featured",
     year: "2026",
     summary:

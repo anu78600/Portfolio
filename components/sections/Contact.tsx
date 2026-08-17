@@ -25,23 +25,25 @@ export function Contact() {
     <section
       id="contact"
       aria-labelledby="contact-title"
-      className="section-y border-t border-line"
+      /* No top rule — see About. It crossed the margin rule and had nothing
+         hanging off it. */
+      className="section-y"
     >
       <div className="container-counterfoil">
         <SectionHeading
           label="Contact"
           id="contact-title"
-          title="Let's connect."
+          title="Let’s connect."
         />
 
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
           <Reveal className="lg:col-span-5">
             <p className="max-w-md text-lede leading-relaxed text-ink-2">
-              I'm looking for analyst, people-analytics, consulting and
+              I’m looking for analyst, people-analytics, consulting and
               AI-focused roles — anywhere the work is turning a business
-              question into something a decision-maker can act on. I'm also
+              question into something a decision-maker can act on. I’m also
               glad to talk about where agentic systems are genuinely being put
-              to work. If any of that overlaps with what you're building, email
+              to work. If any of that overlaps with what you’re building, email
               is the fastest route.
             </p>
 

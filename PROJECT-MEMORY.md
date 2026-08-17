@@ -265,14 +265,14 @@ Every check exists because something real got through:
 
 | Group | What it catches |
 |---|---|
-| contrast | Full Cartesian product of (text x surface) in light, dark AND inside `.folio-product`, read from **compiled** CSS. Found a defect the 2-agent audit missed on its first run. |
+| contrast | Full Cartesian product of (text x surface) in light, dark, the light plate AND the dark plate, read from **compiled** CSS. Found a defect the 2-agent audit missed on its first run. |
 | print | Emulates print, asserts every text colour clears 4.5:1 **against white** — because printers drop backgrounds. This is the check that would have caught the plate printing as a white hole at 1.16:1. |
-| layout | Overflow at 9 widths x 2 themes with real device emulation. |
+| layout | Overflow at 9 widths x 2 themes with real device emulation — **both directions**, right and left. |
 | share | The OG card responds 200, is a valid PNG, is 1200x630, and is not blank. It broke twice: wrong palette once, failed to render once. |
 | structure | One h1, a main landmark, a skip link, alt on every image — and **that the stylesheet actually loaded**, which catches the stale-server failure. |
 | assets | Brass appears nowhere outside the plate. |
 
-Two things learned building it, both worth keeping:
+Things learned building it, all worth keeping:
 
 - **Do not `process.exit()`** — it tears down the CDP socket mid-flight, trips a
   libuv assertion on Windows and returns 127, which destroys the exit status. A
@@ -281,6 +281,58 @@ Two things learned building it, both worth keeping:
 - **Verify the harness fails.** The first "break a token and check it fails"
   test passed with exit 0 because the sed targeted a value that no longer
   existed. A harness proven only in the passing direction proves nothing.
+- **A green harness is evidence about what it measures, nothing more.** On
+  18 Aug it read 141/141 while the flagship block hung 50px off the left edge of
+  every phone and the dark plate carried a 2.96:1 border. Both were found by
+  agents looking at the thing, then written into the harness as checks 142–192.
+  When a design agent reports a defect the suite calls green, the suite is
+  usually the thing that is wrong.
+
+Two blind spots it had, both now closed — and both are general traps:
+
+- **`scrollWidth` cannot see LEFT overflow.** In LTR, content placed left of the
+  origin is *clipped*, not scrolled to, so `scrollWidth - clientWidth` stays 0
+  no matter how far off-canvas an element sits. Any overflow probe built only on
+  scroll extent is half a probe. `checkLayout` now also measures every box's
+  `getBoundingClientRect().left` and fails below −1.
+- **A regex `match()` returns the FIRST block.** `checkContrast` read
+  `/\.folio-product\{([^}]*)\}/`, which is the light plate — so the dark plate's
+  tokens were graded as the light plate's, 87 times, and never once tested. Any
+  theme that overrides a subset of tokens has to be **merged over its base**
+  before checking, the way the cascade does it.
+
+---
+
+## 4f. `npm run copy-metrics` — and how not to abuse it
+
+Measures the mechanical tells of LLM prose. **Deliberately not in a commit
+hook**: a hook turns a diagnostic into a target, and a writer optimising for
+"em dashes < 4" just starts substituting semicolons — the same tic in a hat.
+The script tracks semicolons for exactly that reason.
+
+Three of its rules were wrong on 18 Aug, and fixing a measurement is legitimate
+only when you can say what it was mis-measuring. All three were category
+errors, not inconvenient results:
+
+- **`Term — gloss` is not the em-dash tic.** "Udhar tracker — informal lending,
+  treated as the real debt it is" is a definition list, and four parallel
+  bullets in that form are a deliberate structure. Nine of fourteen flagged
+  dashes were that. A dash is exempt when it is the string's first, sits in the
+  first 50 characters, and no sentence has ended before it. **Five genuine
+  prose asides remain and the budget is real: 3.95 / 1,000 against a ≤4 ceiling
+  and a human mean of 3.23.** It is not passing by much. Do not spend the slack.
+- **Flat runs are a property of a paragraph.** Scoped globally, the detector
+  walked from one string's last sentence into the next string's first, so
+  parallel list items scored as monotony. Parallelism across items is a
+  rhetorical figure; monotony inside a paragraph is the tic.
+- **Sentences must be split per string.** Bullets have no full stop, so
+  splitting the joined text welded each to its neighbour — the "longest
+  sentence" reported 66 words when it was two 12-word bullets.
+
+The honest test each time: *would a good human writer have written this?* If
+yes, the metric is wrong. If no, the copy is. **One red remains and it is a
+true positive** — the Act 3 goals paragraph has no concrete anchor. It is also
+the copy awaiting his sign-off, so it is his to fix, not mine.
 
 ---
 
@@ -295,12 +347,26 @@ Two things learned building it, both worth keeping:
   404 with a 9-byte body.
 
   `scripts/serve.ps1` kills every next process, asserts none survived, builds,
-  starts one server, and then **fetches the page's own stylesheet and fails if
-  it is not 200**. Always use it. Never hand-roll the restart again.
+  starts one server, **fetches the page's own stylesheet and fails if it is not
+  200**, and then **starts headless Chrome on 9222** if nothing is listening
+  there. Always use it. Never hand-roll the restart again.
+
+  Two later repairs to it: the fixed 9-second sleep was a race that reported
+  "no stylesheet referenced" when it really meant "the server was not up yet" —
+  it polls now; and Chrome needs its own `--user-data-dir`, or it hands the
+  arguments to the user's already-running browser, exits, and never opens the
+  debugging port.
 - **Headless Chrome `--window-size` is not mobile emulation.** It clips instead
   of reflowing, which looks exactly like a horizontal-overflow bug. Use CDP
   `Emulation.setDeviceMetricsOverride`. `scratchpad/shoot.mjs` does this and also
   reports overflow offenders by selector.
+- **`captureBeyondViewport` does not advance scroll-driven animations.** Reveals
+  use `animation-timeline: view()`, which only progresses while the element is
+  in the *scrollport*. A full-page screenshot therefore renders every
+  below-the-fold section at opacity 0 — a blank image of perfectly good markup,
+  which reads exactly like a regression you just caused. Size the viewport to
+  the target and `scrollIntoView` it instead; `scratchpad/full.mjs` does this.
+  Confirm with computed opacity before believing a blank capture.
 - **Contrast must be checked on compiled output.** Two real failures were found
   this way (a near-black background, and `border-strong` below 3:1).
 - **`scroll-padding-top` and the scroll-spy line must agree**, or clicking a nav
@@ -313,12 +379,64 @@ Two things learned building it, both worth keeping:
 
 ## 6. Current state
 
-Next.js 16 · React 19 · TypeScript strict · Tailwind v4 · Geist Sans/Mono.
-Four runtime dependencies. 16 static routes. ~304 kB first load.
-Zero horizontal overflow verified at 320/375/390/430/768/1024/1440/1920.
-WCAG 2.2 AA verified in both themes against compiled CSS.
+Next.js 16 · React 19 · TypeScript strict · Tailwind v4 · Source Serif 4 /
+Instrument Sans / IBM Plex Mono, vendored. Four runtime dependencies.
+16 static routes. Zero overflow in **either** direction at
+320/360/375/390/430/768/1024/1440/1920. WCAG 2.2 AA verified in light, dark,
+light plate and dark plate against compiled CSS. **192 checks green.**
 
-Repo: `github.com/anu78600/Portfolio` (public). Two commits, **not yet pushed**.
+Repo: `github.com/anu78600/Portfolio` (public).
+
+### The plate rebuild (18 Aug) — what changed and why
+
+He said the plate "looks akward". It was: a 1440×900 landscape capture poured
+into a figure column with **no ratio of its own**, so the column stretched to
+whatever height the prose reached and `object-cover` cropped whatever that
+produced — 526×636 at 1440. Only 52% of the image width survived, centred on
+the empty gutter between the app's two panels, slicing UI text mid-word. The
+crop was decided by copy length.
+
+- The figure now has its own `aspect-[13/15]`, matching a **new crop** of the
+  same capture (`quiet-compound-journal.png`, 780×900, no recapture, no
+  invented UI). It frames the journal card: red margin rule, folio QC·0247, the
+  handwritten entry, "no FOMO · no revenge", the REVIEWED stamp — Counterfoil's
+  own vocabulary, rendered by his own product. It also drops the app's brass
+  **Enter** button, which was the largest saturated-gold object on the site.
+- Two frames need **two alts** (`imageDetail` / `imageDetailAlt`). The wide
+  shot's alt describes a sign-in panel the crop does not show, and describing
+  something not on screen is a fabrication like any other.
+- A **mat** (padding in the plate's ground) sits between the screenshot's
+  blue-black and the plate's warm black, so the two colour worlds never share
+  an edge. This is what stops the hue difference reading as a fault.
+- A **plate caption** under it. The most credible-looking text object in
+  publishing, and what tells a reader the dark rectangle is a reproduction of
+  another application rather than a panel of this page.
+- The metadata `well` became a stamped line under a rule. `--well-shadow` is
+  cream-tuned, and `.folio-product` never overrode it, so in **light** theme a
+  well inside the always-dark plate painted a 70%-white hairline on near-black.
+
+### Also fixed in that pass
+
+- ReminderPro's card read "PRODUCTIVITY · SHIPPED PRODUCT" while the section
+  lede said "finished and not deployed". Now `Built · not deployed`, and
+  `ProjectStatus` is a two-value union so the academic values cannot come back.
+- Dark `--surface-elevated` (0.272) sat **above** the plate ground (0.262), so
+  ReminderPro's card outranked the flagship. Now 0.252.
+- Light `--surface-elevated` (0.988) was paper whiter than the paper — i.e.
+  `--paper-raised`, which REDESIGN §7 deleted *by name*, readmitted under
+  another. Now equals `--surface`. Four planes: sunk, paper, tint, plate.
+- Radii were 6/8/12/16 against a documented "nothing above 3px". Now 2/3/3/3;
+  74 elements, no component touched.
+- Four full-bleed section rules crossed the vermilion margin rule — the one
+  thing only the plate may cross. Deleted. Snapshot's `border-y` moved onto the
+  `<ul>` inside `container-counterfoil`. The footer keeps its rule: it sits
+  outside `<main>`, so it never crosses the rule at all.
+- Folio numbers appeared on About blocks and goals *inside* numbered acts, so a
+  reader saw "01 What I have done" and "01 Background" on one screen. Only acts
+  are numbered now; `index` survives as a sort key.
+- `backdrop-filter` on the scrolled header — banned by REDESIGN §4.3, listed as
+  a template signal in §7, and the most expensive paint on a mid-range Android.
+  Gone, with `--header-bg` (which existed only to be blurred behind).
 
 ### Still open
 

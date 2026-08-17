@@ -59,10 +59,15 @@ export function Header({
       >
         <div
           className={cn(
-            "relative border-b transition-[background-color,border-color,backdrop-filter] duration-300",
-            scrolled
-              ? "border-line bg-[var(--header-bg)] backdrop-blur-xl backdrop-saturate-150"
-              : "border-transparent bg-transparent",
+            /* No backdrop-filter. REDESIGN §4.3 bans it outright and §7 lists
+               systemic backdrop blur as a template signal — it is the "frosted
+               glass header" every starter ships. It is also the most expensive
+               paint on the mid-range Android this site is authored for, and it
+               promotes a compositing layer that stays alive while scrolling.
+               An opaque bar does the same job: it stops the text underneath
+               showing through. */
+            "relative border-b transition-[background-color,border-color] duration-300",
+            scrolled ? "border-line bg-bg" : "border-transparent bg-transparent",
           )}
         >
           <div className="container-page flex h-16 items-center justify-between gap-3">

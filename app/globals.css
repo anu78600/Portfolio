@@ -31,8 +31,15 @@
 
   --bg: oklch(0.972 0.008 84);
   --surface: oklch(0.945 0.012 84);
-  --surface-elevated: oklch(0.988 0.006 84);
+  /* The tint plane, NOT a lighter one. At 0.988 this was paper whiter than the
+     paper — which is `--paper-raised`, the token REDESIGN §7 deleted from both
+     themes by name, readmitted under another. The doctrine is four planes:
+     sunk, paper, tint, plate. Nothing on this site is raised except the plate,
+     and a "raised" surface token only invites cards back in. */
+  --surface-elevated: oklch(0.945 0.012 84);
   --surface-sunken: oklch(0.918 0.014 84);
+  /* An overlay is the one exception: a modal dialog genuinely is above the
+     sheet, so it may be lighter than it. */
   --surface-overlay: oklch(0.988 0.006 84);
 
   /* Rules. `--border` is decorative BY CONTRACT: if anything informational
@@ -74,7 +81,9 @@
     0 4px 8px -4px oklch(0.25 0.02 62 / 0.07),
     0 16px 24px -8px oklch(0.25 0.02 62 / 0.05);
 
-  --header-bg: oklch(0.972 0.008 84 / 0.78);
+  /* No --header-bg. It existed only to be blurred behind: a 78%-alpha bar is
+     legible only because a backdrop-filter is smearing what shows through, and
+     that filter is gone. The header uses --bg. */
   --rail: oklch(0.88 0.013 84 / 0.9);
 }
 
@@ -95,7 +104,12 @@
   --surface-sunken: oklch(0.162 0.009 72);
   --bg: oklch(0.198 0.01 72);
   --surface: oklch(0.238 0.012 72);
-  --surface-elevated: oklch(0.272 0.013 72);
+  /* Must stay BELOW the plate ground (0.262). At 0.272 it sat above it, so
+     ReminderPro's card and the hero identity panel read as more raised, more
+     edged and more finished than the flagship — the hierarchy inverted against
+     the one object the page is built around. On dark, elevation is carried
+     upward in tone (see DEPTH), so this stays above --surface at 0.238. */
+  --surface-elevated: oklch(0.252 0.012 72);
   --surface-overlay: oklch(0.31 0.014 72);
 
   --border: oklch(0.348 0.014 74);
@@ -135,7 +149,6 @@
     0 2px 6px -2px oklch(0 0 0 / 0.3),
     0 12px 32px -12px oklch(0 0 0 / 0.45);
 
-  --header-bg: oklch(0.198 0.01 72 / 0.78);
   --rail: oklch(0.348 0.014 74 / 0.9);
 }
 
@@ -226,11 +239,18 @@
   --text-label--line-height: 1.3;
   --text-label--letter-spacing: 0.06em;
 
-  /* Radii — restrained. Nothing on this site is a pill except a status dot. */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  /* Radii. REDESIGN §4.4: 0 by default, 2px on wells, 3px on the plate and
+     stamps, nothing above 3px anywhere on the site.
+     The census said otherwise: 23 elements at 8px, 30 at 6px, 3 at 12px — and
+     the plate, the one element actually built to the stated system, at 3px. A
+     3px-cornered black plate full of 8px buttons and 6px chips is the largest
+     single reason the page still read as a component library rather than a
+     printed object. Fixing the scale fixes all 74 through the existing
+     `rounded-*` classes without touching a component. */
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 3px;
+  --radius-xl: 3px;
 
   /* Elevation */
   --shadow-subtle: var(--shadow-subtle);
@@ -621,12 +641,22 @@
 }
 
 [data-theme="dark"] {
-  /* Two shadows maximum. Further layers buy ΔL < 0.005 on this ground, which
-     is below the just-noticeable difference — they cost paint and buy nothing. */
+  /* Two BLUR layers maximum — a third buys ΔL < 0.005 on this ground, below the
+     just-noticeable difference, and costs paint for nothing.
+     The 1px ring is not a blur layer. Paired with the inset rim it is a
+     Craik-O'Brien-Cornsweet edge: the ring sits ΔL 0.079 *below* the page and
+     the rim ΔL 0.066 *above* the plate ground, so the total excursion across a
+     2px boundary is 0.209 while the two fills differ by only 0.064. That is
+     what "unmistakably a separate object" costs in dark, and it costs no paint
+     area at all.
+     The ring must come first so it paints tight against the border box, and it
+     must be a shadow rather than a border, or the forced-colors rule and the
+     print reset both start fighting it. */
   --plate-shadow:
-    inset 0 1px 0 0 oklch(1 0 0 / 0.065),
-    0 2px 4px -2px oklch(0.04 0.015 60 / 0.6),
-    0 14px 30px -16px oklch(0.04 0.015 60 / 0.55);
+    0 0 0 1px oklch(0.12 0.01 72),
+    inset 0 1px 0 0 oklch(1 0 0 / 0.075),
+    0 3px 5px -2px oklch(0.04 0.015 60 / 0.65),
+    0 16px 34px -18px oklch(0.04 0.015 60 / 0.55);
   --well-shadow:
     inset 0 1px 2px oklch(0 0 0 / 0.35),
     inset 0 -1px 0 oklch(1 0 0 / 0.03);
@@ -662,6 +692,16 @@
   --accent-line: oklch(0.64 0.115 90);
   --focus: oklch(0.8 0.132 92);
 
+  /* --well-shadow is authored for a cream ground: an inner top shade plus a
+     bright bottom highlight. This block redefines colour but not the two shadow
+     tokens, so in the LIGHT theme a well inside the always-dark plate painted
+     `inset 0 -1px 0 oklch(1 0 0 / 0.7)` — a 70%-white hairline across a
+     near-black box. The plate now carries its own dark-ground recipe in both
+     themes, so the utility stays safe to use in here. */
+  --well-shadow:
+    inset 0 1px 2px oklch(0 0 0 / 0.45),
+    inset 0 -1px 0 oklch(1 0 0 / 0.05);
+
   color: var(--text-primary);
   /* A directional border-box gradient, not a symmetric ring. A ring flattens a
      raised object into a sticker; this catches brass along the top edge and
@@ -683,11 +723,45 @@
 }
 
 [data-theme="dark"] .folio-product {
-  --bg: oklch(0.262 0.02 80);
-  --surface: oklch(0.295 0.02 80);
-  --surface-elevated: oklch(0.32 0.02 80);
-  --surface-sunken: oklch(0.225 0.018 80);
+  /* Chroma, not lightness. Raising --bg to separate the plate from the page
+     buys ΔL 0.006 against a 0.064 baseline — below the just-noticeable
+     difference — and it costs the well its recess and slides --border-strong
+     below 3:1. Doubling chroma at hue 84 instead makes the plate a visibly
+     warmer, browner stock than the page, and moves no contrast pair at all:
+     every text ratio below is identical to the values these replaced. */
+  --bg: oklch(0.262 0.03 84);
+  --surface: oklch(0.295 0.03 84);
+  --surface-elevated: oklch(0.32 0.028 84);
+  --surface-sunken: oklch(0.225 0.026 84);
+  /* 0.58 measured 2.96:1 on --surface-elevated inside the dark plate, below the
+     3:1 floor this token is contractually held to. No check ever saw it:
+     `checkContrast` read the FIRST `.folio-product{}` block in the compiled
+     sheet, which is the light one, so the dark plate was graded as the light
+     plate 87 times. 0.60 gives 3.22:1. */
+  --border-strong: oklch(0.6 0.026 84);
   --accent-contrast: oklch(0.2 0.018 80);
+
+  /* The light gradient inverted every sign it depends on when dark inherited
+     it. Composited over this ground it measured: top brass 2.77:1 (the one
+     good edge), 26% at 1.41:1, 72% at 1.25:1 — five sRGB code values, below a
+     single step on the 6-bit+FRC panels this site is authored for — and a
+     bottom edge at 1.09:1 that was ΔL +0.038 *lighter* than the page it was
+     supposed to be casting a shadow onto. Three of the plate's four edges could
+     not be located.
+
+     On a dark ground a silhouette is made of light catching the edge, not
+     shadow falling off it. Still directional — brightest and brass at the top,
+     dimmest at the bottom — so it reads as a light source, not a ring. */
+  background:
+    linear-gradient(var(--bg), var(--bg)) padding-box,
+    linear-gradient(
+        180deg,
+        oklch(0.64 0.115 90 / 0.6) 0%,
+        oklch(1 0 0 / 0.12) 22%,
+        oklch(1 0 0 / 0.085) 78%,
+        oklch(1 0 0 / 0.06) 100%
+      )
+      border-box;
 }
 
 @media (forced-colors: active) {
