@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { profile } from "@/content/profile";
-import { leadProject } from "@/content/projects";
+import { liveProject } from "@/content/projects";
 import { initialsFrom, real } from "@/lib/content";
 import { cn } from "@/lib/cn";
 import { Icon } from "@/components/ui/Icon";
@@ -29,7 +29,11 @@ export function IdentityPanel() {
   const initials = initialsFrom(profile.name, profile.initials);
   const portrait = real(profile.portrait);
   const availability = real(profile.availability);
-  const liveUrl = real(leadProject.externalUrl);
+  /* Optional by type. The old `leadProject` was a non-null assertion over a
+     layout flag; once both projects became peers it returned undefined and
+     this line threw at module scope — a build failure on the only entry
+     route, not a runtime hiccup. */
+  const liveUrl = liveProject ? real(liveProject.externalUrl) : null;
 
   const rows: Row[] = [
     { label: "Focus", value: "Agentic AI · Analytics · Finance" },
@@ -123,7 +127,7 @@ export function IdentityPanel() {
                 Live now
               </span>
               <span className="mt-1.5 block truncate font-medium text-ink">
-                {leadProject.title}
+                {liveProject?.title}
               </span>
               <span className="mt-0.5 block truncate text-[0.8125rem] text-ink-3">
                 Trades, cards, udhar · local-first

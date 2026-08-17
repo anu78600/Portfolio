@@ -692,6 +692,12 @@
   --surface: oklch(0.235 0.018 80);
   --surface-elevated: oklch(0.26 0.018 80);
   --surface-sunken: oklch(0.17 0.016 80);
+  /* The plate is the topmost plane on this site; nothing sits above it, so its
+     overlay IS its elevated plane. This was the one surface token the plate
+     never declared, so it fell through to the PAGE value — #fdfbf7 in light,
+     i.e. near-white under near-white text at 1.12:1. checkContrast skipped all
+     12 pairs involving it, because a token that is absent is not graded. */
+  --surface-overlay: oklch(0.26 0.018 80);
   --text-primary: oklch(0.95 0.008 90);
   --text-secondary: oklch(0.8 0.012 90);
   --text-muted: oklch(0.7 0.014 90);
@@ -1120,17 +1126,40 @@ html {
   /* The plate sets its own tokens, so the page-level reset above does not
      reach inside it. Printers drop background colours by default, so without
      this the entire Quiet Compound block prints as a white hole — measured
-     1.16:1. It is the section about the only product actually shipped. */
-  .folio-product {
+     1.16:1. It is the section about the only product actually shipped.
+
+     BOTH SELECTORS, ALWAYS. `@media` contributes nothing to specificity, so a
+     bare `.folio-product` (0,1,0) LOSES outright to
+     `[data-theme="dark"] .folio-product` (0,2,0), and in dark theme five
+     surface tokens survived from screen straight into print — measured
+     --bg #2b2313, --surface #342b1b, --surface-elevated #3a3222. A neutral Tag
+     inside the plate printed #27272a on #342b1b: 1.07:1. Same defect class as
+     the white hole this block was written to fix. */
+  .folio-product,
+  [data-theme="dark"] .folio-product {
     --bg: #fff;
     --surface: #fff;
     --surface-elevated: #fff;
     --surface-sunken: #fff;
+    /* The plate has no plane above itself, so its overlay is its own ground. */
+    --surface-overlay: #fff;
     --text-primary: #000;
     --text-secondary: #27272a;
     --text-muted: #52525b;
     --accent: #5a1f15;
+    /* The page-level block resets --accent-soft precisely because a red wash
+       must not print — but that reset stops at this boundary. Left alone the
+       plate printed #392c01 under #5a1f15 text: 1.07:1. */
+    --accent-soft: #fff;
+    --accent-hover: #5a1f15;
+    /* Was #1a150d — near-black on the #5a1f15 fill of a primary button, at
+       1.42:1. White on that fill is 12.79:1. */
+    --accent-contrast: #fff;
+    --accent-line: #d4d4d8;
     --border: #d4d4d8;
+    --border-hover: #d4d4d8;
+    --border-strong: #a1a1aa;
+    --focus: #5a1f15;
     color: #000 !important;
     background: none !important;
     box-shadow: none !important;

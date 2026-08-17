@@ -63,6 +63,12 @@ export default async function CaseStudyPage({
 
   const year = real(project.year);
   const externalUrl = real(project.externalUrl);
+  /* Brass resolves inside `.folio-product` and nowhere else on the site. Gate
+     it on the FACT, not the slug: the plate is a claim about a thing you can
+     open, so only a live product with a real URL earns one. `status` is a
+     closed two-value union, so this cannot drift. */
+  const isPlate = project.status === "Live product" && Boolean(externalUrl);
+  const liveHost = externalUrl?.replace(/^https?:\/\//, "").replace(/\/$/, "");
 
   const index = projects.findIndex((item) => item.slug === project.slug);
   const next = projects[(index + 1) % projects.length];
@@ -136,18 +142,71 @@ export default async function CaseStudyPage({
           </div>
         </header>
 
+        {/* THE PLATE — now the only one on the site, so the privilege of
+            crossing the margin rule is unambiguous.
+
+            It is gated on `status`, not on the slug: the plate is a claim about
+            a thing you can open, and brass is the product's own colour. A
+            project that was never deployed does not get to borrow it.
+
+            Detail crop, not the wide shot. The wide capture carries the app's
+            solid brass Enter button — 14,890 saturated-gold pixels, the largest
+            such object anywhere near this site — and a 21/9 crop keeps all of
+            it, ending just below so it reads as a gold bar hanging off the
+            frame. Quiet asset at the top; the full screen appears further down.
+
+            `sm:` on the pull is not optional: below 40rem `container-counterfoil`
+            reserves no stub, so an unconditional pull hangs the plate ~50px off
+            the left edge of every phone — which `scrollWidth` cannot see. */}
         <div className="container-counterfoil">
-          <Reveal className="relative aspect-[2/1] overflow-hidden rounded-lg border border-line sm:aspect-[21/9]">
-            <ProjectPlate
-              kind={project.kind}
-              seed={project.slug}
-              image={project.image}
-              imageAlt={project.imageAlt}
-              priority
-              size="hero"
-              sizes="100vw"
-            />
-          </Reveal>
+          {isPlate ? (
+            <figure className="sm:-ml-[calc(var(--stub)+var(--stub-gap))]">
+              {/* Capped, NOT `w-fit`. Stretched to the full 1152px container a
+                  portrait figure sat in ~270px of empty ground either side and
+                  read as a small picture lost in a big dark box. But shrink-wrap
+                  is not the fix: `.folio-product` declares
+                  `container-type: inline-size`, which forbids the element's
+                  inline size from depending on its own contents — `w-fit`
+                  collapses the plate to a sliver, and the `5cqi` mat goes with
+                  it. A max-width keeps both the container query and the mount. */}
+              <Reveal className="folio-product overflow-clip sm:max-w-[32rem]">
+                {/* The mat: the screenshot's blue-black never shares an edge
+                    with the plate's warm black. */}
+                <div className="p-[clamp(1.25rem,5cqi,2.75rem)]">
+                  <div
+                    data-plate-figure
+                    className="relative aspect-[13/15] w-full overflow-clip rounded-[2px] border border-line"
+                  >
+                    <ProjectPlate
+                      kind={project.kind}
+                      seed={project.slug}
+                      image={project.imageDetail ?? project.image}
+                      imageAlt={project.imageDetailAlt ?? project.imageAlt}
+                      priority
+                      sizes="(min-width: 40rem) 26rem, 82vw"
+                    />
+                  </div>
+                </div>
+              </Reveal>
+
+              <figcaption className="mt-3 font-sans text-[0.875rem] leading-normal text-ink-2">
+                {project.title}, entry view.
+                {liveHost ? (
+                  <span className="text-ink-3"> Live at {liveHost}.</span>
+                ) : null}
+              </figcaption>
+            </figure>
+          ) : (
+            <Reveal className="relative aspect-[2/1] overflow-clip rounded-lg border border-line sm:aspect-[21/9]">
+              <ProjectPlate
+                kind={project.kind}
+                seed={project.slug}
+                drawn
+                priority
+                size="hero"
+              />
+            </Reveal>
+          )}
         </div>
 
         <div className="container-counterfoil py-14 sm:py-20">
@@ -160,6 +219,29 @@ export default async function CaseStudyPage({
               />
             ))}
           </div>
+
+          {/* The full capture, after the reader knows what they are looking at.
+              18/7, not 21/9: `object-cover object-top` means the ratio IS the
+              crop line — 21/9 shows source rows 0-617 and keeps the app's brass
+              Enter bar whole, while 18/7 stops at row 560 and the bar begins at
+              576. Lazy, because it is well below the fold and the plate above
+              already carries `priority`. */}
+          {isPlate && real(project.image) ? (
+            <Reveal as="figure" className="mt-14 sm:mt-20">
+              <div className="relative aspect-[18/7] overflow-clip rounded-[3px] border border-line">
+                <ProjectPlate
+                  kind={project.kind}
+                  seed={project.slug}
+                  image={project.image}
+                  imageAlt={project.imageAlt}
+                  sizes="100vw"
+                />
+              </div>
+              <figcaption className="mt-3 font-sans text-[0.875rem] leading-normal text-ink-2">
+                The entry screen in full, with live market status.
+              </figcaption>
+            </Reveal>
+          ) : null}
         </div>
       </article>
 

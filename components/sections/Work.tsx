@@ -1,7 +1,6 @@
 import { projects } from "@/content/projects";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { LeadProject } from "@/components/work/LeadProject";
-import { FeaturedProjectCard, ProjectCard } from "@/components/work/ProjectCard";
+import { FeaturedProjectCard } from "@/components/work/ProjectCard";
 
 /**
  * Selected work — two shipped products.
@@ -11,14 +10,21 @@ import { FeaturedProjectCard, ProjectCard } from "@/components/work/ProjectCard"
  * with "this study asks" trains the reader to skim. Two things that exist beat
  * eight things that were considered.
  *
- * The lead block and the wide card carry the ranking argument between them:
- * one product gets a live link and a full treatment, the other gets a card and
- * an honest note that it was never deployed.
+ * An IDENTICAL PAIR, his decision, 18 Aug 2026. Neither project gets a size
+ * advantage and neither shows a screenshot here — the real capture is the
+ * reward for opening the case study. What separates them is a statement of
+ * fact, not a difference of rank: one card is stamped "Live product" and the
+ * other "Built · not deployed", in the same type at the same size.
+ *
+ * No alternation. `reverse` exists for a run of cards where flipping the plate
+ * left and right is a rhythm; over exactly two items it is not a rhythm, it is
+ * a reader hunting for a second left edge — the second card's title would move
+ * 763px to 399px at 1440. Both plates sit left.
+ *
+ * Order is the ranking, and it lives in content/projects.ts. This maps the
+ * array without sorting.
  */
 export function Work() {
-  const lead = projects.find((project) => project.weight === "flagship");
-  const featured = projects.filter((project) => project.weight === "featured");
-
   return (
     <section
       id="work"
@@ -33,22 +39,18 @@ export function Work() {
           label="What I have built"
           id="work-title"
           title="Two things I built."
-          lede="One is live and you can open it right now. The other is finished and not deployed, which is stated rather than hidden."
+          lede="One is live at quiet-compound.vercel.app and you can open it right now. The other is finished and not deployed, which is stated rather than hidden."
         />
 
-        {lead ? <LeadProject project={lead} /> : null}
-
         <div className="mt-12 flex flex-col gap-6">
-          {featured.map((project, index) => (
+          {projects.map((project, index) => (
             <FeaturedProjectCard
               key={project.slug}
               project={project}
-              reverse={index % 2 === 1}
               delay={index * 60}
             />
           ))}
         </div>
-
       </div>
     </section>
   );

@@ -84,17 +84,35 @@ function checkContrast() {
       .map((b) => parse(b.slice(6, -1)))
       .find((t) => t["--bg"]),
     dark: blockOf(/\[data-theme=dark\]\{([^}]*)\}/),
-    plate: blockOf(/\.folio-product\{([^}]*)\}/),
+    /* ANCHORED on the preceding `{`, which only the @utility output has:
+       `@layer utilities{.folio-product{`. `[data-theme=dark] .folio-product{`
+       is preceded by a space and the print rule by `}`, so unanchored either
+       could impersonate the base block the moment Tailwind tree-shakes the
+       utility away — and @utility output is emitted ONLY if the class name
+       appears in scanned source. Lose the last consumer and the entire plate
+       colour world silently leaves the stylesheet. */
+    plate: blockOf(/\{\.folio-product\{([^}]*)\}/),
     /* The dark plate is a SEPARATE block that overrides only some tokens, and
        `blockOf` returns the first match — which is the light plate. So every
        one of the checks below has been grading the light plate twice and the
        dark plate never, which is how --border-strong shipped at 2.96:1 inside
        it. Merge the override over the base, the way the cascade does. */
     plateDark: {
-      ...blockOf(/\.folio-product\{([^}]*)\}/),
+      ...blockOf(/\{\.folio-product\{([^}]*)\}/),
       ...blockOf(/\[data-theme=dark\] \.folio-product\{([^}]*)\}/),
     },
   };
+
+  /* Absence must be loud. Every other check here grades what it finds, so a
+     vanished block reads as "nothing to grade" and the suite reports ALL
+     PASSED on a smaller suite — the exact trap this file has already fallen
+     into twice. */
+  record(
+    "contrast",
+    "plate base token block present in compiled CSS",
+    Boolean(themes.plate && themes.plate["--text-primary"] && themes.plate["--bg"]),
+    "the @utility folio-product output is missing — tree-shaken?",
+  );
 
   const TEXT = ["--text-primary", "--text-secondary", "--text-muted", "--accent"];
   const SURFACES = [
@@ -295,7 +313,7 @@ async function checkLayout(page, path, theme) {
  * So: emulate print, and assert every text element contrasts against WHITE,
  * not against its own background.
  */
-async function checkPrint(page, path) {
+async function checkPrint(page, path, expectPlate = false) {
   await page.send("Emulation.setDeviceMetricsOverride", {
     width: 1024,
     height: 1400,
@@ -339,6 +357,39 @@ async function checkPrint(page, path) {
       r >= 4.5,
       `${r.toFixed(2)}:1 on paper — "${s.sample}"`,
     );
+  }
+
+  /* A check that measures nothing passes. Sampling TEXT inside the plate is not
+     enough on its own: the plate now holds a figure and no copy, so a
+     text-only probe finds zero rows and reports success by finding nothing —
+     the same failure that let the dark plate go 87 checks ungraded.
+     So assert the plate is on this route AND that the print reset actually
+     reached it. `@media` adds no specificity, so a bare `.folio-product`
+     (0,1,0) loses to `[data-theme="dark"] .folio-product` (0,2,0) and the
+     screen tokens survive into print — measured --bg #2b2313 under near-white
+     text before this was fixed. */
+  if (expectPlate) {
+    const plate = await page.evaluate(`(() => {
+      const el = document.querySelector(".folio-product");
+      if (!el) return null;
+      const s = getComputedStyle(el);
+      return {
+        bg: s.getPropertyValue("--bg").trim(),
+        text: s.getPropertyValue("--text-primary").trim(),
+        contrast: s.getPropertyValue("--accent-contrast").trim(),
+      };
+    })()`);
+
+    record("print", `${path}: plate present on this route`, Boolean(plate),
+      "no .folio-product found — has it moved?");
+
+    if (plate) {
+      /* Print emulation flattens these to literal hex in both themes. */
+      const flat = (v) => /^#f{3,6}$|^#0{3,6}$|^white$|^black$/i.test(v);
+      record("print", `${path}: plate --bg reset for paper`, flat(plate.bg), plate.bg);
+      record("print", `${path}: plate --text-primary reset for paper`, flat(plate.text), plate.text);
+      record("print", `${path}: plate --accent-contrast reset for paper`, flat(plate.contrast), plate.contrast);
+    }
   }
 
   await page.send("Emulation.setEmulatedMedia", { media: "" });
@@ -463,6 +514,9 @@ try {
   await checkLayout(page, "/resume", "light");
   await checkPrint(page, "/");
   await checkPrint(page, "/resume");
+  /* The plate lives on the case study now. Without this route its print
+     coverage would be zero and the group would just get smaller. */
+  await checkPrint(page, "/work/quiet-compound", true);
   await checkStructure(page, "/");
   await checkStructure(page, "/resume");
   /* The case studies were a total blind spot: no check had ever loaded one, and

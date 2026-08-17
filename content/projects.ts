@@ -1,4 +1,5 @@
 import type { Project } from "./types";
+import { real } from "@/lib/content";
 
 /**
  * Selected work.
@@ -9,11 +10,14 @@ import type { Project } from "./types";
  *    section is marked `pending` and renders as an honest note.
  *  • `thesis` and `summary` describe the *question the work asks*, which is
  *    derivable from the brief. They never assert an answer.
- *  • `weight` drives layout: `flagship` gets the full-width lead treatment,
- *    `featured` the wide card. There is no `standard` tier in use — the six
- *    academic projects were cut on 17 Aug 2026 because they were theory with
- *    no problem statement, and two shipped products say more than eight
- *    entries where six begin "this study asks".
+ *  • ORDER is the ranking. This array is authored strongest-first and Work.tsx
+ *    maps it without sorting, so the sequence is visible here rather than
+ *    computed from a field. `weight` used to do that job and was deleted on
+ *    18 Aug 2026: both projects now get identical cards, so a layout flag had
+ *    nothing left to drive.
+ *  • The six academic projects were cut on 17 Aug 2026 — theory with no problem
+ *    statement, and two shipped products say more than eight entries where six
+ *    begin "this study asks".
  */
 
 export const projects: Project[] = [
@@ -25,7 +29,6 @@ export const projects: Project[] = [
     category: "Personal finance",
     kind: "product",
     status: "Live product",
-    weight: "flagship",
     year: "2026",
     summary:
       "A personal finance suite for students. It tracks trades, charts, credit cards, and the money you lent a friend that you have both half-forgotten.",
@@ -107,7 +110,6 @@ export const projects: Project[] = [
     category: "Productivity",
     kind: "product",
     status: "Built · not deployed",
-    weight: "featured",
     year: "2026",
     summary:
       "A reminders app. The entire design brief was that adding one should be faster than the thought that made you want to.",
@@ -133,8 +135,23 @@ export const projects: Project[] = [
 
 ];
 
-/** The lead project — currently the shipped product, not the research. */
-export const leadProject = projects.find((p) => p.weight === "flagship")!;
+/**
+ * The one product that is actually running.
+ *
+ * Keyed to `status`, which is a FACT about the work and already a closed
+ * two-value union — not to a layout flag and not to a slug. The old
+ * `leadProject` was a non-null assertion over `weight === "flagship"`; the
+ * moment both projects became peers that returned `undefined` and the hero
+ * dereferenced it at module scope, which is a `next build` failure on the
+ * site's only entry route rather than a runtime hiccup.
+ *
+ * Optional by type, so every consumer has to handle "nothing is live yet".
+ * The same predicate is what lets brass resolve on a case study: the plate is
+ * a claim about a thing you can open.
+ */
+export const liveProject: Project | undefined = projects.find(
+  (p) => p.status === "Live product" && Boolean(real(p.externalUrl)),
+);
 
 export function getProject(slug: string): Project | undefined {
   return projects.find((p) => p.slug === slug);

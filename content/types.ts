@@ -139,8 +139,6 @@ export interface Project {
   thesis: string;
   /** Methods, tools and frameworks actually used. */
   methods: string[];
-  /** Drives layout: `featured` gets the wide card, `standard` the grid. */
-  weight: "flagship" | "featured";
   /** Year or range. Placeholder-safe. */
   year: Todo | string;
   caseStudy: CaseStudySection[];

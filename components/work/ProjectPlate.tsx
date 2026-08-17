@@ -242,6 +242,7 @@ export function ProjectPlate({
   image,
   imageAlt,
   priority,
+  drawn = false,
   size = "card",
   sizes = "(min-width: 1024px) 50vw, 100vw",
   className,
@@ -253,6 +254,15 @@ export function ProjectPlate({
   image?: string;
   imageAlt?: string;
   priority?: boolean;
+  /**
+   * Force the drawn abstraction even where a real capture exists.
+   *
+   * The home-page cards use this. Not passing `image` would have the same
+   * effect today, but an explicit flag survives the edit where someone re-adds
+   * `image={project.image}` "for consistency" and silently undoes the decision
+   * to keep the photograph behind the click.
+   */
+  drawn?: boolean;
   /** `hero` is the wide case-study banner, where a card-sized figure is lost. */
   size?: "card" | "hero";
   sizes?: string;
@@ -268,9 +278,13 @@ export function ProjectPlate({
    * interface survives every crop ratio the card uses, and carries an inset
    * hairline so it sits in the card's material rather than floating on it.
    */
-  if (image) {
+  if (image && !drawn) {
     return (
-      <div className={cn("relative h-full w-full overflow-hidden bg-sunken", className)}>
+      /* `overflow-clip`, not `overflow-hidden`: this wrapper sits between the
+         plate and the figure that carries the scroll settle, and `hidden` would
+         make it a scroll container that captures the figure's view() timeline
+         and pins it silently. */
+      <div className={cn("relative h-full w-full overflow-clip bg-sunken", className)}>
         <Image
           src={image}
           alt={imageAlt ?? ""}
