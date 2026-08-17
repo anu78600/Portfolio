@@ -1158,12 +1158,16 @@ html {
     --accent-line: #d4d4d8;
     --border: #d4d4d8;
     --border-hover: #d4d4d8;
-    --border-strong: #a1a1aa;
+    /* #71717a = 4.83:1 on paper, not #a1a1aa = 2.56:1. --border-strong is held
+       to 3:1 by contract everywhere else on the site, and print is where it
+       matters most: the plate's ground is dropped, so this line is the only
+       thing telling a reader where the reproduction begins. */
+    --border-strong: #71717a;
     --focus: #5a1f15;
     color: #000 !important;
     background: none !important;
     box-shadow: none !important;
-    border-color: #a1a1aa !important;
+    border-color: #71717a !important;
   }
 
   a[data-print-url]::after {
