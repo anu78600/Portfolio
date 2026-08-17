@@ -425,7 +425,7 @@
    drift apart again. Plain :root rather than @theme, because the gutter
    changes at breakpoints. */
 :root {
-  --page-max: 72rem;
+  --page-max: 78rem;
   --page-gutter: 1.125rem;
 
   /* The stub: the strip outside the margin rule where folios, years and
@@ -438,15 +438,20 @@
 @media (width >= 40rem) {
   :root {
     --page-gutter: 2rem;
-    --stub: 5.5rem;
-    --stub-gap: 1.5rem;
+    --stub: 4rem;
+    --stub-gap: 1.25rem;
   }
 }
 @media (width >= 64rem) {
   :root {
     --page-gutter: 3rem;
-    --stub: 9rem;
-    --stub-gap: 2.25rem;
+    /* 4.5rem, not 9rem. The stub holds a two-digit folio at 11px — about 30px
+       of ink. 144px of reservation for that, on every line of the page, was
+       the single largest consumer of horizontal space on the site: it pushed
+       the content 168px right of centre at every width and left the whole page
+       looking as though it had slipped off its own margin. */
+    --stub: 4.5rem;
+    --stub-gap: 1.5rem;
   }
 }
 
@@ -470,8 +475,27 @@
   margin-inline: auto;
   padding-inline: var(--page-gutter);
 
+  /* SYMMETRIC. Padding sits inside a centred box, so padding only on the start
+     side cannot produce centred content — it just pushes everything right, by
+     the full width of the stub, forever. Measured before this: 366px of dead
+     space on the left against 198px on the right at 1440, identical 168px
+     imbalance at 1280 and 1920. The page read as though it had slipped.
+     Reserving the same width on both sides costs nothing that was being used —
+     the right margin was already empty — and it buys a page that is actually
+     centred, with the stub still sitting in its own strip on the left. */
   @media (width >= 40rem) {
     padding-inline-start: calc(
+      var(--page-gutter) + var(--stub) + var(--stub-gap)
+    );
+  }
+
+  /* Symmetry only from 64rem, where --page-max leaves spare margin to give
+     back. Between 40 and 64rem the viewport IS the constraint — matching the
+     stub on the right there would take the width straight out of the reading
+     column (592px to 536px at 768) to fix an imbalance nobody notices on a
+     tablet. Centre the page where centring is free. */
+  @media (width >= 64rem) {
+    padding-inline-end: calc(
       var(--page-gutter) + var(--stub) + var(--stub-gap)
     );
   }
