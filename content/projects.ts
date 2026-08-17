@@ -41,21 +41,21 @@ export const projects: Project[] = [
     ],
     image: "/work/quiet-compound.png",
     imageAlt:
-      "Quiet Compound's entry screen: a ruled paper folio with a handwritten trade entry on the left, and a sign-in panel showing live NSE market status on the right.",
+      "Quiet Compound’s entry screen: a ruled paper folio with a handwritten trade entry on the left, and a sign-in panel showing live NSE market status on the right.",
     /* The journal card, cropped out of the same capture — no recapture, no
        invented UI. It names what is visibly in frame and deliberately does not
        restate the entry's gain figure: describing the artefact is reporting,
        repeating a return in the page's own voice is a claim. */
     imageDetail: "/work/quiet-compound-journal.png",
     imageDetailAlt:
-      "Quiet Compound's journal view: a ruled dark sheet with a red margin rule, the folio number QC·0247, a handwritten trade entry, the line “no FOMO · no revenge”, and a stamp reading REVIEWED.",
+      "Quiet Compound’s journal view: a ruled dark sheet with a red margin rule, the folio number QC·0247, a handwritten trade entry, the line “no FOMO · no revenge”, and a stamp reading REVIEWED.",
     externalUrl: "https://quiet-compound.vercel.app",
     externalLabel: "Open the live app",
     caseStudy: [
       {
         heading: "The problem",
         body: [
-          "A student's money is scattered across places that do not talk to each other, and the messiest parts are the ones no finance app bothers with. Udhar is the clearest example: money lent to a friend or borrowed from family is real debt, but it lives in memory and screenshots, and it is socially awkward to chase. Nobody builds for it, so everybody tracks it badly or not at all.",
+          "A student’s money is scattered across places that do not talk to each other, and the messiest parts are the ones no finance app bothers with. Udhar is the clearest example: money lent to a friend or borrowed from family is real debt, but it lives in memory and screenshots, and it is socially awkward to chase. Nobody builds for it, so everybody tracks it badly or not at all.",
           "The same goes for a second credit card, or a trade taken for a reason already forgotten. Each is small on its own. Together they are why someone can be careful with money and still have no idea where they stand.",
         ],
       },

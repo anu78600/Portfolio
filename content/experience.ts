@@ -49,7 +49,7 @@ export const experience: ExperienceItem[] = [
     period: "Jul 2025–Present",
     location: "Remote",
     summary:
-      "Prompt work, treated as engineering. Versioned, logged, adapted to whatever the client's domain turns out to need.",
+      "Prompt work, treated as engineering. Versioned, logged, adapted to whatever the client’s domain turns out to need.",
     contributions: [
       "Compare prompt variants against client requirements instead of judging by feel",
       "Keep iteration logs of prompt variants, so an improvement is traceable to a specific change",
@@ -69,7 +69,7 @@ export const experience: ExperienceItem[] = [
     period: "Aug 2025–Sep 2025",
     location: "Uttar Pradesh, India",
     summary:
-      "Two months inside the HR function of one of India's largest fertiliser cooperatives. The layer underneath the policy, where processes meet the systems that record them.",
+      "Two months inside the HR function of one of India’s largest fertiliser cooperatives. The layer underneath the policy, where processes meet the systems that record them.",
     contributions: [
       "Maintained employee records in line with HR policy and procedure",
       "Supported employee engagement initiatives run by the HR team",

@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* Prose and build tooling are not markup.
+   Tailwind v4 scans the WHOLE project — Markdown and scripts included — and
+   treats any matching token as a class candidate. So REDESIGN.md and
+   PROJECT-MEMORY.md documenting the blurred-backdrop ban *by name*, and the
+   harness's own regex forbidding it, all caused Tailwind to emit that very
+   utility into the shipped stylesheet. Writing down a prohibition was enough to
+   ship the prohibited thing, and the check that enforces it failed itself.
+   These directories hold no class names. Excluding them is the fix; the same
+   trap waits for any utility a doc happens to mention. */
+@source not "../*.md";
+@source not "../scripts";
+@source not "../scratchpad";
+
 /* ─────────────────────────────────────────────────────────────────────────────
    DESIGN TOKENS
 
@@ -82,8 +95,8 @@
     0 16px 24px -8px oklch(0.25 0.02 62 / 0.05);
 
   /* No --header-bg. It existed only to be blurred behind: a 78%-alpha bar is
-     legible only because a backdrop-filter is smearing what shows through, and
-     that filter is gone. The header uses --bg. */
+     legible only because a blur is smearing what shows through, and that blur
+     is gone. The header uses --bg. */
   --rail: oklch(0.88 0.013 84 / 0.9);
 }
 
@@ -825,6 +838,68 @@
     }
   }
 
+  /* The plate figure settles as it arrives.
+     ─────────────────────────────────────────────────────────────────────────
+     The SUBJECT IS THE FIGURE, not the plate. The plate holds 21px Source
+     Serif, and a composited scale resamples rendered text rather than
+     re-rastering it, so scaling the plate softens every word in it. The figure
+     is a raster the browser resamples anyway. The plate is also never more
+     than 71.6% visible on any phone (354 x 1179 at 390, a 1.40 viewports),
+     so scaling it would animate an object still sliding in off the bottom.
+
+     THIS ONLY WORKS BECAUSE `.folio-product` IS `overflow-clip`, NOT
+     `overflow-hidden`. `hidden` is a scroll container, so `view()` on any
+     descendant re-parents to the plate — which never scrolls — and pins
+     progress at 1.000 forever while nothing moves. Measured at 9 scroll
+     positions at both 1440 and 390: playState "finished", scale "1", every
+     time. It looks exactly like the CSS was never written. `clip` clips to the
+     same padding box, honours the same radius, and is not a scroll container.
+     If anyone sets that class back to `overflow-hidden`, this animation dies
+     silently and the page looks untouched.
+
+     `scale`, NEVER `transform: scale()`. Two animations that both write
+     `transform` do not compose — the later name wins outright. Measured on
+     this plate with both running: `transform: scale()` yields
+     matrix(0.942705,0,0,0.942705,0,0), i.e. reveal-in's 12px lift is silently
+     deleted. The independent `scale` property yields
+     matrix(1,0,0,1,0,3.02572) AND scale 0.941879 — both applied, because CSS
+     resolves translate -> rotate -> scale -> transform.
+
+     ONE RANGE, NO BREAKPOINTS. For a box shorter than the scrollport the
+     `entry` range length equals the box's own layout height, so entry progress
+     IS the fraction of the figure on screen — width-invariant by
+     construction. The growth therefore always begins with 61-84% of the figure
+     already visible and always ends the instant it has fully arrived. The
+     window is 154px of scroll at 320 and 198px at 390: about a quarter of one
+     flick. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      [data-plate-figure] {
+        /* Symmetrical. The mat is a fixed border on all four sides, so an
+           off-centre origin turns the settle into a slide. This is the
+           computed default; it is written down so a future `origin-*` utility
+           cannot change the gesture silently. */
+        transform-origin: 50% 50%;
+        animation: plate-figure-settle linear both;
+        animation-timeline: view();
+        animation-range: entry 45% entry 100%;
+      }
+    }
+  }
+
+  /* Never above 1. Scaling past 1 pushes the figure outward into an 18px phone
+     gutter, and renders the 2px radius at 2.12px — breaking the documented
+     "nothing above 3px" ceiling by transform rather than by declaration, which
+     no lint on the stylesheet can see. */
+  @keyframes plate-figure-settle {
+    from {
+      scale: 0.9;
+    }
+    to {
+      scale: 1;
+    }
+  }
+
 /* Underline that grows from the left on hover — used for text links */
   .link-underline {
     background-image: linear-gradient(currentColor, currentColor);
@@ -983,6 +1058,20 @@ html {
 @media print {
   @page {
     margin: 14mm 12mm;
+  }
+
+  /* Reveals must actually be removed, not merely claimed to be.
+     A paginated print has no scrollport, so every `animation-timeline: view()`
+     sits at progress 0 and every reveal prints at opacity 0. The comment above
+     has promised these were removed since before they were scroll-driven, and
+     the global reduced-motion reset does not help: it clamps
+     `animation-duration`, and duration is meaningless to a progress-based
+     timeline. Measured on `/` as shipped: 33 of 41 [data-reveal] elements
+     computed opacity < 0.99 under print emulation. The homepage printed a
+     fraction of the content it has. */
+  [data-reveal],
+  [data-plate-figure] {
+    animation: none !important;
   }
 
   :root,

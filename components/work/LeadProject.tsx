@@ -46,9 +46,15 @@ export function LeadProject({ project }: { project: Project }) {
        is clipped, not scrolled to — so the harness reported green until the
        left-edge probe was added. */
     <div className="sm:-ml-[calc(var(--stub)+var(--stub-gap))]">
+      {/* `overflow-clip`, not `overflow-hidden`. Both clip to the padding box
+          and both honour the 3px radius — I diffed the rendered pixels and they
+          are byte-identical. But `hidden` is a SCROLL CONTAINER, so any
+          `animation-timeline: view()` inside the plate binds to the plate
+          instead of the document, and the plate never scrolls. The figure's
+          settle would report progress 1.000 forever and never move. */}
       <Reveal
         as="article"
-        className="folio-product overflow-hidden lg:grid lg:grid-cols-12"
+        className="folio-product overflow-clip lg:grid lg:grid-cols-12"
       >
         {/* The mat.
 
@@ -67,14 +73,26 @@ export function LeadProject({ project }: { project: Project }) {
             `.folio-product`, which had no consumer: the mat scales with the
             plate rather than with the viewport. */}
         <div className="relative flex items-center justify-center border-b border-line p-[clamp(1.25rem,5cqi,2.25rem)] lg:col-span-6 lg:border-r lg:border-b-0">
-          <div className="relative aspect-[13/15] w-full overflow-hidden rounded-[2px] border border-line">
+          {/* An attribute, not a class, for the same reason `data-reveal` is
+              one: the utility list is layout, and a behaviour hook riding on
+              `aspect-[13/15]` breaks the day the asset is re-cropped. */}
+          <div
+            data-plate-figure
+            className="relative aspect-[13/15] w-full overflow-hidden rounded-[2px] border border-line"
+          >
             <ProjectPlate
               kind={project.kind}
               seed={project.slug}
               image={project.imageDetail ?? project.image}
               imageAlt={project.imageDetailAlt ?? project.imageAlt}
               priority
-              sizes="(min-width: 1024px) 34vw, 82vw"
+              /* The figure is a FIXED 454px from 1280 up, because
+                 container-counterfoil caps at 1152 — a vw hint is structurally
+                 wrong up there. And 34vw at 1024 resolved to 348px against a
+                 rendered 384px: 10% under-declared, the one direction that
+                 costs quality, because on DPR 2 the browser then picks a
+                 candidate a full rung too small. */
+              sizes="(min-width: 1280px) 456px, (min-width: 1024px) 38vw, 82vw"
             />
           </div>
         </div>

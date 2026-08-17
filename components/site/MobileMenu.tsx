@@ -69,7 +69,11 @@ export function MobileMenu({
       aria-label="Site navigation"
       className={cn(
         "mobile-menu m-0 h-dvh max-h-none w-full max-w-none bg-bg p-0 text-ink",
-        "backdrop:bg-black/40 backdrop:backdrop-blur-[2px]",
+        /* An opaque-enough scrim, no blur — banned by REDESIGN §4.3, and this
+           is the one navigation surface essentially all of the traffic touches.
+           55% black separates the modal from the page just as well, with no
+           compositing layer. */
+        "backdrop:bg-black/55",
       )}
     >
       <div className="flex h-full flex-col">
@@ -104,8 +108,18 @@ export function MobileMenu({
                       active ? "text-accent" : "text-ink hover:text-accent",
                     )}
                   >
-                    <span className="label-sc w-6 shrink-0 text-ink-3 tabular-nums">
-                      {String(i + 1).padStart(2, "0")}
+                    {/* Only the three acts carry a folio. Numbering Contact
+                        "04" made the numbers mean "a menu row" instead of "one
+                        of three movements", which is the whole point of the
+                        spine. The empty span keeps the labels aligned.
+                        No `tabular-nums` either: it overrode `.label-sc`'s own
+                        lining/slashed-zero routing, so these folios rendered a
+                        different zero from every other folio on the site. */}
+                    <span
+                      aria-hidden="true"
+                      className="label-sc w-6 shrink-0 text-ink-3"
+                    >
+                      {i < 3 ? String(i + 1).padStart(2, "0") : ""}
                     </span>
                     <span className="text-[1.375rem] font-medium tracking-[-0.02em]">
                       {section.label}

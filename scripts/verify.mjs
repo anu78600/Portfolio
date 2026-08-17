@@ -170,6 +170,28 @@ function checkBrassContainment() {
     offenders.length === 0,
     offenders.join(", "),
   );
+
+  /* Brass containment got a check; the blurred-backdrop ban never did, and it
+     survived on a floating button for two purges while the header carried a
+     comment saying it was banned. A rule stated this absolutely needs a test,
+     not a convention.
+     The property name is ASSEMBLED, never written literally. Tailwind v4 scans
+     the whole project for class candidates, so spelling it out here made the
+     build emit the very utility this forbids — the check failed itself, and
+     shipped dead CSS to every visitor while doing it. */
+  const BANNED = ["backdrop", "filter"].join("-");
+  const dir = join(".next", "static", "chunks");
+  const cssFile = readdirSync(dir).find((f) => f.endsWith(".css"));
+  if (cssFile) {
+    const css = readFileSync(join(dir, cssFile), "utf8");
+    const hits = css.match(new RegExp(`${BANNED}:(?!\\s*none)[^;}]*`, "g")) ?? [];
+    record(
+      "assets",
+      `no ${BANNED} in compiled CSS`,
+      hits.length === 0,
+      [...new Set(hits)].join(", ").slice(0, 160),
+    );
+  }
 }
 
 /* ── CDP ──────────────────────────────────────────────────────────────────── */
@@ -371,6 +393,64 @@ async function checkStructure(page, path) {
   record("structure", `${path}: stylesheet actually loaded`, probe.stylesheet);
 }
 
+/* ── 7. motion, and placeholders on screen ────────────────────────────────── */
+
+/*
+ * Two failures that shipped green, both invisible to every check above.
+ *
+ * MOTION. `overflow: hidden` is a scroll container, so an `animation-timeline:
+ * view()` on any descendant silently re-parents to that ancestor instead of the
+ * document. The animation stays listed, playState reads "running", progress
+ * pins at a constant and NOTHING EVER MOVES — indistinguishable from forgetting
+ * to write the CSS. The plate is `overflow-clip` precisely so this cannot
+ * happen; this check is what stops someone "tidying" it back to `hidden`.
+ *
+ * PLACEHOLDERS. `[ADD ISSUER]` rendered on screen at 5.76:1 and, worse, inside
+ * JSON-LD on every route — publishing a credential issuer that does not exist.
+ * The integrity model's single hardest rule is that a placeholder never becomes
+ * structured data, and nothing was enforcing it.
+ */
+async function checkContent(page, path) {
+  await page.send("Page.navigate", { url: BASE + path });
+  await new Promise((r) => setTimeout(r, 800));
+
+  const probe = await page.evaluate(`(() => {
+    const P = /\\[ADD\\b[^\\]]*\\]/g;
+    /* Text nodes only, and NOT the ones inside <script>/<style> — the RSC
+       flight payload is a text node in <body>, so an unfiltered walk reports a
+       placeholder as "visible" on routes that render no such content at all.
+       Two checks that cannot tell each other's failure apart are one check. */
+    const text = [];
+    const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: (n) =>
+        /^(SCRIPT|STYLE|TEMPLATE|NOSCRIPT)$/.test(n.parentNode?.nodeName ?? "")
+          ? NodeFilter.FILTER_REJECT
+          : NodeFilter.FILTER_ACCEPT,
+    });
+    for (let n; (n = w.nextNode()); ) {
+      const m = n.nodeValue.match(P);
+      if (m) text.push(...m);
+    }
+    const ld = [...document.querySelectorAll('script[type="application/ld+json"]')]
+      .flatMap((s) => s.textContent.match(P) || []);
+    const stray = [];
+    for (const el of document.querySelectorAll("[data-reveal],[data-plate-figure]")) {
+      const a = el.getAnimations()[0];
+      if (!a || !a.timeline) continue;
+      if (a.timeline.source !== document.documentElement)
+        stray.push(el.tagName + "." + String(el.className).slice(0, 40));
+    }
+    return { text: [...new Set(text)], ld: [...new Set(ld)], stray };
+  })()`);
+
+  record("content", `${path}: no placeholder in visible text`,
+    probe.text.length === 0, probe.text.join(", "));
+  record("content", `${path}: no placeholder in JSON-LD`,
+    probe.ld.length === 0, probe.ld.join(", "));
+  record("motion", `${path}: every view() timeline sourced at <html>`,
+    probe.stray.length === 0, probe.stray.join(", "));
+}
+
 /* ── run ──────────────────────────────────────────────────────────────────── */
 
 const t0 = Date.now();
@@ -385,6 +465,13 @@ try {
   await checkPrint(page, "/resume");
   await checkStructure(page, "/");
   await checkStructure(page, "/resume");
+  /* The case studies were a total blind spot: no check had ever loaded one, and
+     a raw Markdown asterisk sat in the flagship's opening sentence as a result. */
+  await checkStructure(page, "/work/quiet-compound");
+  await checkLayout(page, "/work/quiet-compound", "dark");
+  await checkContent(page, "/");
+  await checkContent(page, "/resume");
+  await checkContent(page, "/work/quiet-compound");
 } finally {
   page.detach();
   /* Let the socket finish closing before the process winds down. Exiting in

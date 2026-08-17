@@ -59,14 +59,25 @@ export function Header({
       >
         <div
           className={cn(
-            /* No backdrop-filter. REDESIGN §4.3 bans it outright and §7 lists
+            /* No blurred backdrop. REDESIGN §4.3 bans it outright and §7 lists
                systemic backdrop blur as a template signal — it is the "frosted
                glass header" every starter ships. It is also the most expensive
                paint on the mid-range Android this site is authored for, and it
                promotes a compositing layer that stays alive while scrolling.
                An opaque bar does the same job: it stops the text underneath
-               showing through. */
-            "relative border-b transition-[background-color,border-color] duration-300",
+               showing through.
+               (Written without the literal CSS property name on purpose: the
+               Tailwind v4 scanner treats any matching token in a source file as
+               a class candidate, so naming it in a comment re-emits the very
+               utility the harness now forbids.) */
+            /* The ground flips in one frame; only the hairline fades.
+               Transitioning background-color left the bar measurably
+               see-through for ~100-200ms after the scroll begins (alpha 0 at
+               59ms, 0.110 at 108ms, 0.458 at 152ms), so page content passed
+               through the header. --bg is byte-identical to the body ground in
+               both themes, so an instant flip is invisible at rest, while the
+               border still fades in and keeps the "lifts off the page" read. */
+            "relative border-b transition-[border-color] duration-300",
             scrolled ? "border-line bg-bg" : "border-transparent bg-transparent",
           )}
         >

@@ -248,7 +248,8 @@ export function CommandPalette({
         }}
         className={cn(
           "command-palette m-0 w-full max-w-none bg-transparent p-0",
-          "backdrop:bg-black/45 backdrop:backdrop-blur-[2px]",
+          /* Opaque scrim, no blur — see MobileMenu. REDESIGN §4.3. */
+          "backdrop:bg-black/60",
         )}
       >
         <div className="flex min-h-dvh items-start justify-center px-4 pt-[12vh] pb-8">

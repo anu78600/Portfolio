@@ -21,11 +21,11 @@ export default function NotFound() {
         <p className="label-sc text-accent">Error 404</p>
 
         <h1 className="mt-5 text-title font-medium text-ink">
-          This one isn&apos;t on the roadmap.
+          This one isn’t on the roadmap.
         </h1>
 
         <p className="mt-5 text-lede leading-relaxed text-ink-2">
-          The page you asked for doesn&apos;t exist — most likely a stale link or
+          The page you asked for doesn’t exist — most likely a stale link or
           a typo in the address. Everything that does exist is one click away.
         </p>
 

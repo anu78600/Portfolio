@@ -207,8 +207,14 @@ export default function ResumePage() {
                   >
                     <span>
                       {cert.name}
-                      <span className="text-ink-3"> · </span>
-                      <span className="text-ink-2">{cert.issuer}</span>
+                      {/* The separator is wrapped with the value it separates.
+                          Guarding only the issuer would ship a dangling " · ". */}
+                      {real(cert.issuer) ? (
+                        <>
+                          <span className="text-ink-3"> · </span>
+                          <span className="text-ink-2">{real(cert.issuer)}</span>
+                        </>
+                      ) : null}
                     </span>
                     {date ? (
                       <span className="label-sc text-ink-3">{date}</span>
@@ -219,7 +225,7 @@ export default function ResumePage() {
             </ul>
           </Block>
 
-          <Block title="Where I'm going" icon="compass">
+          <Block title="Where I’m going" icon="compass">
             <ol className="flex flex-col gap-3">
               {goals.map((goal) => (
                 <li key={goal.index}>

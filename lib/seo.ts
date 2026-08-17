@@ -47,12 +47,23 @@ export function buildJsonLd() {
       "@type": "EducationalOrganization",
       name: item.institution,
     })),
-    hasCredential: certifications.map((cert) => ({
-      "@type": "EducationalOccupationalCredential",
-      name: cert.name,
-      credentialCategory: "certificate",
-      recognizedBy: { "@type": "Organization", name: cert.issuer },
-    })),
+    /* `recognizedBy` only when the issuer is real. Unguarded, this published an
+       Organization literally named "[ADD ISSUER]" as machine-readable structured
+       data on EVERY route — including the case studies, which show no
+       certifications at all. That is the exact failure this file's own header
+       comment promises does not happen, and a fabricated credential issuer is
+       where a wrong fact does the most damage. `recognizedBy` is optional on
+       EducationalOccupationalCredential, so omitting it stays valid schema.org. */
+    hasCredential: certifications.map((cert) => {
+      const issuer = real(cert.issuer);
+      const credential: Record<string, unknown> = {
+        "@type": "EducationalOccupationalCredential",
+        name: cert.name,
+        credentialCategory: "certificate",
+      };
+      if (issuer) credential.recognizedBy = { "@type": "Organization", name: issuer };
+      return credential;
+    }),
   };
 
   if (name) person.name = name;

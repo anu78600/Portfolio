@@ -96,9 +96,16 @@ export function Credentials() {
                     </div>
                     <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
                       <Tag>{cert.category}</Tag>
-                      <span className="text-[0.8125rem] text-ink-3">
-                        {cert.issuer}
-                      </span>
+                      {/* Through `real`, like every other placeholder-bearing
+                          field. Unguarded, this printed the literal string
+                          "[ADD ISSUER]" at 5.76:1 in light and 8.87:1 in dark —
+                          fully legible, and sitting exactly where an issuer's
+                          name goes, so it read as the issuer. */}
+                      {real(cert.issuer) ? (
+                        <span className="text-[0.8125rem] text-ink-3">
+                          {real(cert.issuer)}
+                        </span>
+                      ) : null}
                       {date ? (
                         <span className="label-sc ml-auto text-ink-3">{date}</span>
                       ) : null}

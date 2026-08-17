@@ -5,7 +5,6 @@ import { projects } from "@/content/projects";
 import { real } from "@/lib/content";
 import { buildJsonLd, siteDescription, siteName, siteUrl } from "@/lib/seo";
 import { initialsFrom } from "@/lib/content";
-import { BackToTop } from "@/components/site/BackToTop";
 import { CommandPalette } from "@/components/site/CommandPalette";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
@@ -107,7 +106,12 @@ export default function RootLayout({
 
         <Footer />
 
-        <BackToTop />
+        {/* No back-to-top button. It shipped the one surviving blurred backdrop
+            on the site — banned outright by REDESIGN §4.3 and
+            listed as a template signal in §7 — and parked 44x44 of furniture
+            permanently over running body copy at every ordinary reading
+            position on a phone, to buy a scroll the OS already provides. The
+            sticky header's logo returns home. */}
         <CommandPalette
           socials={profile.socials}
           resumePdf={real(profile.resumePdf)}

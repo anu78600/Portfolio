@@ -75,9 +75,15 @@ export function Experience() {
                         key={contribution}
                         className="flex gap-3 text-[0.9375rem] leading-relaxed text-ink-2"
                       >
+                        {/* --border-strong, not --accent-line. This rule is the
+                            only thing separating one contribution from the
+                            next, so it is informational — and --accent-line is
+                            decorative BY CONTRACT, measuring 2.20:1 in light
+                            and 2.89:1 in dark, both under the 3:1 non-text
+                            floor. --border-strong is 3.96:1 and 4.60:1. */}
                         <span
                           aria-hidden="true"
-                          className="mt-[0.6em] h-px w-3 shrink-0 bg-accent-line"
+                          className="mt-[0.6em] h-px w-3 shrink-0 bg-line-strong"
                         />
                         <span>{contribution}</span>
                       </li>

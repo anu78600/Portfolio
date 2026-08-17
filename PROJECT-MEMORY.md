@@ -288,7 +288,20 @@ Things learned building it, all worth keeping:
   When a design agent reports a defect the suite calls green, the suite is
   usually the thing that is wrong.
 
-Two blind spots it had, both now closed — and both are general traps:
+**Now 225 checks**, after three more families were added on 18 Aug — each,
+again, because something real got through:
+
+| Group | What it catches |
+|---|---|
+| motion | Every `view()` timeline must resolve to `<html>`. A clipping ancestor re-parents it *silently*: the animation stays listed, `playState` reads "running", progress pins at a constant, and nothing ever moves. |
+| content | No `[ADD …]` placeholder in visible text **or in JSON-LD**, on `/`, `/resume` and a case study. |
+| assets | No blurred backdrop in compiled CSS. The ban had been stated absolutely since REDESIGN §4.3 and never tested, so it survived two purges on a floating button. |
+
+`/work/[slug]` had never been loaded by any check. That blind spot is why a raw
+Markdown asterisk sat in the flagship case study's opening sentence. Layout and
+structure now cover it too.
+
+Blind spots it had, all now closed — and all are general traps:
 
 - **`scrollWidth` cannot see LEFT overflow.** In LTR, content placed left of the
   origin is *clipped*, not scrolled to, so `scrollWidth - clientWidth` stays 0
@@ -360,6 +373,40 @@ the copy awaiting his sign-off, so it is his to fix, not mine.
   of reflowing, which looks exactly like a horizontal-overflow bug. Use CDP
   `Emulation.setDeviceMetricsOverride`. `scratchpad/shoot.mjs` does this and also
   reports overflow offenders by selector.
+- **`overflow: hidden` IS A SCROLL CONTAINER; `overflow: clip` is not.** Any
+  `animation-timeline: view()` on a descendant of a `hidden` box re-parents to
+  that box. If the box never scrolls, progress pins at a constant forever and
+  the animation is a **silent no-op** — it stays in `getAnimations()`,
+  `playState` reads "running", and nothing moves. Indistinguishable from
+  forgetting to write the CSS. `clip` clips to the same padding box, honours the
+  same radius, and is paint-identical (diffed at DPR 2: byte-identical PNGs).
+  The plate is `overflow-clip` for exactly this reason. `scripts/verify.mjs`
+  now asserts every timeline resolves to `<html>`.
+- **Two animations that both write `transform` do not compose — the later name
+  wins outright.** Measured on the plate: adding `transform: scale()` beside the
+  reveal yields `matrix(0.942705,0,0,0.942705,0,0)` — the translateY is exactly
+  0 and the reveal's 12px lift is silently deleted. Use the independent `scale`
+  property: it yields `matrix(1,0,0,1,0,3.02572)` **and** `scale: 0.941879`,
+  both applied, because CSS resolves translate → rotate → scale → transform.
+- **`prefers-reduced-motion` must be an explicit guard on scroll-driven
+  animation.** The global reset clamps `animation-duration`, and duration is
+  meaningless to a progress-based timeline. Without the
+  `@media (prefers-reduced-motion: no-preference)` wrapper it runs anyway.
+- **A paginated print has no scrollport**, so every `view()` timeline sits at
+  progress 0 and every reveal prints at **opacity 0**. Measured: 33 of 41
+  reveals invisible, and the homepage PDF was 169 kB against 522 kB with
+  `animation: none !important` in the print block. The print section had claimed
+  "reveal animations are all removed" since before they were scroll-driven.
+- **Tailwind v4 scans the WHOLE project — Markdown and scripts included — and
+  treats any matching token as a class candidate.** `REDESIGN.md` and this file
+  documenting the blurred-backdrop ban *by name*, plus the harness regex
+  forbidding it, all caused Tailwind to emit that very utility into the shipped
+  stylesheet. Writing down a prohibition shipped the prohibited thing, and the
+  check enforcing it failed itself. Fixed with `@source not` for `*.md`,
+  `scripts` and `scratchpad`. Any utility name a doc mentions has this problem.
+- **`window.scrollTo` obeys `scroll-behavior: smooth`.** A CDP probe that scrolls
+  and settles two rAFs measures the *old* position and reports progress 0 —
+  which reads exactly like a broken animation. Pass `behavior: "instant"`.
 - **`captureBeyondViewport` does not advance scroll-driven animations.** Reveals
   use `animation-timeline: view()`, which only progresses while the element is
   in the *scrollport*. A full-page screenshot therefore renders every
@@ -383,7 +430,7 @@ Next.js 16 · React 19 · TypeScript strict · Tailwind v4 · Source Serif 4 /
 Instrument Sans / IBM Plex Mono, vendored. Four runtime dependencies.
 16 static routes. Zero overflow in **either** direction at
 320/360/375/390/430/768/1024/1440/1920. WCAG 2.2 AA verified in light, dark,
-light plate and dark plate against compiled CSS. **192 checks green.**
+light plate and dark plate against compiled CSS. **225 checks green.**
 
 Repo: `github.com/anu78600/Portfolio` (public).
 
@@ -437,6 +484,49 @@ crop was decided by copy length.
 - `backdrop-filter` on the scrolled header — banned by REDESIGN §4.3, listed as
   a template signal in §7, and the most expensive paint on a mid-range Android.
   Gone, with `--header-bg` (which existed only to be blurred behind).
+
+### The settle, and the professionalism pass (18 Aug, second run)
+
+He asked for the plate to "first be short and gradually zoom" instead of being
+permanently big. A 13-agent run designed it and audited the whole site: 73
+findings, 8 adversarially verified, 0 refuted.
+
+**The settle.** The figure — *not* the plate — scales 0.9 → 1 on
+`animation-range: entry 45% entry 100%`. Scaling the plate was rejected: it holds
+21px Source Serif and a composited scale resamples rendered text, and the plate
+is never more than 71.6% visible on any phone (354 × 1179 at 390, 1.40
+viewports), so the growth would happen on an object still sliding in. Measured:
+the growth runs over **292px of scroll at 1440 and 190px at 390**, always
+finishing exactly as the figure fully arrives. One range, no breakpoints — for a
+box shorter than the scrollport the `entry` length equals the box's own height,
+so entry progress *is* the fraction on screen, width-invariant by construction.
+
+**Be honest about what it does not do:** he said "instead of it permanently this
+big", and this changes the size for a fifth of a flick and then restores exactly
+the size he objected to. The plate's desktop height (605px) is set entirely by
+the **prose column** (603px vs the figure column's 598px), so no change to the
+mat, the width or the figure can shrink it. Only shortening `project.thesis` or
+the `TagRow` can. That is a copy decision and it is his.
+
+**Also fixed, in value order:**
+
+- `[ADD ISSUER]` rendered on screen at 5.76:1 **and inside JSON-LD on every
+  route** — publishing an Organization that does not exist. The §2 rule that a
+  placeholder never becomes structured data was documented, asserted in
+  `lib/seo.ts`'s own header comment, and not enforced anywhere.
+- Raw Markdown `*no app touches*` printed literally in the flagship case study's
+  first sentence — the same string renders as `<em>` on the home page, because
+  one call site wraps it in `Prose` and the other did not.
+- The homepage printed a fraction of itself (see the print gotcha above).
+- `BackToTop` deleted: it carried the last blurred backdrop on the site and
+  parked 44×44 of furniture permanently over running body copy on every phone.
+- Both remaining blur scrims (mobile menu, command palette) → opaque black.
+- The header faded its background over 300ms, so text passed through a
+  see-through bar for ~100–200ms. Only the hairline transitions now.
+- List bullets used `--accent-line`, decorative *by contract*, at 2.20:1 light
+  and 2.89:1 dark. Now `--border-strong` at 3.96:1 / 4.60:1.
+- `sizes` under-declared the figure by 10% at 1024, costing a resolution rung.
+- The mobile menu numbered Contact "04", against the three-act spine.
 
 ### Still open
 

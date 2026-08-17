@@ -7,6 +7,7 @@ import { real } from "@/lib/content";
 import { siteDescription } from "@/lib/seo";
 import { Icon } from "@/components/ui/Icon";
 import { PendingNote } from "@/components/ui/PendingNote";
+import { Prose } from "@/components/ui/Prose";
 import { Reveal } from "@/components/ui/Reveal";
 import { Tag, TagRow } from "@/components/ui/Tag";
 import { ProjectPlate } from "@/components/work/ProjectPlate";
@@ -88,8 +89,13 @@ export default async function CaseStudyPage({
               <h1 className="mt-4 text-title font-medium text-ink">
                 {project.title}
               </h1>
+              {/* Through Prose. The same string renders as a real <em> on the
+                  home page, and printed the literal asterisks of "*no app
+                  touches*" here — in the first sentence a visitor reads after
+                  clicking through from the plate, which is the click the whole
+                  plate exists to earn. */}
               <p className="mt-6 max-w-2xl text-lede leading-relaxed text-ink-2">
-                {project.thesis}
+                <Prose>{project.thesis}</Prose>
               </p>
             </Reveal>
 
@@ -204,7 +210,11 @@ function Section({
               key={paragraph}
               className="mt-4 leading-[1.7] text-ink-2 first:mt-5"
             >
-              {paragraph}
+              {/* No-op on today's copy, but it stops the trap recurring: every
+                  prose surface on the site must route through the same
+                  renderer, or emphasis silently degrades to asterisks on
+                  whichever one was forgotten. */}
+              <Prose>{paragraph}</Prose>
             </p>
           ))}
 
@@ -212,11 +222,20 @@ function Section({
             <ul className="mt-5 flex flex-col gap-3">
               {section.points.map((point) => (
                 <li key={point} className="flex gap-3.5 leading-relaxed text-ink-2">
+                  {/* --border-strong, not --accent-line. The rule is the only
+                      thing separating one point from the next, so it is
+                      informational, and --accent-line is decorative BY
+                      CONTRACT: it measures 2.20:1 light and 2.89:1 dark,
+                      both under the 3:1 non-text floor. --border-strong is
+                      3.96:1 and 4.60:1. w-3 to match Experience — three views
+                      of the same idea were shipping three bullet widths. */}
                   <span
                     aria-hidden="true"
-                    className="mt-[0.7em] h-px w-3.5 shrink-0 bg-accent-line"
+                    className="mt-[0.7em] h-px w-3 shrink-0 bg-line-strong"
                   />
-                  <span>{point}</span>
+                  <span>
+                    <Prose>{point}</Prose>
+                  </span>
                 </li>
               ))}
             </ul>
