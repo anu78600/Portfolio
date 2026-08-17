@@ -84,6 +84,7 @@ function checkContrast() {
       .map((b) => parse(b.slice(6, -1)))
       .find((t) => t["--bg"]),
     dark: blockOf(/\[data-theme=dark\]\{([^}]*)\}/),
+    /* eslint-disable-next-line no-unused-vars -- see EXPECT_PLATE below */
     /* ANCHORED on the preceding `{`, which only the @utility output has:
        `@layer utilities{.folio-product{`. `[data-theme=dark] .folio-product{`
        is preceded by a space and the print rule by `}`, so unanchored either
@@ -103,16 +104,36 @@ function checkContrast() {
     },
   };
 
-  /* Absence must be loud. Every other check here grades what it finds, so a
-     vanished block reads as "nothing to grade" and the suite reports ALL
-     PASSED on a smaller suite — the exact trap this file has already fallen
-     into twice. */
+  /* Absence must be a DECISION, never a discovery.
+     Every other check here grades what it finds, so a vanished block reads as
+     "nothing to grade" and the suite reports ALL PASSED on a smaller suite —
+     the trap this file has fallen into twice. `.folio-product` is the plate's
+     scoped colour world and the only place brass resolves; Tailwind emits
+     `@utility` output only when the class appears in scanned source, so losing
+     its last consumer deletes 26 contrast checks silently.
+     The plate was removed from the case study on 18 Aug (his call — the mount
+     read as awkward), so brass currently resolves nowhere and the block is
+     correctly absent. This flag asserts THAT, in both directions: put a plate
+     back without flipping it and the suite goes red rather than quietly
+     growing. */
+  const EXPECT_PLATE = false;
+  const platePresent = Boolean(
+    themes.plate && themes.plate["--text-primary"] && themes.plate["--bg"],
+  );
   record(
     "contrast",
-    "plate base token block present in compiled CSS",
-    Boolean(themes.plate && themes.plate["--text-primary"] && themes.plate["--bg"]),
-    "the @utility folio-product output is missing — tree-shaken?",
+    EXPECT_PLATE
+      ? "plate token block present in compiled CSS"
+      : "no plate in compiled CSS (brass resolves nowhere)",
+    platePresent === EXPECT_PLATE,
+    EXPECT_PLATE
+      ? "the @utility folio-product output is missing — tree-shaken?"
+      : "a .folio-product block shipped — flip EXPECT_PLATE if that was intended",
   );
+  if (!EXPECT_PLATE) {
+    delete themes.plate;
+    delete themes.plateDark;
+  }
 
   const TEXT = ["--text-primary", "--text-secondary", "--text-muted", "--accent"];
   const SURFACES = [
@@ -514,9 +535,10 @@ try {
   await checkLayout(page, "/resume", "light");
   await checkPrint(page, "/");
   await checkPrint(page, "/resume");
-  /* The plate lives on the case study now. Without this route its print
-     coverage would be zero and the group would just get smaller. */
-  await checkPrint(page, "/work/quiet-compound", true);
+  /* Still checked, even with no plate on it: this is the route whose print
+     behaviour has the most to lose, and it had never been printed at all until
+     18 Aug. `expectPlate` is false because the plate was removed. */
+  await checkPrint(page, "/work/quiet-compound");
   await checkStructure(page, "/");
   await checkStructure(page, "/resume");
   /* The case studies were a total blind spot: no check had ever loaded one, and
