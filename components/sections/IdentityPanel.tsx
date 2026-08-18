@@ -49,7 +49,7 @@ export function IdentityPanel() {
         className="absolute -top-3 -right-3 bottom-3 left-3 rounded-lg border border-line"
       />
 
-      <figure className="relative overflow-hidden rounded-lg border border-line bg-elevated shadow-[var(--shadow-elevated)]">
+      <figure className="glass relative overflow-hidden rounded-lg">
         <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
           <span className="label-sc text-ink-3">Profile</span>
           {availability ? (

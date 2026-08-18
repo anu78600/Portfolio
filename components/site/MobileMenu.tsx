@@ -68,12 +68,10 @@ export function MobileMenu({
       onClick={onBackdropClick}
       aria-label="Site navigation"
       className={cn(
-        "mobile-menu m-0 h-dvh max-h-none w-full max-w-none bg-bg p-0 text-ink",
-        /* An opaque-enough scrim, no blur — banned by REDESIGN §4.3, and this
-           is the one navigation surface essentially all of the traffic touches.
-           55% black separates the modal from the page just as well, with no
-           compositing layer. */
-        "backdrop:bg-black/55",
+        "mobile-menu glass-bar m-0 h-dvh max-h-none w-full max-w-none p-0 text-ink",
+        /* Blur reinstated 19 Aug at his request — the §4.3 ban is reversed
+           project-wide, recorded in the harness as EXPECT_GLASS. */
+        "backdrop:bg-black/40 backdrop:backdrop-blur-sm",
       )}
     >
       <div className="flex h-full flex-col">

@@ -244,7 +244,15 @@ function checkBrassContainment() {
      the whole project for class candidates, so spelling it out here made the
      build emit the very utility this forbids — the check failed itself, and
      shipped dead CSS to every visitor while doing it. */
+  /* Presence is now a DECISION, in both directions — same doctrine as
+     EXPECT_PLATE above. The §4.3 ban was reversed at his explicit request on
+     19 Aug (glassmorphism): with EXPECT_GLASS true the suite goes red if the
+     glass silently DISAPPEARS — a tree-shaken utility, a lost @supports block —
+     and flipping it back to false restores the old ban verbatim. The property
+     name stays assembled so the Tailwind scanner never re-emits the utility
+     from this file. */
   const BANNED = ["backdrop", "filter"].join("-");
+  const EXPECT_GLASS = true;
   const dir = join(".next", "static", "chunks");
   const cssFile = readdirSync(dir).find((f) => f.endsWith(".css"));
   if (cssFile) {
@@ -252,10 +260,25 @@ function checkBrassContainment() {
     const hits = css.match(new RegExp(`${BANNED}:(?!\\s*none)[^;}]*`, "g")) ?? [];
     record(
       "assets",
-      `no ${BANNED} in compiled CSS`,
-      hits.length === 0,
-      [...new Set(hits)].join(", ").slice(0, 160),
+      EXPECT_GLASS
+        ? `${BANNED} present in compiled CSS (glass is a recorded decision)`
+        : `no ${BANNED} in compiled CSS`,
+      EXPECT_GLASS ? hits.length > 0 : hits.length === 0,
+      EXPECT_GLASS && hits.length === 0
+        ? "glass utilities are gone — tree-shaken, or reverted without flipping EXPECT_GLASS"
+        : [...new Set(hits)].join(", ").slice(0, 160),
     );
+    /* Glass without a solid fallback leaves unsupporting browsers a
+       transparent panel over running body text. The utilities are written
+       solid-first; hold them to it. */
+    if (EXPECT_GLASS) {
+      record(
+        "assets",
+        "glass ships a solid fallback",
+        /\.glass(?:-bar)?\{[^{}]*background:/.test(css),
+        "no solid background on the glass utilities",
+      );
+    }
   }
 }
 

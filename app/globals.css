@@ -105,6 +105,22 @@
 
   --focus: oklch(0.47 0.095 205);
 
+  /* Glass. Fill is the theme ground at partial alpha, so whatever the blur
+     samples stays inside the neutral family and composited text contrast
+     moves by well under one ratio point (worst case measured below 0.6). */
+  --glass-fill: oklch(0.993 0 90 / 0.66);
+  --glass-edge: oklch(0 0 0 / 0.08);
+  --glass-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.7),
+    0 1px 1px oklch(0 0 0 / 0.04),
+    0 12px 32px -16px oklch(0 0 0 / 0.14);
+
+  /* The aurora: what the glass has to refract. Teal-family only, and within
+     ~3 L* of the ground — glass over a perfectly flat field is invisible,
+     which is the first thing anyone implementing glassmorphism discovers. */
+  --aurora-1: oklch(0.9 0.05 205 / 0.5);
+  --aurora-2: oklch(0.93 0.035 245 / 0.45);
+
   /* Brass. Scoped to the product plate; see .folio-product below. */
   --brass: oklch(0.8 0.132 92);
   --brass-mark: oklch(0.64 0.115 90);
@@ -165,6 +181,15 @@
   --accent-line: oklch(0.52 0.075 205);
 
   --focus: oklch(0.8 0.085 205);
+
+  --glass-fill: oklch(0.248 0 90 / 0.6);
+  --glass-edge: oklch(1 0 0 / 0.1);
+  --glass-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.07),
+    0 12px 32px -16px oklch(0 0 0 / 0.55);
+
+  --aurora-1: oklch(0.4 0.06 205 / 0.4);
+  --aurora-2: oklch(0.34 0.05 250 / 0.35);
 
   --brass: oklch(0.8 0.132 92);
   --brass-mark: oklch(0.64 0.115 90);
@@ -270,18 +295,17 @@
   --text-label--line-height: 1.3;
   --text-label--letter-spacing: 0.06em;
 
-  /* Radii. REDESIGN §4.4: 0 by default, 2px on wells, 3px on the plate and
-     stamps, nothing above 3px anywhere on the site.
-     The census said otherwise: 23 elements at 8px, 30 at 6px, 3 at 12px — and
-     the plate, the one element actually built to the stated system, at 3px. A
-     3px-cornered black plate full of 8px buttons and 6px chips is the largest
-     single reason the page still read as a component library rather than a
-     printed object. Fixing the scale fixes all 74 through the existing
-     `rounded-*` classes without touching a component. */
-  --radius-sm: 2px;
-  --radius-md: 3px;
-  --radius-lg: 3px;
-  --radius-xl: 3px;
+  /* Radii. The documented 3px ceiling is RETIRED — his explicit call, 19 Aug,
+     with the glass/card direction. A 3px corner on a translucent panel reads
+     as a rendering seam, not a decision; the glass idiom needs enough radius
+     for the edge highlight to turn. This reverses REDESIGN §4.4 knowingly,
+     the same day the palette left warm paper: the printed-ledger metaphor is
+     now carried by the margin rule, the folios and the type — not by the
+     corner radius. */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
 
   /* Elevation */
   --shadow-subtle: var(--shadow-subtle);
@@ -678,6 +702,81 @@
     var(--border) 88%,
     transparent
   );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   GLASS
+
+   Reinstated at his explicit request, 19 Aug — this REVERSES the REDESIGN §4.3
+   backdrop-filter ban, and the harness flag flipped with it (EXPECT_GLASS in
+   scripts/verify.mjs), so the reversal is a recorded decision rather than a
+   regression the suite happens to miss.
+
+   Solid first, glass as the enhancement: browsers without backdrop-filter get
+   --surface-elevated and lose nothing but the refraction. The blur radius is
+   held at 12-14px and the surface count small — blur cost scales with the
+   sampled area, and the budget is a mid-range Android.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Panels: cards, dialogs, the metadata block. Carries its own edge + shadow. */
+@utility glass {
+  border: 1px solid var(--glass-edge);
+  background: var(--surface-elevated);
+  box-shadow: var(--glass-shadow);
+
+  @supports (backdrop-filter: blur(1px)) {
+    background: var(--glass-fill);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    backdrop-filter: blur(14px) saturate(150%);
+  }
+}
+
+/* Bars: the sticky header, the full-screen menu. No border, no radius, no
+   shadow of its own — the bar's edge is drawn by whoever mounts it. */
+@utility glass-bar {
+  background: var(--surface-elevated);
+
+  @supports (backdrop-filter: blur(1px)) {
+    background: var(--glass-fill);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    backdrop-filter: blur(12px) saturate(150%);
+  }
+}
+
+/* The aurora field the glass refracts. A body pseudo-element, not a div:
+   pseudos are invisible to the layout probe's `body *` sweep and a fixed box
+   never grows scrollWidth, so the -12% bleed cannot trip the overflow checks.
+   z-index -1 paints it above the canvas background and below all content.
+   Screen only — print gets paper. */
+@media screen {
+  body::before {
+    content: "";
+    position: fixed;
+    inset: -12%;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(42% 34% at 18% 12%, var(--aurora-1), transparent 70%),
+      radial-gradient(38% 30% at 82% 26%, var(--aurora-2), transparent 70%),
+      radial-gradient(46% 38% at 55% 90%, var(--aurora-1), transparent 72%);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    body::before {
+      animation: aurora-drift 70s ease-in-out infinite alternate;
+    }
+  }
+}
+
+/* Transform only — compositor-driven, no paint per frame. The -12% inset above
+   is what keeps the edges covered while it moves. */
+@keyframes aurora-drift {
+  from {
+    transform: translate3d(-1.2%, -0.8%, 0);
+  }
+  to {
+    transform: translate3d(1.2%, 1.2%, 0);
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────

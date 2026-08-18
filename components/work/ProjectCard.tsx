@@ -21,9 +21,12 @@ const cardShell =
      "running". Measured on this exact shell at 13 scroll positions: source
      A.group…, progress 1.000, scale 1 throughout. Indistinguishable from
      forgetting to write the CSS. */
-  "group flex h-full flex-col overflow-clip rounded-lg border border-line bg-elevated " +
-  "transition-[border-color,box-shadow,transform] duration-300 ease-[var(--ease-out)] " +
-  "hover:border-line-hover hover:shadow-[var(--shadow-elevated)]";
+  /* `glass` carries its own edge and shadow, so the old border/bg classes go
+     with it. The hover is a LIFT now — 4px of translate — because on a
+     translucent panel a border-colour change alone is sub-threshold. */
+  "group flex h-full flex-col overflow-clip rounded-lg glass " +
+  "transition-[border-color,box-shadow,transform,translate] duration-300 ease-[var(--ease-out)] " +
+  "hover:border-line-hover hover:-translate-y-1";
 
 const plateMotion =
   "transition-transform duration-[600ms] ease-[var(--ease-out)] group-hover:scale-[1.03]";

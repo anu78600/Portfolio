@@ -78,7 +78,10 @@ export function Header({
                both themes, so an instant flip is invisible at rest, while the
                border still fades in and keeps the "lifts off the page" read. */
             "relative border-b transition-[border-color] duration-300",
-            scrolled ? "border-line bg-bg" : "border-transparent bg-transparent",
+            /* Glass, reinstated at his explicit request 19 Aug — reverses
+               the §4.3 ban this comment block used to defend. Solid fallback
+               lives inside the utility. */
+            scrolled ? "border-line glass-bar" : "border-transparent bg-transparent",
           )}
         >
           <div className="container-page flex h-16 items-center justify-between gap-3">

@@ -528,6 +528,36 @@ the `TagRow` can. That is a copy decision and it is his.
 - `sizes` under-declared the figure by 10% at 1024, costing a resolution rung.
 - The mobile menu numbered Contact "04", against the three-act spine.
 
+### The 19 Aug reversals — his explicit calls, recorded so they read as decisions
+
+Three standing rules were overturned at his direct request, the same day:
+
+- **The palette left warm paper.** Austere zero-chroma neutrals (#fdfdfd/#141414
+  grounds), deep teal accent (#006871 / #77ced8) replacing the red. The chroma
+  arch is retired with it — the arch was the right answer for a tinted system
+  and this is not one. Links now carry a permanent accent-line underline
+  (hover was the only cue before, and hover does not exist on phones).
+- **The §4.3 backdrop-filter ban is reversed.** Glassmorphism shipped:
+  `glass` / `glass-bar` utilities (solid-first, blur as the @supports
+  enhancement), a fixed teal aurora field on `body::before` (glass over a flat
+  ground is invisible — the aurora is what it refracts; a body pseudo because
+  pseudos are invisible to the layout probe and fixed boxes never grow
+  scrollWidth), applied to the header, project cards, identity panel, goal
+  cards, dialogs and the case-study metadata block. The harness flag is
+  `EXPECT_GLASS` in scripts/verify.mjs — true asserts glass PRESENT plus a
+  solid fallback; flipping it false restores the old ban verbatim.
+- **The 3px radius ceiling is retired.** Radii now 6/10/14/20 — a 3px corner on
+  a translucent panel reads as a seam, and the ledger identity is carried by
+  the margin rule, folios and type rather than the corner radius.
+
+One measurement worth keeping from the palette work: the old accent covered
+0.216% of painted pixels against the documented 3% ceiling, and the ground sat
+at Lab C2.75 — above the tint-noticing threshold, below reading as a material.
+"Too warm" and "too muted" were one defect. Also: Lightning CSS minifies
+#808080 to the named colour `gray`, which the contrast parser silently dropped
+(63→58 checks, all green) — named colours now resolve and each theme asserts
+its full token set is readable.
+
 ### Still open
 
 - `siteUrl` in `content/profile.ts` — blocks deploy
