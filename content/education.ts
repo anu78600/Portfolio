@@ -5,15 +5,15 @@ export const education: EducationItem[] = [
     /* Current, so it leads. The array is authored most-recent-first and both
        the home page and /resume map it without sorting.
 
-       He supplied the qualification and that he is in his first semester, and
-       nothing else. The institution and the years are therefore placeholders,
-       not guesses — `real()` hides them until they are filled, and the row
-       renders with "Years to be added" rather than a date nobody supplied.
-       Inferring "2026" from "first semester" would be inventing a date, which
-       is the one thing this file may never do. */
+       The YEARS are still a placeholder, and deliberately so. He supplied the
+       qualification, the university and that he is in his first semester —
+       nothing about dates. Inferring "2026" from "first semester" plus today's
+       date would be inventing one, which is the single thing this file may
+       never do. `real()` hides it and the row renders "Years to be added"
+       until he fills it. */
     id: "llb",
     qualification: "Bachelor of Laws (LLB)",
-    institution: "[ADD LLB INSTITUTION]",
+    institution: "Prof. Rajendra Singh University (PRSU)",
     period: "[ADD LLB YEARS]",
     note: "Currently pursuing — first semester.",
   },
