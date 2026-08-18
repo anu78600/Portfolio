@@ -30,7 +30,6 @@ export const metadata: Metadata = {
     "Financial analysis",
     "Human resource management",
     "International business",
-    "Digital transformation",
   ],
   alternates: { canonical: "/" },
   openGraph: {

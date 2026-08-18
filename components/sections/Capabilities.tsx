@@ -19,12 +19,21 @@ export function Capabilities() {
         lede="Grouped by what each one is for. Tools appear where I use them for something specific, not to lengthen the list."
       />
 
-        <div className="grid grid-cols-1 gap-x-14 gap-y-12 lg:grid-cols-2">
+        {/* Columns, not a grid.
+            A two-column grid aligns rows, so the shorter group in each row is
+            padded out to the height of the taller one. With 10 items beside 4,
+            that left roughly 360px of nothing under Business & Management.
+            Multi-column flows instead of aligning: each group is only as tall
+            as its own list, and the columns balance themselves as the content
+            changes — which matters here, because these lists get edited.
+            `break-inside-avoid` is what stops a group being split across the
+            column boundary mid-list. */}
+        <div className="lg:columns-2 lg:gap-x-14">
           {skillGroups.map((group, index) => (
             <Reveal
               key={group.id}
               delay={index * 70}
-              className="border-t border-line pt-6"
+              className="mb-12 break-inside-avoid border-t border-line pt-6 last:mb-0"
             >
               <div className="flex items-center gap-3">
                 <span

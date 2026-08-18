@@ -41,10 +41,12 @@ export const skillGroups: SkillGroup[] = [
     items: [
       { name: "Human Resource Management", note: "MBA specialisation" },
       { name: "International Business", note: "MBA specialisation" },
-      { name: "Business strategy" },
-      { name: "Digital transformation", note: "Focus of my HR research" },
-      { name: "HR reporting" },
-      { name: "Business research" },
+      /* Interests, not claims. His call, 18 Aug: these two are where he wants
+         to go, not work he has been paid for, and the note says so rather than
+         letting the reader assume otherwise. Same convention as "Agentic AI —
+         primary research interest" above. */
+      { name: "Business research", note: "Interest" },
+      { name: "Business strategy", note: "Interest" },
     ],
   },
   {

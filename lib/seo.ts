@@ -41,7 +41,6 @@ export function buildJsonLd() {
       "Financial statement analysis",
       "Human resource management",
       "International business",
-      "Digital transformation",
     ],
     alumniOf: education.map((item) => ({
       "@type": "EducationalOrganization",
