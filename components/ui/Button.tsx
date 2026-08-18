@@ -10,8 +10,11 @@ type Size = "sm" | "md";
    "headings, row titles, buttons" -- yet these were inheriting the body
    serif. Every sampled top-tier site sets controls in a 500-weight sans a
    step below body size; the serif keeps the jobs it is good at. */
+/* `active:scale` is the one state that reaches PHONES: hover does not exist
+   there, but a tap-press does. 985 not 95 — a button should give, not shrink. */
 const base =
   "group relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-sans font-medium " +
+  "transition-transform duration-100 active:scale-[0.985] " +
   "transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[var(--ease-out)] " +
   "active:translate-y-px disabled:pointer-events-none disabled:opacity-45";
 

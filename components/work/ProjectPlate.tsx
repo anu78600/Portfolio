@@ -212,7 +212,15 @@ function Sheet() {
           it is this site's structural device quoted at thumbnail size, and it is
           the single feature of Quiet Compound's sheet nothing else can say. In
           ink it reads as a book spine. */}
-      <line x1="33" y1="6" x2="33" y2="84" className={accent} strokeWidth="1.5" />
+      <line
+        x1="33"
+        y1="6"
+        x2="33"
+        y2="84"
+        pathLength={1}
+        className={cn(accent, "figure-rule")}
+        strokeWidth="1.5"
+      />
       {/* Folio left, date right — the head of a bound page. Deliberately NOT a
           full-width rule under them: a horizontal crossing the vertical makes a
           table header, which is a dashboard's cousin. */}

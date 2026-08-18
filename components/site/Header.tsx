@@ -124,7 +124,7 @@ export function Header({
                         aria-current={active ? "true" : undefined}
                         data-active={active}
                         className={cn(
-                          "relative block px-3 py-2 font-sans text-[0.875rem] font-medium leading-[1.2] transition-colors duration-200",
+                          "nav-draw relative block px-3 py-2 font-sans text-[0.875rem] font-medium leading-[1.2] transition-colors duration-200",
                           "after:pointer-events-none after:absolute after:right-3 after:bottom-1 after:left-3",
                           "after:h-px after:origin-left after:scale-x-0 after:bg-accent",
                           "after:transition-transform after:duration-300 after:ease-[var(--ease-out)]",

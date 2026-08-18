@@ -194,7 +194,7 @@ export function Hero() {
                   <span className="flex min-w-0 items-center gap-2">
                     <span
                       aria-hidden="true"
-                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                      className="live-pulse h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
                     />
                     <span className="label-sc shrink-0 text-accent">Live</span>
                     <span className="truncate font-sans text-[0.9375rem] font-medium text-ink">

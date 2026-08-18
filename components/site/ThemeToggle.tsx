@@ -77,8 +77,11 @@ export function ThemeToggle({ className }: { className?: string }) {
         depends on client state, so it is correct on the very first paint and
         cannot cause a hydration mismatch.
       */}
-      <Icon name="moon" size={18} className="dark:hidden" />
-      <Icon name="sun" size={18} className="hidden dark:block" />
+      {/* A 15-degree lean on hover: the sun tips toward setting, the moon
+          toward rising. Transform-only, and the group class is already on
+          the button. */}
+      <Icon name="moon" size={18} className="dark:hidden transition-transform duration-200 ease-[var(--ease-out)] group-hover:rotate-[15deg]" />
+      <Icon name="sun" size={18} className="hidden dark:block transition-transform duration-200 ease-[var(--ease-out)] group-hover:rotate-[15deg]" />
       <span className="sr-only dark:hidden">Switch to dark theme</span>
       <span className="sr-only light:hidden">Switch to light theme</span>
     </button>

@@ -1070,6 +1070,48 @@
      Verified on the running build: 7 elements, 7 animations, every timeline
      resolving to <html> (no clipping ancestor re-parents it), progress 1 at
      centre, inset(0 100% 0 0) at rest above. */
+  /* The drawn figure's margin rule redraws when the card is hovered: the
+     nib re-inks the one accent line, top to bottom, 350ms. `pathLength: 1`
+     on the SVG line normalises the geometry so this single keyframe serves
+     every figure. Hover-only and reduced-motion-gated; at rest and on touch
+     the rule is simply there, fully drawn. */
+  @media (prefers-reduced-motion: no-preference) {
+    .group:hover .figure-rule {
+      stroke-dasharray: 1;
+      animation: figure-redraw 350ms var(--ease-out);
+    }
+  }
+
+  @keyframes figure-redraw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* The LIVE dot breathes. A soft ring leaves it every 2.6s — an honest
+     signal (the app IS running) and the only looping motion on the page
+     besides the aurora. Reduced-motion users get a plain dot. */
+  @media (prefers-reduced-motion: no-preference) {
+    .live-pulse {
+      animation: live-pulse 2.6s var(--ease-out) infinite;
+    }
+  }
+
+  @keyframes live-pulse {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 45%, transparent);
+    }
+    70% {
+      box-shadow: 0 0 0 7px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+
   /* ── TYPEWRITER ───────────────────────────────────────────────────────────
      A typewriter is a printing device, so on a ledger this is on-metaphor
      rather than the usual hero-tagline trick — but only if it behaves like a
@@ -1252,6 +1294,23 @@
     to {
       scale: 1;
     }
+  }
+
+  /* Nav hover: the site's signature drawn-rule gesture at link scale. The
+     rest state carries nothing (a permanently underlined nav is noise); the
+     hairline draws left-to-right on hover in 140ms — a state change, not an
+     animation. Layout-free: background, not text-decoration, because the draw
+     direction is the gesture. */
+  .nav-draw {
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-repeat: no-repeat;
+    background-position: 0.75rem calc(100% - 0.35rem);
+    background-size: 0 1px;
+    transition: background-size 140ms var(--ease-out);
+  }
+  .nav-draw:hover,
+  .nav-draw:focus-visible {
+    background-size: calc(100% - 1.5rem) 1px;
   }
 
   /* A link that is a link WITHOUT a pointer.
@@ -1473,6 +1532,32 @@ html {
   html[data-mark]:has(a:hover, button:hover)::after {
     opacity: 1;
     scale: 0.72;
+    /* The circle completes the mark. A printer's registration mark is a
+       crosshair inside a ring; at rest only the hairlines ride along, and the
+       ring appears when the mark is over something clickable — the plate is
+       ready to be pulled. Drawn as a radial ring in the same accent, still one
+       element, still zero JS beyond the two custom properties. */
+    background:
+      radial-gradient(
+          circle,
+          transparent 7.5px,
+          var(--accent) 8px,
+          var(--accent) 8.7px,
+          transparent 9.2px
+        )
+        50% 50% / 22px 22px no-repeat,
+      linear-gradient(var(--accent), var(--accent)) 50% 0 / 1px 7px no-repeat,
+      linear-gradient(var(--accent), var(--accent)) 50% 100% / 1px 7px no-repeat,
+      linear-gradient(var(--accent), var(--accent)) 0 50% / 7px 1px no-repeat,
+      linear-gradient(var(--accent), var(--accent)) 100% 50% / 7px 1px no-repeat;
+  }
+
+  /* The press: the mark stamps. Scale under the click, spring back on
+     release — the one moment the cursor is allowed to be theatrical,
+     because the user caused it. */
+  html[data-mark]:has(a:active, button:active)::after {
+    scale: 0.55;
+    transition-duration: 70ms;
   }
 }
 
