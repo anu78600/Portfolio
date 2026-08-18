@@ -118,7 +118,14 @@ export const aboutBlocks: AboutBlock[] = [
   {
     index: "02",
     title: "How I work",
-    body: "Define the question. Find what actually speaks to it. Reduce the answer to one page someone can act on. AI made that loop *faster*. It did not make it easier to know which question was worth asking, and that part still takes the longest.",
+    /* The three imperatives moved into `steps` and draw as a figure; the body
+       keeps the two sentences that are the actual point. Every word verbatim. */
+    body: "AI made that loop *faster*. It did not make it easier to know which question was worth asking, and that part still takes the longest.",
+    steps: [
+      "Define the question",
+      "Find what actually speaks to it",
+      "Reduce the answer to one page someone can act on",
+    ],
   },
   {
     index: "03",

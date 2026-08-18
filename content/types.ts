@@ -77,6 +77,12 @@ export interface AboutBlock {
   index: string;
   title: string;
   body: string;
+  /**
+   * Verbatim fragments of the block's own prose, drawn as a numbered process
+   * figure instead of run as a paragraph. The words are his, relocated, never
+   * rewritten — /resume still carries the full original prose.
+   */
+  steps?: string[];
 }
 
 export interface ExperienceItem {

@@ -61,6 +61,9 @@
 
 :root {
   color-scheme: light;
+  /* Chromium: lets block-size transition to `auto` (the disclose fold).
+     Inert everywhere else. */
+  interpolate-size: allow-keywords;
 
   /* Light text on a dark ground optically thickens. This is a one-token
      correction that no static-font site can make, and it is why the dark
@@ -1070,6 +1073,76 @@
      Verified on the running build: 7 elements, 7 animations, every timeline
      resolving to <html> (no clipping ancestor re-parents it), progress 1 at
      centre, inset(0 100% 0 0) at rest above. */
+  /* ── COUNT-UP ─────────────────────────────────────────────────────────────
+     A registered integer property so the browser can interpolate a COUNTER
+     rather than tween text. The keyframe declares only `from: 0`; the `to` is
+     the element's own inline --count, so the target lives in one place. Where
+     scroll timelines are missing, and under reduced motion, and in print, the
+     inline value renders directly — nobody ever sees a zero. */
+  @property --count {
+    syntax: "<integer>";
+    inherits: false;
+    initial-value: 0;
+  }
+
+  .count-up {
+    font-variant-numeric: tabular-nums lining-nums;
+    counter-reset: count var(--count, 0);
+  }
+
+  .count-up::before {
+    content: counter(count);
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .count-up {
+        animation: count-to linear both;
+        animation-timeline: view();
+        animation-range: entry 30% entry 90%;
+      }
+    }
+  }
+
+  @keyframes count-to {
+    from {
+      --count: 0;
+    }
+  }
+
+  /* ── DISCLOSE ─────────────────────────────────────────────────────────────
+     Prose the page holds folded. The body height animates through
+     ::details-content where supported (Chromium 131+); elsewhere the toggle
+     is instant. The + rotates to x, which is the whole state indicator —
+     no chevron sprite, one glyph. */
+  .disclose > summary {
+    list-style: none;
+  }
+
+  .disclose > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .disclose .disclose-mark {
+    transition: rotate 200ms var(--ease-out);
+  }
+
+  .disclose[open] .disclose-mark {
+    rotate: 45deg;
+  }
+
+  .disclose::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      block-size 300ms var(--ease-out),
+      content-visibility 300ms allow-discrete;
+  }
+
+  .disclose[open]::details-content {
+    block-size: auto;
+  }
+
   /* The drawn figure's margin rule redraws when the card is hovered: the
      nib re-inks the one accent line, top to bottom, 350ms. `pathLength: 1`
      on the SVG line normalises the geometry so this single keyframe serves
@@ -1584,7 +1657,11 @@ html {
      computed opacity < 0.99 under print emulation. The homepage printed a
      fraction of the content it has. */
   [data-reveal],
-  [data-plate-figure] {
+  [data-plate-figure],
+  .count-up {
+    /* A paginated print has no scrollport, so a scroll-driven counter sits
+       at progress 0 and prints as a page of zeros. With the animation gone
+       the inline --count renders directly. */
     animation: none !important;
   }
 

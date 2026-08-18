@@ -1,4 +1,5 @@
 import { aboutBlocks } from "@/content/profile";
+import { Disclose } from "@/components/ui/Disclose";
 import { Prose } from "@/components/ui/Prose";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -51,9 +52,56 @@ export function About({ children }: { children?: React.ReactNode }) {
               <h3 className="text-subheading font-medium text-ink">
                 {block.title}
               </h3>
-              <p className="mt-4 leading-relaxed text-ink-2">
-                <Prose>{block.body}</Prose>
-              </p>
+              {block.steps ? (
+                <>
+                  {/* The paragraph, drawn. Three chips on a rule, numbered in
+                      the mono — a process reads in one glance where three
+                      sentences read in three. The caption below is the part
+                      that was always the point. */}
+                  <ol className="mt-5 flex flex-col gap-2.5">
+                    {block.steps.map((step, i) => (
+                      <li key={step} className="flex items-center gap-3">
+                        <span
+                          aria-hidden="true"
+                          className="grid h-7 w-7 shrink-0 place-items-center rounded-md border border-line bg-surface font-mono text-[0.6875rem] text-accent"
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span className="panel rounded-md px-3.5 py-2 font-sans text-[0.875rem] font-medium text-ink">
+                          {step}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                  <p className="mt-4 leading-relaxed text-ink-2">
+                    <Prose>{block.body}</Prose>
+                  </p>
+                </>
+              ) : (
+                (() => {
+                  /* Lead sentence visible, the rest folded. Split on the
+                     first sentence boundary — his words untouched, just
+                     paced. /resume renders the full block regardless. */
+                  const cut = block.body.indexOf(". ");
+                  const lead =
+                    cut === -1 ? block.body : block.body.slice(0, cut + 1);
+                  const rest = cut === -1 ? "" : block.body.slice(cut + 2);
+                  return (
+                    <>
+                      <p className="mt-4 leading-relaxed text-ink-2">
+                        <Prose>{lead}</Prose>
+                      </p>
+                      {rest ? (
+                        <Disclose label="More" className="mt-3">
+                          <p className="leading-relaxed text-ink-2">
+                            <Prose>{rest}</Prose>
+                          </p>
+                        </Disclose>
+                      ) : null}
+                    </>
+                  );
+                })()
+              )}
             </Reveal>
           ))}
         </div>

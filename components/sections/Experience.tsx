@@ -1,6 +1,7 @@
 import { experience } from "@/content/experience";
 import { real } from "@/lib/content";
 import { Icon } from "@/components/ui/Icon";
+import { Disclose } from "@/components/ui/Disclose";
 import { Reveal } from "@/components/ui/Reveal";
 import { SubHeading } from "@/components/ui/SubHeading";
 import { TagRow } from "@/components/ui/Tag";
@@ -69,7 +70,15 @@ export function Experience() {
                     {item.summary}
                   </p>
 
-                  <ul className="mt-6 flex flex-col gap-3">
+                  {/* The role and its one-line summary stay in view; the
+                      bullet detail folds behind a labelled count. A scanner
+                      judges the row in a glance, a reader opens it, and
+                      /resume prints every bullet regardless. */}
+                  <Disclose
+                    label={`What I did · ${item.contributions.length}`}
+                    className="mt-5"
+                  >
+                  <ul className="flex flex-col gap-3">
                     {item.contributions.map((contribution) => (
                       <li
                         key={contribution}
@@ -89,8 +98,9 @@ export function Experience() {
                       </li>
                     ))}
                   </ul>
+                  </Disclose>
 
-                  <TagRow items={item.skills} className="mt-6" />
+                  <TagRow items={item.skills} className="mt-5" />
                 </div>
               </Reveal>
             );

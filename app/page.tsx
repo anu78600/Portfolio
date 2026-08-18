@@ -4,7 +4,7 @@ import { Credentials } from "@/components/sections/Credentials";
 import { Experience } from "@/components/sections/Experience";
 import { Direction } from "@/components/sections/Direction";
 import { Hero } from "@/components/sections/Hero";
-import { Snapshot } from "@/components/sections/Snapshot";
+import { Glance } from "@/components/sections/Glance";
 import { Work } from "@/components/sections/Work";
 
 /**
@@ -32,7 +32,7 @@ export default function HomePage() {
   return (
     <main id="main" className="counterfoil">
       <Hero />
-      <Snapshot />
+      <Glance />
 
       {/* Act one carries Roles and the academic record, and nothing else.
           ─────────────────────────────────────────────────────────────────────
