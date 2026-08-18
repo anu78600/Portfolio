@@ -108,12 +108,24 @@
   /* Glass. Fill is the theme ground at partial alpha, so whatever the blur
      samples stays inside the neutral family and composited text contrast
      moves by well under one ratio point (worst case measured below 0.6). */
-  --glass-fill: oklch(0.993 0 90 / 0.66);
+  --glass-fill: oklch(0.993 0 90 / 0.72);
   --glass-edge: oklch(0 0 0 / 0.08);
   --glass-shadow:
     inset 0 1px 0 oklch(1 0 0 / 0.7),
     0 1px 1px oklch(0 0 0 / 0.04),
     0 12px 32px -16px oklch(0 0 0 / 0.14);
+
+  /* Content panels are TONAL, not glass -- see the GLASS section for why.
+     Light lift is a doubled ramp at constant alpha (Comeau's construction,
+     Linear's shipped version): the strongest layer is the 1px contact shadow,
+     so the card stays crisp at arm's length instead of airbrushed. */
+  --panel-fill: oklch(1 0 90);
+  --panel-edge: oklch(0 0 0 / 0.12);
+  --panel-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.7),
+    0 1px 1px oklch(0 0 0 / 0.05),
+    0 2px 4px oklch(0 0 0 / 0.05),
+    0 6px 12px oklch(0 0 0 / 0.05);
 
   /* The aurora: what the glass has to refract. Teal-family only, and within
      ~3 L* of the ground — glass over a perfectly flat field is invisible,
@@ -182,14 +194,32 @@
 
   --focus: oklch(0.8 0.085 205);
 
-  --glass-fill: oklch(0.248 0 90 / 0.6);
+  --glass-fill: oklch(0.248 0 90 / 0.72);
   --glass-edge: oklch(1 0 0 / 0.1);
+  /* On a dark ground a drop shadow buys about one JND whatever you spend --
+     top-tier dark panels seat with an OUTER 1px dark ring instead (sampled:
+     Linear ships 0 0 0 1px rgba(0,0,0,.6) on every dark panel). The ring is
+     the seating; the small drop is only contact. */
   --glass-shadow:
     inset 0 1px 0 oklch(1 0 0 / 0.07),
-    0 12px 32px -16px oklch(0 0 0 / 0.55);
+    0 0 0 1px oklch(0 0 0 / 0.55),
+    0 4px 24px -12px oklch(0 0 0 / 0.55);
 
-  --aurora-1: oklch(0.4 0.06 205 / 0.4);
-  --aurora-2: oklch(0.34 0.05 250 / 0.35);
+  /* Tone does the lift on dark: a white-6% fill reads as a plane one level up,
+     which no blurred shadow on this ground can. Border promoted to 12% -- the
+     edge carries more of the job when the shadow cannot. */
+  --panel-fill: oklch(1 0 90 / 0.06);
+  --panel-edge: oklch(1 0 0 / 0.12);
+  --panel-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.06),
+    0 0 0 1px oklch(0 0 0 / 0.55),
+    0 4px 24px -12px oklch(0 0 0 / 0.5);
+
+  /* Bright enough to survive its own glass. At 0.4/0.06 the composited patch
+     sat near L*17 behind a 60%-black tint and vanished -- every blur surface
+     was refracting a flat field, which is glass paying its cost for nothing. */
+  --aurora-1: oklch(0.48 0.08 205 / 0.55);
+  --aurora-2: oklch(0.4 0.07 250 / 0.45);
 
   --brass: oklch(0.8 0.132 92);
   --brass-mark: oklch(0.64 0.115 90);
@@ -246,8 +276,14 @@
      the token rather than by memory. */
 
   --text-display: clamp(2.75rem, 1.4rem + 5.5vw, 4.25rem);
-  --text-display--line-height: 0.94;
-  --text-display--letter-spacing: -0.015em;
+  /* 1.02, not 0.94. Sub-1.0 leading survives only while the line never wraps --
+     and at 320px the name wraps to two lines whose descenders collide with the
+     caps below. Sampled display tiers: Linear 1.0 unwrapped, Family 1.1; 1.02
+     holds the set tight AND survives the wrap. Tracking -0.02em, the sampled
+     consensus at 64-68px (Vercel's -6% is Geist-specific; Instrument Sans
+     self-collides there). */
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.02em;
 
   --text-title: clamp(1.5rem, 1.1rem + 1.7vw, 2.125rem);
   --text-title--line-height: 1.2;
@@ -273,7 +309,11 @@
      correctly spaced; a -0.003em nobody can see is a tell that the number was
      picked to look like typography. */
   --text-body: 1.1875rem;
-  --text-body--line-height: 1.62;
+  /* An exact ratio so the computed leading is an INTEGER pixel: 19 x 1.62 =
+     30.78px, and stacks built on body leading drifted 18px vs 19px between
+     identical sibling blocks. Linear writes calc(21/14), gwern calc(25/17) --
+     same trick. 31/19 computes to 31px even. */
+  --text-body--line-height: calc(31 / 19);
   --text-body--letter-spacing: 0em;
 
   --text-body-sm: 1rem;
@@ -417,9 +457,18 @@
      replaced with something more legible. No border-radius is set here — the
      outline already follows each element's own corner radius, and forcing one
      would square off the corners of rounded cards while they are focused. */
+  /* Two rings, not one outline: a gap ring in the surface colour, then the
+     accent. A single ring dissolves on whichever ground happens to match it;
+     the two-ring form survives glass, panels and arbitrary scrolled content
+     (sampled from Vercel's focus treatment). The transparent outline is for
+     forced-colors mode, where box-shadow is stripped and the system paints
+     the outline instead. */
   :focus-visible {
-    outline: 2px solid var(--focus);
-    outline-offset: 3px;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow:
+      0 0 0 2px var(--bg),
+      0 0 0 4px var(--focus);
   }
 
   /* Non-keyboard focus stays quiet */
@@ -718,7 +767,21 @@
    sampled area, and the budget is a mid-range Android.
    ───────────────────────────────────────────────────────────────────────────── */
 
-/* Panels: cards, dialogs, the metadata block. Carries its own edge + shadow. */
+/* Content panels: cards, the metadata block, goal cards. TONAL, never blurred.
+   The platform grammar (Apple's glass guidance, Linear's shipped stack) puts
+   glass ONLY on the floating navigation layer and lifts content by tone -- and
+   the first version here had it inverted: six blurred surfaces, two of them
+   960px-wide content cards, re-sampled on every scroll frame of a mid-range
+   Android. A panel is one composited fill; the z-axis comes back because only
+   chrome refracts. */
+@utility panel {
+  border: 1px solid var(--panel-edge);
+  background: var(--panel-fill);
+  box-shadow: var(--panel-shadow);
+}
+
+/* Overlay glass: the scrolled header, the dialogs, the palette. NOTHING else --
+   glass on content is the inversion the panel utility exists to prevent. */
 @utility glass {
   border: 1px solid var(--glass-edge);
   background: var(--surface-elevated);

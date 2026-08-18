@@ -58,7 +58,10 @@ export function Hero() {
                 aria-hidden="true"
                 className="h-1.5 w-1.5 rounded-full bg-accent"
               />
-              <p className="font-mono text-micro text-accent uppercase">
+              {/* 12px, not text-micro’s 11 — this is the FIRST thing that
+                  moves on the page and it was also the smallest text on it.
+                  11px stays for true marginalia: the folios. */}
+              <p className="font-mono text-[0.75rem] tracking-[0.1em] text-accent uppercase">
                 <span
                   data-typewriter
                   style={

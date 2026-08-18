@@ -6,8 +6,12 @@ import { Icon, type IconName } from "./Icon";
 type Variant = "primary" | "secondary" | "ghost";
 type Size = "sm" | "md";
 
+/* font-sans: buttons are UI, and app/fonts.ts assigns the grotesk to
+   "headings, row titles, buttons" -- yet these were inheriting the body
+   serif. Every sampled top-tier site sets controls in a 500-weight sans a
+   step below body size; the serif keeps the jobs it is good at. */
 const base =
-  "group relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium " +
+  "group relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-sans font-medium " +
   "transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-[var(--ease-out)] " +
   "active:translate-y-px disabled:pointer-events-none disabled:opacity-45";
 

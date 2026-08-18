@@ -281,7 +281,7 @@ export function CommandPalette({
                 spellCheck={false}
                 className="h-14 flex-1 bg-transparent text-[0.9375rem] text-ink outline-none placeholder:text-ink-3"
               />
-              <kbd className="label-sc hidden shrink-0 rounded-sm border border-line px-1.5 py-1 text-ink-3 sm:block">
+              <kbd className="hidden shrink-0 rounded-[4px] border border-line px-1.5 py-1 font-mono text-[0.6875rem] tracking-[0.04em] text-ink-3 sm:block">
                 Esc
               </kbd>
             </div>
@@ -367,13 +367,24 @@ export function PaletteTrigger() {
       type="button"
       onClick={() => window.dispatchEvent(new CustomEvent(OPEN_PALETTE_EVENT))}
       className={cn(
-        "hidden items-center gap-2 rounded-md border border-line bg-surface/60 py-1.5 pr-1.5 pl-3 md:inline-flex",
-        "text-[0.8125rem] text-ink-3 transition-colors duration-200 hover:border-line-strong hover:text-ink-2",
+        /* A ghost, deliberately. It was a bordered, translucent-filled box --
+           translucency WITHOUT blur ghosts scrolled text straight through the
+           button, and it made three competing boxed rectangles in one header.
+           Sampled grammar (Linear, Vercel): ONE filled element per bar. On
+           this site that element is Resume -- the recruiter CTA earns the box. */
+        "hidden items-center gap-2 rounded-md py-1.5 pr-1.5 pl-2 md:inline-flex",
+        "font-sans text-[0.8125rem] font-medium text-ink-3 transition-colors duration-200 hover:text-ink",
       )}
     >
       <Icon name="search" size={14} />
-      <span>Search</span>
-      <kbd className="label-sc rounded-sm border border-line bg-bg px-1.5 py-1 text-ink-3">
+      <span className="text-ink-2">Search</span>
+      {/* The hint never outranks its label. label-sc set this kbd at 14px/600
+          with +0.84px tracking -- bigger, bolder and more decorated than the
+          word it serves, so the eye landed on CTRL K and the affordance was
+          the whisper. 11px mono, one weight. 4px radius, because concentric
+          geometry inside a 10px-radius parent with 6px padding is 10-6=4 --
+          unequal corner gaps are a sub-pixel tell that reads as template. */}
+      <kbd className="rounded-[4px] border border-line bg-surface px-1.5 py-1 font-mono text-[0.6875rem] tracking-[0.04em] text-ink-3">
         {isMac ? "⌘" : "Ctrl"} K
       </kbd>
     </button>

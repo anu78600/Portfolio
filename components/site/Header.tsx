@@ -94,7 +94,11 @@ export function Header({
                 aria-hidden="true"
                 className={cn(
                   "grid h-8 w-8 place-items-center rounded-sm border border-line-strong",
-                  "font-mono text-[0.6875rem] font-medium tracking-tight text-accent",
+                  /* No font-medium: the mono ships one weight (400) with font-synthesis
+                     off, so 500 was a silent no-op. And caps at 11px take
+                     POSITIVE tracking -- negative tracking on small caps is
+                     backwards; the eyebrow already does +0.1em correctly. */
+                  "font-mono text-[0.6875rem] tracking-[0.08em] text-accent",
                   "transition-colors duration-200 group-hover:border-accent",
                 )}
               >
@@ -120,7 +124,7 @@ export function Header({
                         aria-current={active ? "true" : undefined}
                         data-active={active}
                         className={cn(
-                          "relative block px-3 py-2 text-[0.875rem] transition-colors duration-200",
+                          "relative block px-3 py-2 font-sans text-[0.875rem] font-medium leading-[1.2] transition-colors duration-200",
                           "after:pointer-events-none after:absolute after:right-3 after:bottom-1 after:left-3",
                           "after:h-px after:origin-left after:scale-x-0 after:bg-accent",
                           "after:transition-transform after:duration-300 after:ease-[var(--ease-out)]",
@@ -143,7 +147,7 @@ export function Header({
                 href="/resume"
                 className={cn(
                   "hidden h-9 items-center gap-1.5 rounded-md border border-line-strong px-3.5",
-                  "text-[0.875rem] font-medium text-ink transition-colors duration-200",
+                  "font-sans text-[0.875rem] font-medium text-ink transition-colors duration-200",
                   "hover:border-ink-3 hover:bg-surface sm:inline-flex",
                 )}
               >

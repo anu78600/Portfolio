@@ -132,7 +132,10 @@ export function MobileMenu({
             <a
               href="/resume"
               onClick={onClose}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-accent px-5 font-medium text-accent-contrast"
+              /* 44px and 15px sans, matching the hero pair exactly. These shipped at
+              48px with 19px inherited SERIF -- body prose in a box. Every
+              sampled site holds one button grammar, stepped below body size. */
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-accent px-5 font-sans text-[0.9375rem] font-medium text-accent-contrast"
             >
               <Icon name="file-text" size={16} />
               View resume
@@ -143,7 +146,7 @@ export function MobileMenu({
                 href={resumePdf}
                 download
                 onClick={onClose}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-md border border-line-strong px-5 font-medium text-ink"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-line-strong px-5 font-sans text-[0.9375rem] font-medium text-ink"
               >
                 <Icon name="download" size={16} />
                 Download PDF

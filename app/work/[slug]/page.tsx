@@ -114,7 +114,7 @@ export default async function CaseStudyPage({
             </Reveal>
 
             <Reveal delay={80} className="lg:col-span-5">
-              <dl className="glass rounded-lg">
+              <dl className="panel rounded-lg">
                 <div className="flex items-baseline justify-between gap-4 border-b border-line px-4 py-3">
                   <dt className="label-sc text-ink-3">Status</dt>
                   <dd>
@@ -140,7 +140,7 @@ export default async function CaseStudyPage({
                   href={externalUrl}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="glass mt-3 flex items-center justify-between gap-3 rounded-lg px-4 py-3 text-[0.875rem] text-ink transition-colors hover:border-line-strong hover:text-accent"
+                  className="panel mt-3 flex items-center justify-between gap-3 rounded-lg px-4 py-3 font-sans text-[0.875rem] text-ink transition-colors hover:border-line-strong hover:text-accent"
                 >
                   {project.externalLabel ?? "View the document"}
                   <Icon name="arrow-up-right" size={15} />

@@ -38,7 +38,7 @@ export function Direction() {
               as="li"
               key={goal.index}
               delay={index * 70}
-              className="glass rounded-lg p-6 sm:p-7"
+              className="panel rounded-lg p-6 sm:p-7"
             >
               {/* Horizon only. Numbering the goals inside numbered act 03 made
                   the folio numbers mean nothing; the `<ol>` already carries the

@@ -21,12 +21,15 @@ const cardShell =
      "running". Measured on this exact shell at 13 scroll positions: source
      A.group…, progress 1.000, scale 1 throughout. Indistinguishable from
      forgetting to write the CSS. */
-  /* `glass` carries its own edge and shadow, so the old border/bg classes go
-     with it. The hover is a LIFT now — 4px of translate — because on a
-     translucent panel a border-colour change alone is sub-threshold. */
-  "group flex h-full flex-col overflow-clip rounded-lg glass " +
-  "transition-[border-color,box-shadow,transform,translate] duration-300 ease-[var(--ease-out)] " +
-  "hover:border-line-hover hover:-translate-y-1";
+  /* `panel`, not `glass`: content lifts by TONE, only chrome refracts — see
+     the GLASS section in globals.css. And no hover translate: none of the
+     sampled top-tier sites moves a card at all (they swap border + ring), a
+     4px lift was double this site’s own 2px arrow-nudge idiom, and
+     translating a blur-backed panel re-samples the blurred region on every
+     frame — the exact mid-range-Android cost the budget forbids. */
+  "group flex h-full flex-col overflow-clip rounded-lg panel " +
+  "transition-[border-color,box-shadow] duration-300 ease-[var(--ease-out)] " +
+  "hover:border-line-hover hover:shadow-[var(--shadow-elevated)]";
 
 const plateMotion =
   "transition-transform duration-[600ms] ease-[var(--ease-out)] group-hover:scale-[1.03]";
