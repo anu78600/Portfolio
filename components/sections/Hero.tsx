@@ -4,17 +4,23 @@ import { cn } from "@/lib/cn";
 import { ButtonLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { SocialIconLinks } from "@/components/ui/SocialLinks";
-import { IdentityPanel } from "./IdentityPanel";
+import { liveProject } from "@/content/projects";
+import { Icon } from "@/components/ui/Icon";
+import { ProjectPlate } from "@/components/work/ProjectPlate";
 
 /**
- * Hero.
+ * Hero — identity, proof and contact in one viewport.
  *
- * Answers who / what / what-they-care-about / what-they-offer above the fold,
- * in that reading order, and gives the visitor exactly two things to do.
+ * Restructured to the blueprint (19 Aug, his sign-off): review is a fast
+ * negative filter, so the seniority signal and a visible contact email sit
+ * above the fold; and the strongest hero formula leads with actual work —
+ * one strongest screen shown large with a short verbal anchor, not
+ * introductory messaging. The three intro paragraphs left the hero: their
+ * facts survive in the credential line, the About blocks and the hero card,
+ * and /resume still renders them in full.
  *
- * The type stack is: mono eyebrow → name at display size → positioning
- * statement at title size → two lines of supporting copy. Nothing here is a
- * card, and nothing animates on a loop.
+ * He kept the act order below (Done → Built → Going stays his three-act
+ * story); the hero alone carries the proof into viewport one.
  */
 /**
  * Splits the headline so one phrase can carry the gradient, without hard-coding
@@ -86,6 +92,20 @@ export function Hero() {
             </Reveal>
 
             <Reveal>
+              {/* The negative-filter line: standing, availability, place —
+                  all verifiable, all above the fold. */}
+              <p className="mt-4 font-sans text-[0.9375rem] font-medium text-ink-2">
+                {profile.credentialLine}
+                {real(profile.availability) ? (
+                  <span className="text-ink-3"> · {real(profile.availability)}</span>
+                ) : null}
+                {real(profile.location) ? (
+                  <span className="text-ink-3"> · {real(profile.location)}</span>
+                ) : null}
+              </p>
+            </Reveal>
+
+            <Reveal>
               {/* Deliberately a <p>, not an <h2>. It reads like a heading, but
                   every other h2 on this page is a section landmark, and adding
                   a non-landmark h2 here breaks heading-based navigation. */}
@@ -95,16 +115,6 @@ export function Hero() {
                   accent={profile.headlineAccent}
                 />
               </p>
-            </Reveal>
-
-            <Reveal>
-              <div className="mt-7 max-w-xl space-y-3.5">
-                {profile.intro.map((line) => (
-                  <p key={line} className="text-lede text-ink-2">
-                    {line}
-                  </p>
-                ))}
-              </div>
             </Reveal>
 
             <Reveal
@@ -144,11 +154,65 @@ export function Hero() {
                 className="sm:ml-auto"
               />
             </Reveal>
+
+            {/* Contact, above the fold and in plain text. The email address
+                used to first appear ~12,000px down the page; an icon is not
+                an address. */}
+            <Reveal className="mt-6">
+              <a
+                href={`mailto:${profile.email}`}
+                className="link-underline font-sans text-[0.875rem] text-ink-2"
+              >
+                {profile.email}
+              </a>
+            </Reveal>
           </div>
 
-          <Reveal delay={140} className="lg:col-span-5">
-            <IdentityPanel />
-          </Reveal>
+          {/* THE PROOF, as the hero image. One strongest screen shown
+              large — the journal card with its margin rule, entry and
+              REVIEWED stamp — not a montage, not a drawn stand-in. The whole
+              card is one link to the running app: the single click a
+              recruiter can use to verify the claim. */}
+          {liveProject && real(liveProject.externalUrl) ? (
+            <Reveal delay={140} className="lg:col-span-5">
+              <a
+                href={real(liveProject.externalUrl)!}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="panel group block overflow-clip rounded-lg transition-[border-color,box-shadow] duration-300 ease-[var(--ease-out)] hover:border-line-hover hover:shadow-[var(--shadow-elevated)]"
+              >
+                <div className="relative aspect-[13/15] max-h-[56vh] w-full overflow-clip border-b border-line">
+                  <ProjectPlate
+                    figure={liveProject.figure}
+                    image={liveProject.imageDetail ?? liveProject.image}
+                    imageAlt={liveProject.imageDetailAlt ?? liveProject.imageAlt}
+                    priority
+                    sizes="(min-width: 1024px) 40vw, 92vw"
+                  />
+                </div>
+                <div className="flex items-center justify-between gap-3 px-4 py-3">
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span
+                      aria-hidden="true"
+                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                    />
+                    <span className="label-sc shrink-0 text-accent">Live</span>
+                    <span className="truncate font-sans text-[0.9375rem] font-medium text-ink">
+                      {liveProject.title}
+                    </span>
+                  </span>
+                  <span className="flex shrink-0 items-center gap-1.5 font-sans text-[0.875rem] font-medium text-accent">
+                    Open
+                    <Icon
+                      name="arrow-up-right"
+                      size={14}
+                      className="transition-transform duration-200 ease-[var(--ease-out)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    />
+                  </span>
+                </div>
+              </a>
+            </Reveal>
+          ) : null}
         </div>
       </div>
     </section>

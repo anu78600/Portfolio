@@ -30,6 +30,11 @@ export const profile: Profile = {
 
   jobTitle: "Business & AI Professional",
 
+  // The hero's seniority signal. Review is a fast negative filter and the
+  // role-level read has to survive the first viewport; both standings are the
+  // ones education.ts carries and /resume repeats. No adjectives.
+  credentialLine: "MBA (HR + IB), top 10% " + "\u00b7" + " BCA, top 3%",
+
   location: "Uttar Pradesh, India",
   availability: "Open to analyst and AI roles",
 

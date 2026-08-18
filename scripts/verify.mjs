@@ -503,12 +503,20 @@ async function checkStructure(page, path) {
     h1: document.querySelectorAll("h1").length,
     main: document.querySelectorAll("main").length,
     skip: !!document.querySelector('a[href="#main"]'),
+    heroMail: !!document.querySelector('#top a[href^="mailto:"]'),
     imgNoAlt: [...document.images].filter(i => !i.hasAttribute("alt")).length,
     stylesheet: [...document.styleSheets].some(s => { try { return s.cssRules.length > 0 } catch { return false } }),
   }))()`);
   record("structure", `${path}: exactly one h1`, probe.h1 === 1, `found ${probe.h1}`);
   record("structure", `${path}: has a main landmark`, probe.main === 1);
   record("structure", `${path}: skip link present`, probe.skip);
+  /* The blueprint's negative-filter guarantee: a visible mailto in the hero.
+     The address used to first appear ~12,000px down; review is a fast
+     negative filter and contact must survive the first viewport. Only "/"
+     has a hero. */
+  if (path === "/") {
+    record("structure", "/: contact email lives in the hero", probe.heroMail);
+  }
   record("structure", `${path}: every image has alt`, probe.imgNoAlt === 0, `${probe.imgNoAlt} missing`);
   /* Catches the stale-server failure: HTML served, stylesheet 404. */
   record("structure", `${path}: stylesheet actually loaded`, probe.stylesheet);

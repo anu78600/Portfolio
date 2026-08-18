@@ -86,6 +86,16 @@ export const projects: Project[] = [
         ],
       },
       {
+        /* The hiring-manager case-study arc ends on "success metrics proving
+           impact". This site invents no metrics, so the arc ends on the next
+           best thing and arguably the better one: the claims a reader can
+           verify without trusting us. */
+        heading: "What can be checked",
+        body: [
+          "The app is live and anyone can open it. It was built by one person. Its data stays on your device unless you choose to sign in. Nothing in this write-up asks to be taken on trust.",
+        ],
+      },
+      {
         heading: "Build, stack and the hard parts",
         pending: true,
         body: [

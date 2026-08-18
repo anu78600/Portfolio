@@ -48,6 +48,10 @@ export interface Profile {
   intro: string[];
   /** Used for the resume header and the JSON-LD `jobTitle`. */
   jobTitle: string;
+  /** One line of verifiable standing for the hero's negative-filter read:
+      the seniority signal that must sit above the fold. Facts only, sourced
+      from education.ts. */
+  credentialLine: string;
   location: Todo | string;
   /** Optional one-line availability note. Hidden entirely if placeholder. */
   availability: Todo | string;
