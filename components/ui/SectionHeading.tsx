@@ -37,6 +37,9 @@ export function SectionHeading({
 }) {
   return (
     <header className={cn("mb-10 sm:mb-14", className)}>
+      {/* This row does NOT reveal: it holds the `.rule-fade`, which now draws
+          itself. Two motions on one object muddy both, and the drawn rule is
+          the gesture worth keeping. */}
       <Reveal className="relative flex items-center gap-4">
         {/* The folio hangs in the stub, outside the margin rule. It is the
             clearest statement of the whole grid: numbers live in the margin,
@@ -54,7 +57,7 @@ export function SectionHeading({
         {action ? <div className="hidden sm:block">{action}</div> : null}
       </Reveal>
 
-      <Reveal delay={60} className={cn("mt-6", align === "start" && "max-w-3xl")}>
+      <Reveal act={Boolean(index)} delay={60} className={cn("mt-6", align === "start" && "max-w-3xl")}>
         <h2 id={id} className="text-heading font-medium text-ink">
           {title}
         </h2>

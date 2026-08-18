@@ -527,8 +527,13 @@ async function checkContent(page, path) {
       ).join("|"),
     );
 
+    const named = {};
+    for (const a of document.getAnimations())
+      named[a.animationName] = (named[a.animationName] || 0) + 1;
+
     return { text: [...new Set(text)], ld: [...new Set(ld)], stray,
-             figures: figures.length, distinct: new Set(figures).size };
+             figures: figures.length, distinct: new Set(figures).size,
+             reveals: named["reveal-in"] || 0, rules: named["rule-draw"] || 0 };
   })()`);
 
   record("content", `${path}: no placeholder in visible text`,
@@ -537,6 +542,21 @@ async function checkContent(page, path) {
     probe.ld.length === 0, probe.ld.join(", "));
   record("motion", `${path}: every view() timeline sourced at <html>`,
     probe.stray.length === 0, probe.stray.join(", "));
+
+  /* The reveal population cannot silently regrow.
+     It reached 41 — one keyframe on every wrapper, including list rows and
+     paragraphs, which REDESIGN §4.5 forbids in those words: "applied to
+     sections only — never paragraphs, never individual rows." A reveal is a
+     promise that something is arriving; made 41 times over 16 viewports it is
+     a texture, and a texture cannot be an event. Three: one per act, which is
+     the page's own cardinality. Contact is deliberately unnumbered, so the
+     ABSENCE of the gesture there carries the same signal as its absent folio. */
+  if (path === "/") {
+    record("motion", "/: exactly 3 reveals, one per act",
+      probe.reveals === 3, `found ${probe.reveals}`);
+    record("motion", "/: the drawn-rule gesture is present",
+      probe.rules > 0, `found ${probe.rules} .rule-fade animations`);
+  }
 
   if (probe.figures > 1) {
     record("content", `${path}: drawn figures are pairwise distinct`,

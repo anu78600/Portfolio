@@ -15,7 +15,7 @@ import { cn } from "@/lib/cn";
 export function Reveal({
   as: Tag = "div",
   delay = 0,
-  immediate = false,
+  act = false,
   className,
   children,
   ...rest
@@ -28,8 +28,22 @@ export function Reveal({
    * past roughly 10% the later items in a group visibly lag the scroll.
    */
   delay?: number;
-  /** Opt out entirely — used above the fold, where nothing should animate. */
-  immediate?: boolean;
+  /**
+   * Opt IN to the reveal. Default is off.
+   *
+   * This was inverted on 18 Aug. Every wrapper on the site was revealing, so
+   * `/` ran 41 instances of one keyframe — on list rows and paragraph wrappers,
+   * which REDESIGN §4.5 forbids in those words: "applied to sections only —
+   * never paragraphs, never individual rows. Scroll-linked opacity on body copy
+   * is a readability tax."
+   *
+   * A reveal is a promise that something is arriving. Made 41 times over 16
+   * viewports it is a texture, and a texture cannot be an event. It is now
+   * carried by exactly three objects — the three act headings — which is the
+   * page's own cardinality. Contact is deliberately unnumbered, so the ABSENCE
+   * of the gesture there says the same thing the absent folio says.
+   */
+  act?: boolean;
   className?: string;
   children: ReactNode;
 } & Record<string, unknown>) {
@@ -37,9 +51,9 @@ export function Reveal({
 
   return (
     <Tag
-      {...(immediate ? {} : { "data-reveal": "" })}
+      {...(act ? { "data-reveal": "" } : {})}
       style={
-        !immediate && shift
+        act && shift
           ? ({ "--reveal-shift": `${shift}%` } as React.CSSProperties)
           : undefined
       }

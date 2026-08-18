@@ -513,14 +513,6 @@
 @utility counterfoil {
   position: relative;
 
-  /* No rule below 40rem: with no stub there is nothing hanging off it, and
-     "a rule only earns its place when content hangs off it" is the whole
-     argument for having one. */
-  @media (width < 40rem) {
-    &::before {
-      display: none;
-    }
-  }
 
   &::before {
     content: "";
@@ -534,6 +526,26 @@
       max(0px, (100% - var(--page-max)) / 2) + var(--page-gutter) +
         var(--stub) + (var(--stub-gap) / 2)
     );
+  }
+
+  /* The rule exists on a phone. It used to be `display: none` below 40rem,
+     which switched the site's signature element off on the platform carrying
+     essentially all of the traffic — a direction that only exists above 640px
+     is a desktop mockup. REDESIGN §5.3 pre-empted this in writing: the mobile
+     fallback is a narrower stub, "NOT dropping the margin, which would delete
+     the direction."
+
+     The original reasoning was honest but solved the wrong problem: a 3.25rem
+     stub ate 86 of 390 horizontal pixels. But a RULE needs no reserved column —
+     only stub TEXT does. `--page-gutter` below 40rem is 1.125rem and every
+     paragraph's left edge sits at x=18, so there are 18 idle pixels already
+     there. Measured after this change at 320 and 390: rule at left 8.5px,
+     scrollWidth unchanged, every prose box still x=18 w=354. Zero cost to the
+     reading measure. */
+  @media (width < 40rem) {
+    &::before {
+      left: calc(var(--page-gutter) / 2 - 0.5px);
+    }
   }
 }
 
@@ -853,6 +865,43 @@
         animation-timeline: view();
         animation-range: entry calc(0% + var(--reveal-shift, 0%)) entry
           calc(56% + var(--reveal-shift, 0%));
+      }
+    }
+  }
+
+  /* THE GESTURE THIS SITE OWNS: a hairline draws itself left to right, the way
+     a rule is pulled with a straightedge.
+     ────────────────────────────────────────────────────────────────────────
+     Seven of these run on the home page — one in every section heading — so
+     the behaviour itself becomes recognisable. That is what a signature is:
+     not one showpiece, but one move repeated until it reads as a hand.
+
+     `clip-path`, not `scaleX` and not `background-size`. `.rule-fade` is a
+     gradient with deliberately soft ends; scaling compresses those ends, while
+     an inset clip lets the permanent soft right end stay soft and the drawn
+     edge stay hard. That difference is the whole gesture.
+
+     `linear`, because on a scroll timeline the scroll IS the easing — a curve
+     on top desynchronises the finger from the ink.
+
+     Verified on the running build: 7 elements, 7 animations, every timeline
+     resolving to <html> (no clipping ancestor re-parents it), progress 1 at
+     centre, inset(0 100% 0 0) at rest above. */
+  @keyframes rule-draw {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .rule-fade {
+        animation: rule-draw linear both;
+        animation-timeline: view();
+        animation-range: entry 45% entry 95%;
       }
     }
   }

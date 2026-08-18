@@ -47,7 +47,7 @@ export function Hero() {
       <div className="container-counterfoil">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
-            <Reveal immediate className="flex items-center gap-2.5">
+            <Reveal className="flex items-center gap-2.5">
               <span
                 aria-hidden="true"
                 className="h-1.5 w-1.5 rounded-full bg-accent"
@@ -55,7 +55,7 @@ export function Hero() {
               <p className="label-sc text-accent">{profile.eyebrow}</p>
             </Reveal>
 
-            <Reveal immediate>
+            <Reveal>
               <h1
                 id="hero-name"
                 className={cn(
@@ -67,7 +67,7 @@ export function Hero() {
               </h1>
             </Reveal>
 
-            <Reveal immediate>
+            <Reveal>
               {/* Deliberately a <p>, not an <h2>. It reads like a heading, but
                   every other h2 on this page is a section landmark, and adding
                   a non-landmark h2 here breaks heading-based navigation. */}
@@ -79,7 +79,7 @@ export function Hero() {
               </p>
             </Reveal>
 
-            <Reveal immediate>
+            <Reveal>
               <div className="mt-7 max-w-xl space-y-3.5">
                 {profile.intro.map((line) => (
                   <p key={line} className="text-lede text-ink-2">
@@ -90,7 +90,6 @@ export function Hero() {
             </Reveal>
 
             <Reveal
-              immediate
               className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center"
             >
               {/* Stacked full-width below 480px. Forcing two columns gave each button
