@@ -62,6 +62,18 @@ function checkContrast() {
   if (!file) return record("contrast", "compiled stylesheet found", false, dir);
   const css = readFileSync(join(dir, file), "utf8");
 
+  /* Lightning CSS minifies a hex to a NAMED colour whenever the name is
+     shorter — `#808080` ships as `gray`. A parser that keeps only values
+     starting with "#" then drops that token silently, and every pair involving
+     it disappears from the suite. That is exactly how this file lost five
+     checks and still reported green. Resolve the names it can actually emit. */
+  const NAMED = {
+    black: "#000000", white: "#ffffff", gray: "#808080", grey: "#808080",
+    silver: "#c0c0c0", red: "#ff0000", maroon: "#800000", lime: "#00ff00",
+    green: "#008000", blue: "#0000ff", navy: "#000080", teal: "#008080",
+    aqua: "#00ffff", olive: "#808000", purple: "#800080", fuchsia: "#ff00ff",
+    yellow: "#ffff00", orange: "#ffa500", tan: "#d2b48c", plum: "#dda0dd",
+  };
   const parse = (body) =>
     Object.fromEntries(
       body
@@ -69,7 +81,9 @@ function checkContrast() {
         .filter((kv) => kv.includes(":"))
         .map((kv) => {
           const i = kv.indexOf(":");
-          return [kv.slice(0, i).trim(), kv.slice(i + 1).trim()];
+          const k = kv.slice(0, i).trim();
+          const v = kv.slice(i + 1).trim();
+          return [k, NAMED[v.toLowerCase()] ?? v];
         })
         .filter(([, v]) => v.startsWith("#")),
     );
@@ -147,11 +161,23 @@ function checkContrast() {
      purpose; --border-strong is not, and slipped to 2.90:1 once. */
   const UI = ["--border-strong", "--focus"];
 
+  /* Every pair below is guarded by `if (!t[fg] || !t[bg]) continue`, so one
+     unreadable token removes checks instead of failing them. Assert the full
+     set is present, per theme, so the suite cannot quietly get smaller. */
+  const EXPECTED = [...new Set([...TEXT, ...SURFACES, ...UI, "--accent-contrast"])];
+
   for (const [theme, t] of Object.entries(themes)) {
     if (!t) {
       record("contrast", `${theme} tokens present`, false);
       continue;
     }
+    const missing = EXPECTED.filter((k) => !t[k]);
+    record(
+      "contrast",
+      `${theme}: all ${EXPECTED.length} graded tokens readable`,
+      missing.length === 0,
+      missing.join(", "),
+    );
     for (const fg of TEXT)
       for (const bg of SURFACES) {
         if (!t[fg] || !t[bg]) continue;
