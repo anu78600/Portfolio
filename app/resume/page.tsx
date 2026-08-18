@@ -11,14 +11,14 @@ import { Icon, type IconName } from "@/components/ui/Icon";
 import { ResumeControls } from "@/components/resume/ResumeControls";
 
 export const metadata: Metadata = {
-  title: "Résumé",
+  title: "Resume",
   description:
-    "A plain, printable résumé — education, experience, projects, skills and certifications.",
+    "A plain, printable resume — education, experience, projects, skills and certifications.",
   alternates: { canonical: "/resume" },
 };
 
 /**
- * Résumé view.
+ * Resume view.
  *
  * This is the "resume mode" the brief asked about, built as a route rather than
  * a toggle on the homepage. A toggle would have to unwind every layout decision
@@ -151,9 +151,11 @@ export default function ResumePage() {
                         {period ?? "Years to be added"}
                       </span>
                     </div>
-                    <p className="mt-1 text-[0.9375rem] text-ink-2">
-                      {item.institution}
-                    </p>
+                    {real(item.institution) ? (
+                      <p className="mt-1 text-[0.9375rem] text-ink-2">
+                        {real(item.institution)}
+                      </p>
+                    ) : null}
                   </li>
                 );
               })}

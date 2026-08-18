@@ -19,7 +19,7 @@ export const goals: Goal[] = [
     index: "01",
     horizon: "Next role",
     title: "Analyst work where the AI is real",
-    body: "People analytics, business analysis, or a graduate consulting scheme — the specific title matters less than whether the model is actually in the loop. I would rather be the person who knows what it is doing than the person who presents what it produced.",
+    body: "Business analysis or a graduate consulting scheme — the specific title matters less than whether the model is actually in the loop. I would rather be the person who knows what it is doing than the person who presents what it produced.",
   },
   {
     index: "02",

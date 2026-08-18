@@ -24,7 +24,7 @@ interface Action {
  * Command palette (⌘K / Ctrl K).
  *
  * Included because it is genuinely the fastest route to the two things a
- * recruiter actually wants — the résumé and a way to make contact — without
+ * recruiter actually wants — the resume and a way to make contact — without
  * putting a second row of buttons in the header. It is an accelerator, never
  * the only path: every action here is also reachable by ordinary clicking.
  *
@@ -78,9 +78,9 @@ export function CommandPalette({
 
     list.push({
       id: "resume-view",
-      label: "View résumé",
+      label: "View resume",
       hint: "Plain, printable version",
-      group: "Résumé",
+      group: "Resume",
       icon: "file-text",
       run: () => router.push("/resume"),
     });
@@ -88,9 +88,9 @@ export function CommandPalette({
     if (resumePdf) {
       list.push({
         id: "resume-download",
-        label: "Download résumé (PDF)",
+        label: "Download resume (PDF)",
         hint: resumePdf,
-        group: "Résumé",
+        group: "Resume",
         icon: "download",
         run: () => window.open(resumePdf, "_blank", "noopener"),
       });

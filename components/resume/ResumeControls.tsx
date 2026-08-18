@@ -9,17 +9,17 @@ import { Icon } from "@/components/ui/Icon";
 type Density = "detailed" | "compact";
 
 /**
- * Résumé toolbar.
+ * Resume toolbar.
  *
- * The one genuinely useful interaction on a résumé page is letting the reader
+ * The one genuinely useful interaction on a resume page is letting the reader
  * choose how much of it they want. A recruiter doing a first pass wants the
  * one-page version; someone who has decided to take you seriously wants the
  * detail. "Compact" collapses supporting prose — the profile paragraphs and
- * project descriptions — while every fact a résumé is judged on (roles, dates,
+ * project descriptions — while every fact a resume is judged on (roles, dates,
  * responsibilities, grades, credentials) stays on the page in both modes.
  *
  * That constraint is deliberate: hiding substance behind a toggle is how
- * interactive résumés usually fail. This one only ever hides elaboration.
+ * interactive resumes usually fail. This one only ever hides elaboration.
  *
  * Density is applied as a data attribute on <html> and the hiding is pure CSS,
  * so the server render is unaffected and there is no hydration mismatch. The

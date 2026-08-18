@@ -144,7 +144,7 @@ export function Header({
                   "hover:border-ink-3 hover:bg-surface sm:inline-flex",
                 )}
               >
-                Résumé
+                Resume
               </Link>
 
               <ThemeToggle />

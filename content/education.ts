@@ -2,6 +2,22 @@ import type { Certification, EducationItem, LearningItem } from "./types";
 
 export const education: EducationItem[] = [
   {
+    /* Current, so it leads. The array is authored most-recent-first and both
+       the home page and /resume map it without sorting.
+
+       He supplied the qualification and that he is in his first semester, and
+       nothing else. The institution and the years are therefore placeholders,
+       not guesses — `real()` hides them until they are filled, and the row
+       renders with "Years to be added" rather than a date nobody supplied.
+       Inferring "2026" from "first semester" would be inventing a date, which
+       is the one thing this file may never do. */
+    id: "llb",
+    qualification: "Bachelor of Laws (LLB)",
+    institution: "[ADD LLB INSTITUTION]",
+    period: "[ADD LLB YEARS]",
+    note: "Currently pursuing — first semester.",
+  },
+  {
     id: "mba",
     qualification: "Master of Business Administration",
     specialisation: "Human Resource Management + International Business",
@@ -23,7 +39,7 @@ export const education: EducationItem[] = [
  *
  * "Basics of Nutrition" (Ministry of Women & Child Development / ICMR) is
  * deliberately not listed. It is a real certificate, but on a page aimed at
- * analyst, people-analytics and AI roles it reads as list-padding and pulls
+ * analyst and AI roles it reads as list-padding and pulls
  * against the focus everything else on the site establishes. Add it back here
  * if you are applying somewhere it is relevant.
  */

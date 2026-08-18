@@ -137,7 +137,7 @@ export function MobileMenu({
               className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-accent px-5 font-medium text-accent-contrast"
             >
               <Icon name="file-text" size={16} />
-              View résumé
+              View resume
             </a>
 
             {resumePdf ? (

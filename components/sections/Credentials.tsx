@@ -55,9 +55,14 @@ export function Credentials() {
                       </p>
                     ) : null}
 
-                    <p className="mt-1.5 text-[0.9375rem] text-ink-2">
-                      {item.institution}
-                    </p>
+                    {/* Through `real`. A course can be entered before its
+                        institution is confirmed — the LLB is — and an
+                        unguarded field prints the placeholder on screen. */}
+                    {real(item.institution) ? (
+                      <p className="mt-1.5 text-[0.9375rem] text-ink-2">
+                        {real(item.institution)}
+                      </p>
+                    ) : null}
 
                     {item.note ? (
                       <p className="mt-3 max-w-xl text-[0.875rem] leading-relaxed text-ink-3">

@@ -34,7 +34,7 @@ export default function NotFound() {
             Back to the homepage
           </ButtonLink>
           <ButtonLink href="/resume" variant="secondary">
-            View résumé
+            View resume
           </ButtonLink>
         </div>
 

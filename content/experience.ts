@@ -5,7 +5,7 @@ import type { ExperienceItem } from "./types";
  *
  * NOTE ON NUMBERS — read before editing.
  *
- * The source résumé attached percentages to three of these bullets: "100%
+ * The source resume attached percentages to three of these bullets: "100%
  * compliance", "morale by 20%", "accuracy by 15–20%". They are not reproduced
  * here, and the omission is deliberate rather than an oversight.
  *

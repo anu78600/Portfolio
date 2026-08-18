@@ -123,7 +123,7 @@ export function Hero() {
                     icon="download"
                     download
                   >
-                    Download résumé
+                    Download resume
                   </ButtonLink>
                 ) : (
                   <ButtonLink
@@ -131,7 +131,7 @@ export function Hero() {
                     variant="secondary"
                     icon="arrow-up-right"
                   >
-                    View résumé
+                    View resume
                   </ButtonLink>
                 )}
               </div>

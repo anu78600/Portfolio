@@ -3,7 +3,7 @@ import type { AboutBlock, Domain, Profile } from "./types";
 /**
  * ─────────────────────────────────────────────────────────────────────────────
  *  Sourced from Anupam_Resume_Updated 1.1.pdf, August 2026.
- *  Remaining `[ADD …]` strings are facts the résumé did not carry. Nothing
+ *  Remaining `[ADD …]` strings are facts the resume did not carry. Nothing
  *  here is invented — see SETUP.md for what is still open.
  * ─────────────────────────────────────────────────────────────────────────────
  */
@@ -31,7 +31,7 @@ export const profile: Profile = {
   jobTitle: "Business & AI Professional",
 
   location: "Uttar Pradesh, India",
-  availability: "Open to analyst, people-analytics and AI roles",
+  availability: "Open to analyst and AI roles",
 
   email: "anupam78600@gmail.com",
 
@@ -64,7 +64,7 @@ export const profile: Profile = {
     },
   ],
 
-  // Save the résumé PDF as public/resume.pdf, then set this to "/resume.pdf".
+  // Save the resume PDF as public/resume.pdf, then set this to "/resume.pdf".
   resumePdf: "[ADD RESUME PDF]",
 
   // Drop an editorial portrait at public/portrait.jpg (4:5 crop, ~1000×1250)

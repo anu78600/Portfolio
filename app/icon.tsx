@@ -7,7 +7,7 @@ export const contentType = "image/png";
 
 /**
  * Favicon: the same initials mark used in the header, so the browser tab, the
- * site and the résumé all carry one identity. Generated from the profile data
+ * site and the resume all carry one identity. Generated from the profile data
  * rather than a checked-in binary, which means renaming updates every surface.
  */
 export default function Icon() {

@@ -35,7 +35,7 @@ export function Footer() {
               href="/resume"
               className="link-underline w-fit text-ink-2 transition-colors hover:text-ink"
             >
-              Résumé
+              Resume
             </Link>
             {resumePdf ? (
               <a

@@ -5,10 +5,10 @@ import type { SkillGroup } from "./types";
  * and carry no proficiency percentages — a self-assigned "85%" communicates
  * nothing a reader can verify.
  *
- * Two things from the source résumé are deliberately absent. "Touch typing"
+ * Two things from the source resume are deliberately absent. "Touch typing"
  * is not a professional differentiator and its presence invites the reader to
  * discount the rest of the list. "Collaboration" and "multi-tasking" are the
- * generic soft skills every résumé claims and none evidences — the experience
+ * generic soft skills every resume claims and none evidences — the experience
  * and project sections demonstrate both far better than a bullet asserting
  * them. Add them back here if you disagree.
  */

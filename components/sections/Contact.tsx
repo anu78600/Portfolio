@@ -39,8 +39,8 @@ export function Contact() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
           <Reveal className="lg:col-span-5">
             <p className="max-w-md text-lede leading-relaxed text-ink-2">
-              I’m looking for analyst, people-analytics, consulting and
-              AI-focused roles — anywhere the work is turning a business
+              I’m looking for analyst, consulting and AI-focused
+              roles — anywhere the work is turning a business
               question into something a decision-maker can act on. I’m also
               glad to talk about where agentic systems are genuinely being put
               to work. If any of that overlaps with what you’re building, email

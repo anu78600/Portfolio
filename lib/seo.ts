@@ -42,10 +42,16 @@ export function buildJsonLd() {
       "Human resource management",
       "International business",
     ],
-    alumniOf: education.map((item) => ({
-      "@type": "EducationalOrganization",
-      name: item.institution,
-    })),
+    /* Only institutions that are real. `alumniOf` published whatever string the
+       content file held, so entering a course before its institution is
+       confirmed — the LLB — put an EducationalOrganization literally named
+       "[ADD LLB INSTITUTION]" into structured data on every route. Exactly the
+       failure "[ADD ISSUER]" caused in `hasCredential` below, in a second field
+       nobody thought to guard. */
+    alumniOf: education
+      .map((item) => real(item.institution))
+      .filter(Boolean)
+      .map((name) => ({ "@type": "EducationalOrganization", name })),
     /* `recognizedBy` only when the issuer is real. Unguarded, this published an
        Organization literally named "[ADD ISSUER]" as machine-readable structured
        data on EVERY route — including the case studies, which show no

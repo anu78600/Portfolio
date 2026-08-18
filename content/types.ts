@@ -46,7 +46,7 @@ export interface Profile {
   headlineAccent?: string;
   /** Two to three lines of supporting hero copy. */
   intro: string[];
-  /** Used for the résumé header and the JSON-LD `jobTitle`. */
+  /** Used for the resume header and the JSON-LD `jobTitle`. */
   jobTitle: string;
   location: Todo | string;
   /** Optional one-line availability note. Hidden entirely if placeholder. */
