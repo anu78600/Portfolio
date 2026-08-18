@@ -14,6 +14,38 @@
 @source not "../scratchpad";
 
 /* ─────────────────────────────────────────────────────────────────────────────
+   TURNING THE PAGE
+
+   One at-rule, no JavaScript, no dependency: same-origin navigations between
+   `/`, `/work/[slug]` and `/resume` stop being hard cuts and become a turn.
+
+   The point is not the cross-fade. It is what does NOT move. Naming the
+   vermilion margin rule makes the browser carry that one element across the
+   navigation while the text beside it changes — the spine stays, the leaf
+   turns. That is the ledger metaphor expressed as behaviour rather than as a
+   picture of a ledger, and it is the only place the metaphor can be a
+   behaviour at all.
+
+   Names must be UNIQUE per document; two elements sharing one aborts the whole
+   transition silently. The header already carries `site-header`, set in
+   Header.tsx and — until now — consumed by nothing.
+
+   Degrades by construction: browsers without support simply navigate. There is
+   no fallback to write and nothing to feature-detect. Chrome also abandons the
+   transition if the next document is not renderable within 4s, which fails
+   safe to a normal navigation. */
+@view-transition {
+  navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
    DESIGN TOKENS
 
    Two deliberately designed themes — not one theme inverted. The dark palette
@@ -62,11 +94,23 @@
   /* 0.615 measured 2.90:1 against --surface-sunken, below the 3:1 floor this
      token is contractually held to. --border and --accent-line are exempt;
      this one is not. */
-  --border-strong: oklch(0.58 0.016 80);
+  /* Chroma PEAKS here. See the note on the ink below. */
+  --border-strong: oklch(0.58 0.02 80);
 
-  --text-primary: oklch(0.245 0.02 62);
-  --text-secondary: oklch(0.415 0.018 62);
-  --text-muted: oklch(0.49 0.016 64);
+  /* Ink goes neutral as it darkens; the paper and the midtones carry the warmth.
+     ─────────────────────────────────────────────────────────────────────────
+     These three carried 0.020 / 0.018 / 0.016 — chroma rising monotonically as
+     the ramp got darker, so the most saturated object on the light page was
+     19px of body text and the paper, which the entire metaphor is about, was
+     the least tinted thing on it. That is backwards for ink on paper.
+     The DARK theme already runs the correct curve: 0.010 at the ground, 0.017
+     peaking at --border-strong in the midtones, collapsing to 0.008 at the
+     lightest text. Light now mirrors it: 0.008 → 0.012 → 0.020 → 0.009.
+     Only chroma moves. Every L is untouched, so no contrast pair can regress —
+     verified against compiled CSS by the harness. */
+  --text-primary: oklch(0.245 0.009 62);
+  --text-secondary: oklch(0.415 0.014 62);
+  --text-muted: oklch(0.49 0.018 64);
 
   /* The hand. Red is a hairline, a link, a ring, a stamp border and one
      handwritten phrase. Never a fill, never beside a number, never next to
@@ -519,6 +563,9 @@
     position: absolute;
     inset-block: 0;
     width: 1px;
+    /* The spine. Named so a cross-document navigation carries it rather than
+       cross-fading it: the rule holds while the page beside it turns. */
+    view-transition-name: margin-rule;
     background: var(--accent-line);
     pointer-events: none;
     z-index: 0;
@@ -985,7 +1032,11 @@
     background-repeat: no-repeat;
     background-position: 0 100%;
     background-size: 0% 1px;
-    transition: background-size 320ms var(--ease-out);
+    /* 140ms, not 320. 320 is an ENTRANCE duration spent on a hover: entrances
+       live at 250-350ms and hover states at 50-200ms, and past roughly 200ms a
+       hover stops reading as a response and starts reading as an animation.
+       This was the one place the page moved like a web app. */
+    transition: background-size 140ms var(--ease-out);
   }
   .link-underline:hover,
   .link-underline:focus-visible {
@@ -1162,12 +1213,15 @@ html {
     --surface-sunken: #ffffff;
     --border: #d4d4d8;
     --border-hover: #d4d4d8;
-    /* #71717a = 4.83:1 on paper. #a1a1aa was 2.56:1 — under the 3:1 floor this
-       token is held to by contract on screen, and print is not an exemption.
-       It matters more than it looks: the drawn project figures are line work in
-       --border-strong and nothing else, so at 2.56:1 the only pictures on the
-       home page printed as a ghost. --border stays decorative and exempt. */
-    --border-strong: #71717a;
+    /* #736e66 = 5.06:1 on paper, and WARM. #a1a1aa was 2.56:1, under the 3:1
+       floor this token is held to by contract on screen, and print is not an
+       exemption — the drawn project figures are line work in --border-strong
+       and nothing else, so at 2.56:1 the only pictures on the home page printed
+       as a ghost. The replacement #71717a fixed the ratio but was a COOL grey
+       (b* negative) sitting inside a warm ramp, on the one surface where the
+       paper metaphor is literally true. Same lightness, warm hue.
+       --border stays decorative and exempt. */
+    --border-strong: #736e66;
     --surface-overlay: #ffffff;
     --text-primary: #000000;
     --text-secondary: #27272a;
@@ -1245,7 +1299,7 @@ html {
     color: #000 !important;
     background: none !important;
     box-shadow: none !important;
-    border-color: #71717a !important;
+    border-color: #736e66 !important;
   }
 
   a[data-print-url]::after {
