@@ -6,7 +6,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 /**
  * Act one — what I have done.
  *
- * Opens with the four numbered blocks, then carries Roles, Capabilities and
+ * Opens with the four numbered blocks, then carries Roles and the academic
  * On-the-record as children rather than as sibling sections, so the page keeps
  * exactly three numbered movements instead of eight equal chapters.
  *

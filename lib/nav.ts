@@ -17,7 +17,7 @@ export interface NavSection {
 }
 
 export const navSections: NavSection[] = [
-  { id: "record", label: "Done", hint: "Background, roles, capabilities, credentials" },
+  { id: "record", label: "Done", hint: "Background, roles and the academic record" },
   { id: "work", label: "Built", hint: "Quiet Compound and ReminderPro" },
   { id: "direction", label: "Going", hint: "Where this is heading" },
   { id: "contact", label: "Contact", hint: "Email and LinkedIn" },

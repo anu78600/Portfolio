@@ -1,27 +1,35 @@
-import { certifications, education } from "@/content/education";
+import Link from "next/link";
+import { education } from "@/content/education";
 import { real } from "@/lib/content";
 import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/ui/Reveal";
 import { SubHeading } from "@/components/ui/SubHeading";
-import { Tag } from "@/components/ui/Tag";
 
 /**
- * Education and certifications, in one section.
+ * The academic record. Education only.
  *
- * They answer the same recruiter question — "what is verifiable here?" — so
- * splitting them into two sections would add a scroll and a heading for no
- * gain.
+ * The five certifications used to sit beside this in a second column and were
+ * moved to /resume on 19 Aug 2026, along with the whole Capabilities block.
+ * They were not deleted — /resume already rendered both in full — they stopped
+ * being the first thing a reader met.
  *
- * There is no category filter on the certifications. Five items spread across
- * five categories means every filter would return one or two results; the
- * category label on each row does the same job with no interaction cost.
+ * The reasoning, measured rather than felt: at 390px this act ran 7,721px
+ * against 1,751px for the section about what he has actually built, and the
+ * words "Quiet Compound" first appeared 12.2 screens down a 16.2-screen page.
+ * Hiring-manager survey evidence says they read the intro and then look for
+ * proof; the proof was ten screens behind the intro.
+ *
+ * Education stays because it is the one inventory item that is genuinely load
+ * bearing for an early-career candidate: two degrees with checkable standings
+ * and a third in progress. macwright.com and maggieappleton.com both carry no
+ * education at all — but both are established, and can afford to.
  */
 export function Credentials() {
   return (
     <div id="credentials" className="mt-20 scroll-mt-24">
       <SubHeading
         label="On the record"
-        lede="Degrees and certificates, with the standings that can be checked."
+        lede="Three degrees, with the standings that can be checked."
       />
 
         <div className="grid grid-cols-1 gap-x-14 gap-y-14 lg:grid-cols-12">
@@ -75,75 +83,26 @@ export function Credentials() {
             </ol>
           </div>
 
+          {/* Everything else is on the resume, and said so plainly. A
+              reader who wants the full inventory should not have to guess that
+              it exists. */}
           <div className="lg:col-span-5">
             <h3 className="label-sc flex items-center gap-2 text-ink-3">
               <Icon name="award" size={15} className="text-accent" />
-              Certifications
+              Also on the record
             </h3>
-            <ul className="mt-5 border-t border-line">
-              {certifications.map((cert, index) => {
-                const url = real(cert.credentialUrl);
-                const date = real(cert.date);
-
-                const body = (
-                  <>
-                    <div className="flex items-start justify-between gap-3">
-                      <p className="text-[0.9375rem] leading-snug font-medium text-ink">
-                        {cert.name}
-                      </p>
-                      {url ? (
-                        <Icon
-                          name="arrow-up-right"
-                          size={14}
-                          className="mt-1 shrink-0 text-ink-3 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent"
-                        />
-                      ) : null}
-                    </div>
-                    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-                      <Tag>{cert.category}</Tag>
-                      {/* Through `real`, like every other placeholder-bearing
-                          field. Unguarded, this printed the literal string
-                          "[ADD ISSUER]" at 5.76:1 in light and 8.87:1 in dark —
-                          fully legible, and sitting exactly where an issuer's
-                          name goes, so it read as the issuer. */}
-                      {real(cert.issuer) ? (
-                        <span className="text-[0.8125rem] text-ink-3">
-                          {real(cert.issuer)}
-                        </span>
-                      ) : null}
-                      {date ? (
-                        <span className="label-sc ml-auto text-ink-3">{date}</span>
-                      ) : null}
-                    </div>
-                  </>
-                );
-
-                return (
-                  <Reveal
-                    as="li"
-                    key={cert.id}
-                    delay={index * 50}
-                    className="border-b border-line"
-                  >
-                    {url ? (
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="group block py-4 transition-colors hover:text-accent"
-                      >
-                        {body}
-                        <span className="sr-only">
-                          — view credential, opens in a new tab
-                        </span>
-                      </a>
-                    ) : (
-                      <div className="py-4">{body}</div>
-                    )}
-                  </Reveal>
-                );
-              })}
-            </ul>
+            <p className="mt-5 max-w-sm text-[0.9375rem] leading-relaxed text-ink-2">
+              Five certificates and the full capability inventory — tools,
+              methods and the things I am only interested in so far — are set
+              out on the resume, where a list belongs.
+            </p>
+            <Link
+              href="/resume"
+              className="mt-5 inline-flex items-center gap-1.5 text-[0.875rem] font-medium text-accent"
+            >
+              Read the resume
+              <Icon name="arrow-up-right" size={14} />
+            </Link>
           </div>
       </div>
     </div>
