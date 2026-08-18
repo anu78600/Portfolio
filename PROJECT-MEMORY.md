@@ -558,6 +558,35 @@ at Lab C2.75 — above the tint-noticing threshold, below reading as a material.
 (63→58 checks, all green) — named colours now resolve and each theme asserts
 its full token set is readable.
 
+### The third-project shortlist — parked 19 Aug, his call to revive
+
+Researched (generate + adversarial rank) as the credible remedy for a
+two-project portfolio; he chose "not now". The site is defensible at two.
+When revived, the ranked list was:
+
+1. **The Labour-Law Bench** (recommended) — public eval of frontier LLMs on
+   Indian employment law, ground truth pinned to statute sections, transcripts
+   published. The only idea that converts his unfakeable stack (paid AI-output
+   grader + HR MBA + LLB-in-progress) into one artifact; counts ARE the
+   findings, so it passes the no-invented-metrics rule outright. Timely: the
+   Labour Codes came into force Nov 2025, so model training data describes the
+   repealed regime. 3-5 part-time weeks.
+2. **Attrition, On the Record** — cited quarterly IT-major attrition ledger
+   from earnings materials, one citation per cell. 2-3 weeks; the natural
+   companion piece.
+3. **One NGO, digitised** — highest credibility (a referee who can say no),
+   riskiest schedule for the same reason. Week 1 is outreach only.
+4. **EPFO redesigned as an exercise** — must confirm UAN access first; without
+   it, scope to pre-login flows or the before-state is second-hand.
+5. **The Placement Record** — NIRF disclosures side by side; framing must stay
+   "what institutions disclosed", never "auditing truth".
+
+Killed, do not revive without new facts: BRSR ledger (already exists —
+Dataful/brsrtracker/PRIME), PLFS charts (edge expired + a maintenance
+obligation), Labour-Codes explainer (months of content, not weeks of
+evidence), and ANY third markets-flavoured object — it pushes the portfolio
+toward the trading-site read the brand work exists to prevent.
+
 ### Still open
 
 - `siteUrl` in `content/profile.ts` — blocks deploy
