@@ -91,7 +91,15 @@ export function FeaturedProjectCard({
   return (
     <Reveal as="article" delay={delay}>
       <Link href={`/work/${project.slug}`} className={cn(cardShell, "md:grid md:grid-cols-12")}>
-        <div className="relative aspect-[16/10] overflow-clip border-b border-line md:col-span-5 md:aspect-auto md:min-h-[280px] md:border-r md:border-b-0">
+        {/* `data-zoom` sits on the WRAPPER and the hover scale on the plate
+            inside it. Both write `scale`, and two animations on one element do
+            not compose — the later name wins outright and, because the settle
+            is fill:both, it would win at every scroll position forever, killing
+            the hover permanently. Different elements, both survive. */}
+        <div
+          data-zoom
+          className="relative aspect-[16/10] overflow-clip border-b border-line md:col-span-5 md:aspect-auto md:min-h-[280px] md:border-r md:border-b-0"
+        >
           <ProjectPlate
             figure={project.figure}
             drawn

@@ -527,13 +527,25 @@ async function checkContent(page, path) {
       ).join("|"),
     );
 
+    const tw = document.querySelector("[data-typewriter]");
+    /* Measure the SETTLED box. The probe runs 800ms after navigation and the
+       typewriter finishes at 1080ms, so measuring naively catches it mid-type
+       and reports a clip that is really just the animation still running. */
+    if (tw) {
+      for (const a of tw.getAnimations()) {
+        if (a.animationName === "typewriter") a.finish();
+      }
+    }
     const named = {};
     for (const a of document.getAnimations())
       named[a.animationName] = (named[a.animationName] || 0) + 1;
 
     return { text: [...new Set(text)], ld: [...new Set(ld)], stray,
              figures: figures.length, distinct: new Set(figures).size,
-             reveals: named["reveal-in"] || 0, rules: named["rule-draw"] || 0 };
+             reveals: named["slide-in"] || 0, rules: named["rule-draw"] || 0,
+             typedVar: tw ? Number(getComputedStyle(tw).getPropertyValue("--typed")) : null,
+             typedLen: tw ? (tw.textContent || "").length : null,
+             typedClip: tw ? Math.round(tw.scrollWidth - tw.getBoundingClientRect().width) : 0 };
   })()`);
 
   record("content", `${path}: no placeholder in visible text`,
@@ -552,10 +564,23 @@ async function checkContent(page, path) {
      the page's own cardinality. Contact is deliberately unnumbered, so the
      ABSENCE of the gesture there carries the same signal as its absent folio. */
   if (path === "/") {
-    record("motion", "/: exactly 3 reveals, one per act",
-      probe.reveals === 3, `found ${probe.reveals}`);
-    record("motion", "/: the drawn-rule gesture is present",
-      probe.rules > 0, `found ${probe.rules} .rule-fade animations`);
+    record("motion", "/: exactly 3 act slides", probe.reveals === 3,
+      `found ${probe.reveals}`);
+    record("motion", "/: the drawn-rule gesture is present", probe.rules > 0,
+      `found ${probe.rules} .rule-fade animations`);
+    /* The typewriter's width is driven by the string's own length in `ch`. If
+       the copy changes and --typed does not, the line is clipped mid-word and
+       nothing else notices — the text is still whole in the DOM, so every
+       content and structure check keeps passing. */
+    record("motion", "/: typewriter width matches its own string",
+      probe.typedVar === probe.typedLen,
+      `--typed=${probe.typedVar} vs ${probe.typedLen} characters`);
+    /* And that the settled box actually FITS the string. `ch` ignores
+       letter-spacing, so a tracked label clips its own last word while the text
+       stays whole in the DOM and every other check passes. Measured once at
+       157px against a scrollWidth of 185. */
+    record("motion", "/: typewriter does not clip its own text",
+      probe.typedClip <= 1, `${probe.typedClip}px clipped`);
   }
 
   if (probe.figures > 1) {

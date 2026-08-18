@@ -908,7 +908,7 @@
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
       [data-reveal] {
-        animation: reveal-in linear both;
+        animation: slide-in linear both;
         animation-timeline: view();
         animation-range: entry calc(0% + var(--reveal-shift, 0%)) entry
           calc(56% + var(--reveal-shift, 0%));
@@ -934,6 +934,98 @@
      Verified on the running build: 7 elements, 7 animations, every timeline
      resolving to <html> (no clipping ancestor re-parents it), progress 1 at
      centre, inset(0 100% 0 0) at rest above. */
+  /* ── TYPEWRITER ───────────────────────────────────────────────────────────
+     A typewriter is a printing device, so on a ledger this is on-metaphor
+     rather than the usual hero-tagline trick — but only if it behaves like a
+     machine: `steps()`, never a smooth ease. A smoothly-widening box is a
+     wipe; discrete character steps are typing.
+
+     Width in `ch`, driven by --typed (the string's own length, set in TSX), so
+     it cannot drift from the copy. The full string is in the DOM and is only
+     CLIPPED, so screen readers, copy-paste and search read it whole.
+
+     The caret is a right border that blinks while typing and is gone after —
+     a caret that blinks forever is a cursor sitting on a finished page. */
+  @keyframes typewriter {
+    from {
+      width: 0;
+    }
+    to {
+      /* TRACKING COUNTS. `1ch` is the advance of "0" and knows nothing about
+         letter-spacing, so on a tracked label — this one runs 0.1em — the box
+         lands short and clips the last characters. Measured before the fix:
+         width 157px against a scrollWidth of 185, i.e. "Analytics" cut off,
+         with the full string still in the DOM so every content check passed. */
+      width: calc(var(--typed, 20) * (1ch + var(--typed-track, 0.1em)));
+    }
+  }
+
+  @keyframes caret {
+    50% {
+      border-color: transparent;
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      [data-typewriter] {
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        vertical-align: bottom;
+        border-right: 1px solid var(--accent);
+        animation:
+          typewriter 900ms steps(var(--typed, 20), end) 180ms both,
+          caret 380ms steps(1, end) 180ms 6 both;
+      }
+    }
+  }
+
+  /* ── ZOOM ─────────────────────────────────────────────────────────────────
+     Scroll-linked, not timed: the figure settles into place as it arrives and
+     then stops. `scale`, never `transform: scale()` — two animations writing
+     `transform` do not compose, the later name wins outright, and the card's
+     hover already writes a transform. Keeping them on different properties AND
+     different elements is what lets both survive.
+     One range, no breakpoints: for a box shorter than the scrollport the
+     `entry` length equals the box's own height, so progress IS the fraction on
+     screen, width-invariant by construction. */
+  @keyframes zoom-settle {
+    from {
+      scale: 0.94;
+    }
+    to {
+      scale: 1;
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      [data-zoom] {
+        transform-origin: 50% 50%;
+        animation: zoom-settle linear both;
+        animation-timeline: view();
+        animation-range: entry 40% entry 95%;
+      }
+    }
+  }
+
+  /* ── SLIDE ────────────────────────────────────────────────────────────────
+     Content enters FROM THE MARGIN RULE, not from nowhere. The rule is the
+     page's spine, so the spine is the only defensible origin for arriving
+     text — a slide from the right or from below is motion borrowed from a
+     carousel. 14px, because a slide you can measure is a slide you notice. */
+  @keyframes slide-in {
+    from {
+      opacity: 0;
+      translate: -14px 0;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
   @keyframes rule-draw {
     from {
       clip-path: inset(0 100% 0 0);
@@ -1175,6 +1267,52 @@ html {
    résumé". Print honours whichever mode is selected. */
 [data-resume-density="compact"] [data-compact-hide] {
   display: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   THE REGISTRATION MARK
+
+   A printer's crosshair, riding alongside the pointer. It is drawn from two
+   1px rules — the same primitive as the margin rule and the section hairlines —
+   so the cursor is made of the page's own material rather than of a shape
+   borrowed from a web app.
+
+   `(pointer: fine)` only: on a touch device this never paints, so the platform
+   carrying nearly all the traffic pays nothing but the four bytes of a data
+   attribute. The system cursor is never hidden.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html[data-mark]::after {
+    content: "";
+    position: fixed;
+    z-index: 90;
+    top: 0;
+    left: 0;
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+    translate: var(--mark-x, -100px) var(--mark-y, -100px);
+    pointer-events: none;
+    /* Two hairlines crossing — a registration mark, not a ring. The gap in the
+       middle is what stops it sitting ON the text it is beside. */
+    background:
+      linear-gradient(var(--accent), var(--accent)) 50% 0 / 1px 7px no-repeat,
+      linear-gradient(var(--accent), var(--accent)) 50% 100% / 1px 7px no-repeat,
+      linear-gradient(var(--accent), var(--accent)) 0 50% / 7px 1px no-repeat,
+      linear-gradient(var(--accent), var(--accent)) 100% 50% / 7px 1px no-repeat;
+    opacity: 0.55;
+    /* No transition on translate: a lagging cursor reads as jank, not as
+       smoothness. Only the state change eases. */
+    transition: opacity 140ms var(--ease-out), scale 140ms var(--ease-out);
+  }
+
+  /* Over anything clickable the mark closes up and asserts itself — the plate
+     is aligned. */
+  html[data-mark]:has(a:hover, button:hover)::after {
+    opacity: 1;
+    scale: 0.72;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────

@@ -47,12 +47,27 @@ export function Hero() {
       <div className="container-counterfoil">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
+            {/* Typed, in the mono face. A typewriter is a printing device, so
+                this is on-metaphor here rather than the usual hero trick — and
+                it finally gives IBM Plex Mono a visible job, which a face
+                without one is the tell that a type system was assembled rather
+                than designed. The string is whole in the DOM and only clipped,
+                so screen readers and copy-paste get all of it. */}
             <Reveal className="flex items-center gap-2.5">
               <span
                 aria-hidden="true"
                 className="h-1.5 w-1.5 rounded-full bg-accent"
               />
-              <p className="label-sc text-accent">{profile.eyebrow}</p>
+              <p className="font-mono text-micro text-accent uppercase">
+                <span
+                  data-typewriter
+                  style={
+                    { "--typed": profile.eyebrow.length } as React.CSSProperties
+                  }
+                >
+                  {profile.eyebrow}
+                </span>
+              </p>
             </Reveal>
 
             <Reveal>
