@@ -61,6 +61,9 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col-reverse items-start justify-between gap-6 border-t border-line pt-6 sm:flex-row sm:items-center">
+          {/* The colophon — the personal touch, done the way a printed book
+              does it. Every claim in it is checkable: the faces ship in
+              /public/fonts, and the dependency count is package.json. */}
           <p className="text-[0.8125rem] text-ink-3">
             <span className={todoClass(profile.name)}>
               © {year} {profile.name}
@@ -68,7 +71,8 @@ export function Footer() {
             <span className="mx-2 text-line-strong" aria-hidden="true">
               ·
             </span>
-            Designed and built with curiosity.
+            Set in Source Serif 4, Instrument Sans &amp; IBM Plex Mono. No
+            template, no tracker.
           </p>
           <SocialIconLinks links={profile.socials} />
         </div>

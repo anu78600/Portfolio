@@ -27,11 +27,21 @@ npm run dev        # http://localhost:3000
 
 ## Stack
 
-Next.js 16 (App Router) · React 19 · TypeScript (strict) · Tailwind CSS v4 ·
-Geist (self-hosted).
+Next.js 16 (App Router) · React 19 · TypeScript (strict) · Tailwind CSS v4.
 
-Four runtime dependencies in total. No animation library, no icon package, no
-UI kit — see [DESIGN.md §4](DESIGN.md#4-engineering-decisions-worth-knowing).
+Type is self-hosted and subset by hand: **Source Serif 4** (variable, real
+small caps) for body and prose, **Instrument Sans** for headings and UI chrome,
+**IBM Plex Mono** for folios, dates and stamps — x-height-normalised so the
+three families sit on one optical size.
+
+Three runtime dependencies in total. No animation library, no 3D engine, no
+icon package, no UI kit — see
+[DESIGN.md §4](DESIGN.md#4-engineering-decisions-worth-knowing). All motion is
+native: CSS scroll-driven animations (`animation-timeline: view()`) for
+reveals, the settle and the count-up band, one IntersectionObserver fallback,
+and `prefers-reduced-motion` gated explicitly — including in print, where a
+paginated page has no scrollport and an unguarded scroll-driven animation
+renders at progress zero.
 
 ## Layout
 
@@ -83,6 +93,22 @@ production they're invisible.
 - Per-project case-study pages, statically generated
 - Generated favicon and Open Graph card, both driven by your profile data
 - `Person` / `WebSite` / `ProfilePage` JSON-LD, sitemap, robots
+
+## Verification
+
+```bash
+powershell -ExecutionPolicy Bypass -File scripts/serve.ps1   # build + serve + headless Chrome
+npm run verify                                               # 186 checks against the RUNNING site
+npm run copy-metrics                                         # prose tics: em-dash rate, flat runs…
+```
+
+The harness grades the compiled CSS, not the source: contrast for every
+(text × surface) pair in both themes, overflow in both directions at nine
+widths, print legibility against a white ground, placeholder leakage into
+visible text and JSON-LD, and that every scroll-driven animation actually
+resolves to the root scroller (an `overflow: hidden` ancestor silently
+re-parents the timeline and the animation becomes a no-op that still reports
+"running"). Every check exists because something real once got through.
 
 ## Accessibility
 
